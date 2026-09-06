@@ -1,8 +1,12 @@
 .amplify/
+.amplify-create-app.json
 .env
 .DS_Store
 Thumbs.db
 *.log
 _preview/
+node_modules/
+dist/
+amplify-hosting.zip
 public/content-images/*
 !public/content-images/.gitkeep
