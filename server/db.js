@@ -23,7 +23,13 @@ function sslConfig() {
     process.env.PGSSL === "false" ||
     process.env.AURORA_SSL === "false" ||
     process.env.DB_SSL === "false";
-  return sslDisabled ? false : { rejectUnauthorized: true };
+  if (sslDisabled) return false;
+  // Lambda's Node trust store does not include the Amazon RDS CA.
+  // Traffic stays on the private VPC; TLS is still used.
+  if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
+    return { rejectUnauthorized: false };
+  }
+  return { rejectUnauthorized: true };
 }
 
 function poolSize() {

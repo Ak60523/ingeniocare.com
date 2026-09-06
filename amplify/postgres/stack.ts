@@ -72,13 +72,10 @@ export function wirePostgresAndDataApi(stack: Stack, dataApiLambda: LambdaFuncti
     targets: [new LambdaWarmTarget(dataApiLambda)],
   });
 
+  // CORS is handled by Express. Setting it here too sends two
+  // Access-Control-Allow-Origin headers and browsers block the API.
   const fnUrl = dataApiLambda.addFunctionUrl({
     authType: FunctionUrlAuthType.NONE,
-    cors: {
-      allowedOrigins: ["*"],
-      allowedHeaders: ["content-type", "authorization", "x-tenant-id"],
-      allowedMethods: [HttpMethod.ALL],
-    },
   });
 
   return {

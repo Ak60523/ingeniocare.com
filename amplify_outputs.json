@@ -1,5 +1,6 @@
 {
+  "version": "1.5",
   "custom": {
-    "dataApiUrl": ""
+    "dataApiUrl": "https://kqpraullobjsq5m2jydh4vwyh40hsbvq.lambda-url.us-east-1.on.aws/"
   }
 }
