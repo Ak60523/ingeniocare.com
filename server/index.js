@@ -4,7 +4,6 @@ import cors from "cors";
 import express from "express";
 import jwt from "jsonwebtoken";
 import path from "node:path";
-import { originalPressReleases } from "./originalPressReleases.js";
 import { seedSiteContent } from "./contentSeed.js";
 import { createPool, initSchema } from "./db.js";
 import {
@@ -40,6 +39,7 @@ import {
   sanitizeHtml,
 } from "./siteContentAi.js";
 import { parseBody, serializeBody } from "./contentBody.js";
+import { sortNewestFirst } from "./contentSort.js";
 import {
   deleteLibraryImage,
   generateContentImage,
@@ -384,7 +384,7 @@ app.get(
       `SELECT id, slug, date_label, title, headline, summary, status, created_at, updated_at
        FROM news_articles ORDER BY created_at DESC, id DESC`
     );
-    const articles = rows.map(mapNews).filter((item) => (admin ? true : isNewsVisible(item)));
+    const articles = sortNewestFirst(rows.map(mapNews).filter((item) => (admin ? true : isNewsVisible(item))));
     res.json({ articles, admin });
   })
 );
@@ -412,9 +412,11 @@ app.get(
     const article = mapNews(row);
     if (!admin && !isNewsVisible(article)) return res.status(404).json({ error: "Article not found" });
     const { rows: siblings } = await pool.query(
-      `SELECT slug, title, status FROM news_articles ORDER BY created_at DESC, id DESC`
+      `SELECT slug, title, status, date_label, created_at FROM news_articles`
     );
-    const visible = siblings.filter((sibling) => admin || isNewsVisible(mapNews(sibling)));
+    const visible = sortNewestFirst(
+      siblings.filter((sibling) => admin || isNewsVisible(mapNews(sibling))).map(mapNews)
+    );
     const index = visible.findIndex((sibling) => sibling.slug === article.slug);
     res.json({
       article,
@@ -516,7 +518,7 @@ app.get(
       `SELECT * FROM site_content WHERE type = ? ORDER BY COALESCE(published_at, created_at) DESC, id DESC`,
       [type]
     );
-    const items = rows.map(mapContent).filter((item) => (admin ? true : isContentVisible(item)));
+    const items = sortNewestFirst(rows.map(mapContent).filter((item) => (admin ? true : isContentVisible(item))));
     res.json({ items, admin });
   })
 );
@@ -650,10 +652,12 @@ app.get(
     const admin = await tryContentAdmin(req);
     if (!admin && !isContentVisible(item)) return res.status(404).json({ error: "Not found" });
     const { rows: siblings } = await pool.query(
-      `SELECT slug, title, status, published_at FROM site_content WHERE type = ? ORDER BY COALESCE(published_at, created_at) DESC, id DESC`,
+      `SELECT slug, title, status, published_at, created_at FROM site_content WHERE type = ?`,
       [item.type]
     );
-    const visible = siblings.filter((row) => admin || String(row.status).toLowerCase() === "published");
+    const visible = sortNewestFirst(
+      siblings.filter((row) => admin || String(row.status).toLowerCase() === "published")
+    );
     const index = visible.findIndex((row) => row.slug === item.slug);
     res.json({
       item,
@@ -1158,37 +1162,6 @@ app.use((error, req, res, _next) => {
   });
 });
 
-async function importOriginalPressReleases(db) {
-  for (const article of originalPressReleases) {
-    const body = persistableBody(article.body);
-    const { rows } = await db.query("SELECT id, body FROM news_articles WHERE slug = ? LIMIT 1", [article.slug]);
-    let articleId = rows[0]?.id;
-    if (!articleId) {
-      const inserted = await db.query(
-        `INSERT INTO news_articles (slug, date_label, title, headline, summary, body, status, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, 'published', ?) RETURNING id`,
-        [article.slug, article.dateLabel, article.title, article.headline, article.summary, body, article.publishedAt]
-      );
-      articleId = inserted.insertId;
-    } else if (article.completeIfMissing && !String(rows[0].body || "").includes(article.completeIfMissing)) {
-      await db.query(
-        `UPDATE news_articles SET
-          date_label = ?, title = ?, headline = ?, summary = ?, body = ?,
-          created_at = ?, updated_at = NOW()
-         WHERE id = ?`,
-        [article.dateLabel, article.title, article.headline, article.summary, body, article.publishedAt, articleId]
-      );
-    }
-    for (const alias of article.aliases || []) {
-      await db.query(
-        `INSERT INTO news_aliases (slug, article_id) VALUES (?, ?)
-         ON CONFLICT (slug) DO UPDATE SET article_id = EXCLUDED.article_id`,
-        [alias, articleId]
-      );
-    }
-  }
-}
-
 async function seedContent(db) {
   await db.query("UPDATE site_content SET gated = FALSE WHERE type = 'whitepaper'");
   for (const item of seedSiteContent) {
@@ -1223,7 +1196,6 @@ export async function ensureDatabase() {
   }
   try {
     await initSchema(pool);
-    await importOriginalPressReleases(pool);
     await seedContent(pool);
     console.log("Postgres schema ready");
   } catch (error) {

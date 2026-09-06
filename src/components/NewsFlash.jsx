@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api";
+import { sortNewestFirst } from "../../server/contentSort.js";
 
 export default function NewsFlash() {
   const [item, setItem] = useState(null);
@@ -11,8 +12,10 @@ export default function NewsFlash() {
       .news()
       .then((data) => {
         if (cancelled) return;
-        const published = (data.articles || []).filter(
-          (article) => String(article.status || "published").toLowerCase() === "published"
+        const published = sortNewestFirst(
+          (data.articles || []).filter(
+            (article) => String(article.status || "published").toLowerCase() === "published"
+          )
         );
         setItem(published[0] || null);
       })

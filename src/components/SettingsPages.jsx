@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { api } from "../api";
 import { contentStatusLabel } from "../roles";
 import { seedSiteContent } from "../../server/contentSeed.js";
+import { sortNewestFirst } from "../../server/contentSort.js";
 import { contentEditPath, footerNav, isSitePathActive, navPath, primaryNav } from "../siteNav.js";
 import NavIcon from "./NavIcons.jsx";
 
@@ -47,10 +48,10 @@ export default function SettingsPages({ collapsed = false }) {
       api.news().then((data) => data.articles || []).catch(() => []),
     ]).then(([nextBlogs, nextPapers, nextPodcasts, nextNews]) => {
       if (cancelled) return;
-      setBlogs(nextBlogs);
-      setPapers(nextPapers);
-      setPodcasts(nextPodcasts);
-      setNews(nextNews);
+      setBlogs(sortNewestFirst(nextBlogs));
+      setPapers(sortNewestFirst(nextPapers));
+      setPodcasts(sortNewestFirst(nextPodcasts));
+      setNews(sortNewestFirst(nextNews));
     });
     return () => {
       cancelled = true;

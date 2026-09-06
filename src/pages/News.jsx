@@ -5,6 +5,7 @@ import PageHero from "../components/PageHero.jsx";
 import { useAuth } from "../AuthContext.jsx";
 import { slugifyTitle } from "../roles";
 import { sectionHero } from "../siteNav.js";
+import { sortNewestFirst } from "../../server/contentSort.js";
 import { AdminBar, StatusChip } from "./ContentPages.jsx";
 
 export default function News() {
@@ -33,7 +34,7 @@ export default function News() {
           return status === "published" || status === "draft";
         });
       }
-      setItems(rows);
+      setItems(sortNewestFirst(rows));
       setError("");
     } catch (err) {
       setItems([]);

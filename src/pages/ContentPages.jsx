@@ -9,6 +9,7 @@ import { bodyHasContent, ensureEditableBlocks, serializeBody } from "../../serve
 import { useAuth } from "../AuthContext.jsx";
 import { contentPath, contentStatusLabel, formatContentDate, slugifyTitle } from "../roles";
 import { seedSiteContent } from "../../server/contentSeed.js";
+import { sortNewestFirst } from "../../server/contentSort.js";
 import { sectionHero } from "../siteNav.js";
 
 const CONTENT_META = {
@@ -121,7 +122,7 @@ export function ContentListPage({ type }) {
       } else if (mode === "preview") {
         rows = rows.filter((item) => item.status === "published" || item.status === "draft");
       }
-      setItems(rows);
+      setItems(sortNewestFirst(rows));
       setError("");
     } catch (err) {
       let rows = seedSiteContent.filter((item) => item.type === type);
@@ -130,7 +131,7 @@ export function ContentListPage({ type }) {
       } else if (mode === "preview") {
         rows = rows.filter((item) => item.status === "published" || item.status === "draft");
       }
-      setItems(rows.map((item) => ({ ...item, publishedAt: item.publishedAt })));
+      setItems(sortNewestFirst(rows.map((item) => ({ ...item, publishedAt: item.publishedAt }))));
       setError("");
     } finally {
       setLoading(false);
@@ -325,7 +326,9 @@ export function ContentDetailPage({ type }) {
     } catch (err) {
       const fallback = seedSiteContent.find((row) => row.slug === slug && row.type === type);
       if (fallback) {
-        const siblings = seedSiteContent.filter((row) => row.type === type && row.status === "published");
+        const siblings = sortNewestFirst(
+          seedSiteContent.filter((row) => row.type === type && row.status === "published")
+        );
         const index = siblings.findIndex((row) => row.slug === fallback.slug);
         setItem(fallback);
         setForm(formFromItem(fallback));
