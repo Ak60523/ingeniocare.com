@@ -54,7 +54,7 @@ export const seedSiteContent = [
       "A deeper guide to Ingenio Care’s Patient Care Orchestration Model — how access, unused capacity, and aligned incentives reduce cost while improving outcomes.",
     hashtags: ["whitepaper", "value-based-care", "pcom"],
     status: "published",
-    gated: 1,
+    gated: 0,
     publishedAt: "2025-08-01T12:00:00Z",
     body: `
       <p>Healthcare has invested heavily in population health, engagement, and PCP-centric programs. Outcomes improved only at the margin. Ingenio Care’s thesis is narrower: find the patient who needs care now, and deliver that care with speed and a closely knit network.</p>
@@ -208,7 +208,7 @@ export const seedSiteContent = [
       "A proposed paper on the Marketplace use case for health systems: make in-system sessions visible and bookable so orthopedics, cardiology, and other specialty referrals stop leaking at the fax machine.",
     hashtags: ["whitepaper", "marketplace", "health-systems", "referral-leakage", "use-case"],
     status: "draft",
-    gated: 1,
+    gated: 0,
     publishedAt: null,
     body: `
       <p>Health systems already employ or contract the specialists patients need. The leakage still happens. Referring clinics cannot see which sessions are open. Access teams work from stale lists. The patient who needed orthopedics this week finds a competitor who answered the phone.</p>
@@ -246,7 +246,7 @@ export const seedSiteContent = [
       "A proposed paper on Digital Front Doors for specialty care: collect the reason for referral, coverage, and site preference, then offer the next available session so patients leave with a time—not another callback.",
     hashtags: ["whitepaper", "digital-front-doors", "specialty-care", "access", "use-case"],
     status: "draft",
-    gated: 1,
+    gated: 0,
     publishedAt: null,
     body: `
       <p>Specialty access is often the slowest step in the journey. A long hold, an incomplete packet, or a missing insurance check is how demand leaks to a competitor—or to the emergency department.</p>
@@ -284,7 +284,7 @@ export const seedSiteContent = [
       "A proposed paper on the home-health use case: the Patient App and Provider App keep visit plans, completions, and specialty needs on one record so cases do not drop after the first week or bounce to the ER.",
     hashtags: ["whitepaper", "home-health", "patient-app", "provider-app", "use-case"],
     status: "draft",
-    gated: 1,
+    gated: 0,
     publishedAt: null,
     body: `
       <p>Home-based care fails in the gaps: the family missed the start-of-care call, the attending never learned the visit happened, and a new specialty need mid-episode restarts as a blank referral—or an emergency-department visit.</p>
@@ -318,7 +318,7 @@ export const seedSiteContent = [
       "A proposed paper for self-funded employers: use the Plan App, Patient App, and Marketplace so employees reach in-network care quickly instead of leaking to urgent care, out-of-network specialists, and the ER.",
     hashtags: ["whitepaper", "employers", "plan-app", "value-based-care", "use-case"],
     status: "draft",
-    gated: 1,
+    gated: 0,
     publishedAt: null,
     body: `
       <p>Self-funded employers do not lack vendors. They lack a path from “I need a clinician this week” to an in-network visit that actually occurs. Access delays become avoidable emergency use, out-of-network specialty claims, and abandoned referrals the plan already pays for.</p>

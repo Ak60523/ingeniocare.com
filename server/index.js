@@ -696,7 +696,7 @@ app.post(
         persistableBody(req.body.body),
         JSON.stringify(parseHashtags(req.body.hashtags)),
         status,
-        Boolean(req.body.gated),
+        type === "whitepaper" ? false : Boolean(req.body.gated),
         String(req.body.pdfUrl || "").trim() || null,
         publishedAt,
         req.actor.user.id,
@@ -748,7 +748,11 @@ app.patch(
         req.body.body !== undefined ? persistableBody(req.body.body) : current.body,
         req.body.hashtags !== undefined ? JSON.stringify(parseHashtags(req.body.hashtags)) : current.hashtags,
         status,
-        req.body.gated !== undefined ? Boolean(req.body.gated) : current.gated,
+        current.type === "whitepaper"
+          ? false
+          : req.body.gated !== undefined
+            ? Boolean(req.body.gated)
+            : current.gated,
         req.body.pdfUrl !== undefined ? String(req.body.pdfUrl).trim() || null : current.pdf_url,
         publishedAt,
         req.body.seoTitle !== undefined ? String(req.body.seoTitle).trim() || null : current.seo_title,
@@ -1186,6 +1190,7 @@ async function importOriginalPressReleases(db) {
 }
 
 async function seedContent(db) {
+  await db.query("UPDATE site_content SET gated = FALSE WHERE type = 'whitepaper'");
   for (const item of seedSiteContent) {
     const { rows } = await db.query("SELECT id FROM site_content WHERE slug = ? LIMIT 1", [item.slug]);
     if (rows[0]) continue;

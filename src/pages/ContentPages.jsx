@@ -33,7 +33,7 @@ const CONTENT_META = {
     kicker: "Paper",
     mediaLabel: "PDF URL",
     mediaCta: "Download PDF",
-    gated: true,
+    gated: false,
     heroImage: sectionHero.papers,
   },
   podcast: {
@@ -288,7 +288,7 @@ export function ContentDetailPage({ type }) {
   const meta = metaFor(type);
   const isPaper = type === "whitepaper";
   const isPodcast = type === "podcast";
-  const { canManageContent, user } = useAuth();
+  const { canManageContent } = useAuth();
   const [params, setParams] = useSearchParams();
   const mode = params.get("mode") === "edit" ? "edit" : "preview";
   const isEdit = canManageContent && mode === "edit";
@@ -299,8 +299,6 @@ export function ContentDetailPage({ type }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  const [gateEmail, setGateEmail] = useState("");
-  const [unlocked, setUnlocked] = useState(false);
 
   function formFromItem(next) {
     return {
@@ -372,7 +370,7 @@ export function ContentDetailPage({ type }) {
         body: serializeBody(form.blocks),
         hashtags: form.hashtags,
         slug: form.slug,
-        gated: form.gated,
+        gated: false,
         pdfUrl: form.pdfUrl,
       });
       setItem(data.item);
@@ -430,7 +428,7 @@ export function ContentDetailPage({ type }) {
         summary: form.summary,
         body: serializeBody(form.blocks),
         hashtags: form.hashtags,
-        gated: form.gated,
+        gated: false,
         pdfUrl: form.pdfUrl,
         slug: form.slug,
         status: item.status,
@@ -460,7 +458,6 @@ export function ContentDetailPage({ type }) {
   }
 
   const listHref = canManageContent ? `${meta.listPath}?mode=edit` : meta.listPath;
-  const showGate = item?.gated && !isEdit && !unlocked && !user;
   const isPublished = String(item?.status || "").toLowerCase() === "published";
   const writeDisabled = busy || isPublished;
 
@@ -558,23 +555,10 @@ export function ContentDetailPage({ type }) {
                 onChange={(blocks) => updateField("blocks", blocks)}
               />
               {isPaper || isPodcast ? (
-                <>
-                  {isPaper ? (
-                    <label className="row">
-                      <input
-                        name="gated"
-                        type="checkbox"
-                        checked={form.gated}
-                        onChange={(event) => updateField("gated", event.target.checked)}
-                      />
-                      <span>Gated paper</span>
-                    </label>
-                  ) : null}
-                  <label>
-                    {meta.mediaLabel}
-                    <input name="pdfUrl" value={form.pdfUrl} onChange={(event) => updateField("pdfUrl", event.target.value)} />
-                  </label>
-                </>
+                <label>
+                  {meta.mediaLabel}
+                  <input name="pdfUrl" value={form.pdfUrl} onChange={(event) => updateField("pdfUrl", event.target.value)} />
+                </label>
               ) : null}
               <button className="btn" type="submit" disabled={busy}>
                 {busy ? "Saving…" : "Save"}
@@ -589,35 +573,14 @@ export function ContentDetailPage({ type }) {
                   <span key={tag}>#{tag}</span>
                 ))}
               </div>
-              {showGate ? (
-                <form
-                  className="form"
-                  onSubmit={(event) => {
-                    event.preventDefault();
-                    if (gateEmail.includes("@")) setUnlocked(true);
-                  }}
-                >
-                  <p>Enter your email to read this paper.</p>
-                  <label>
-                    Email
-                    <input type="email" value={gateEmail} onChange={(event) => setGateEmail(event.target.value)} required />
-                  </label>
-                  <button className="btn" type="submit">
-                    Continue
-                  </button>
-                </form>
-              ) : (
-                <>
-                  <ArticleBody body={item.body} />
-                  {item.pdfUrl ? (
-                    <p>
-                      <a className="btn" href={item.pdfUrl} target="_blank" rel="noreferrer">
-                        {meta.mediaCta}
-                      </a>
-                    </p>
-                  ) : null}
-                </>
-              )}
+              <ArticleBody body={item.body} />
+              {item.pdfUrl ? (
+                <p>
+                  <a className="btn" href={item.pdfUrl} target="_blank" rel="noreferrer">
+                    {meta.mediaCta}
+                  </a>
+                </p>
+              ) : null}
             </article>
           )}
         </div>

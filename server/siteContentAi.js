@@ -97,7 +97,7 @@ function draftFromParsed(parsed, input, type) {
     hashtags: normalizeHashtags(parsed.hashtags ?? input.draft?.hashtags),
     seoTitle: String(parsed.seoTitle ?? parsed.title ?? "").trim(),
     seoDescription: String(parsed.seoDescription ?? parsed.summary ?? "").trim(),
-    gated: type === "whitepaper" ? Boolean(input.draft?.gated ?? true) : false,
+    gated: false,
     slug: input.draft?.slug || null,
     status: input.draft?.status || "draft",
     pdfUrl: input.draft?.pdfUrl || null,
