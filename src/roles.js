@@ -14,18 +14,6 @@ export function canManageContent(role) {
   return role === "owner" || role === "admin";
 }
 
-export function canManageBuilds(role) {
-  return role === "owner";
-}
-
-export function canManageCursorAgents(role) {
-  return role === "owner";
-}
-
-export function canExploreDataModel(role) {
-  return role === "owner";
-}
-
 export function canManageMember(actorRole, targetRole) {
   if (actorRole === "owner") return true;
   if (actorRole === "admin") return targetRole !== "owner";

@@ -4,7 +4,8 @@ import PageHero from "../components/PageHero.jsx";
 import { productHref } from "../data/products.js";
 
 const COM_SITE_VIMEO_SRC =
-  "https://player.vimeo.com/video/933065640?h=bbde7e8fd4&title=0&byline=0&portrait=0";
+  "https://player.vimeo.com/video/933065640?h=bbde7e8fd4&title=0&byline=0&portrait=0&dnt=1";
+const COM_SITE_VIMEO_POSTER = "/assets/images/why-ingenio-care.jpg";
 
 const leadership = [
   {
@@ -119,18 +120,15 @@ function WhyVideo() {
     <>
       <aside className="about-video">
         <div className="about-video-frame">
-          <iframe
-            title="Why Ingenio Care preview"
-            src={COM_SITE_VIMEO_SRC}
-            allow="autoplay; fullscreen; picture-in-picture"
-            tabIndex={-1}
-          />
+          <img src={COM_SITE_VIMEO_POSTER} alt="" />
           <button
             type="button"
             className="about-video-trigger"
             aria-label="Play Why Ingenio Care video"
             onClick={() => setOpen(true)}
-          />
+          >
+            <span className="about-video-play" aria-hidden="true" />
+          </button>
         </div>
         <button type="button" className="about-video-caption" onClick={() => setOpen(true)}>
           Watch the video
@@ -154,6 +152,7 @@ function WhyVideo() {
                 src={`${COM_SITE_VIMEO_SRC}&autoplay=1`}
                 allow="autoplay; fullscreen; picture-in-picture"
                 allowFullScreen
+                referrerPolicy="strict-origin-when-cross-origin"
               />
             </div>
           </div>

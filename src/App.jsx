@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import ConsoleShell from "./components/ConsoleShell.jsx";
 import Layout from "./components/Layout.jsx";
 import RequireRole from "./components/RequireRole.jsx";
@@ -22,7 +22,6 @@ import {
   PodcastDetailPage,
   PodcastsPage,
 } from "./pages/ContentPages.jsx";
-import OwnerLayout from "./pages/owner/OwnerLayout.jsx";
 import OwnerTenants from "./pages/owner/OwnerTenants.jsx";
 import OwnerUsers from "./pages/owner/OwnerUsers.jsx";
 import OwnerSettings from "./pages/owner/OwnerSettings.jsx";
@@ -70,7 +69,7 @@ export default function App() {
         <Route
           element={
             <RequireRole allow={canManageTenants}>
-              <OwnerLayout />
+              <Outlet />
             </RequireRole>
           }
         >
@@ -84,7 +83,7 @@ export default function App() {
         <Route
           element={
             <RequireRole allow={canManageUsers}>
-              <OwnerLayout />
+              <Outlet />
             </RequireRole>
           }
         >
@@ -94,7 +93,7 @@ export default function App() {
         <Route
           element={
             <RequireRole allow={canManageContent}>
-              <OwnerLayout />
+              <Outlet />
             </RequireRole>
           }
         >
