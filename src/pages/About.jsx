@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import PageHero from "../components/PageHero.jsx";
 import { productHref } from "../data/products.js";
+import { sectionHero } from "../siteNav.js";
 
 const COM_SITE_VIMEO_SRC =
   "https://player.vimeo.com/video/933065640?h=bbde7e8fd4&title=0&byline=0&portrait=0&dnt=1";
@@ -218,7 +219,7 @@ export default function About() {
 
   return (
     <>
-      <PageHero title="About Us">
+      <PageHero title="About Us" image={sectionHero.about} imagePosition="58% 26%">
         <h4>AI-Enabled, Patient-Centric Digital Health Network</h4>
       </PageHero>
       <section className="section about-section" id="company">

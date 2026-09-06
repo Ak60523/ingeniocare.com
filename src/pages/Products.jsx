@@ -9,6 +9,7 @@ import {
   productsPath,
   signupHrefForProduct,
 } from "../data/products.js";
+import { sectionHero } from "../siteNav.js";
 import NotFound from "./NotFound.jsx";
 
 export function HashRedirect({ to }) {
@@ -29,7 +30,7 @@ function ProductPage({ product }) {
   const useCases = product.useCases || [];
   return (
     <>
-      <PageHero ruled title={product.title}>
+      <PageHero ruled title={product.title} image={sectionHero.solutions} imagePosition="58% 26%">
         <h4>{product.kicker}</h4>
         <p className="lede">{product.lede}</p>
         <div className="home-hero-actions">
@@ -127,7 +128,7 @@ function ProductPage({ product }) {
 function ProductsHub() {
   return (
     <>
-      <PageHero title="Solutions">
+      <PageHero title="Solutions" image={sectionHero.solutions} imagePosition="58% 26%">
         <p className="lede">
           Ingenio Care solutions help patients get care, enable providers, and make the network easier
           to operate—from access and apps to specialty front doors.

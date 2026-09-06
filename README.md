@@ -1,22 +1,23 @@
 # Ingenio Care — React + Postgres
 
-React frontend for [ingeniocare.com](https://ingeniocare.com). Locally it is Vite + Express + Docker Postgres. Production is **Amplify Gen 2** like Growgent: hosted SPA, Lambda data API, Aurora PostgreSQL.
+React frontend for [ingeniocare.com](https://ingeniocare.com). Local Vite talks to the **production** Amplify data API (Lambda + Aurora). Do not run Postgres or Express on your machine.
 
-The browser never connects to the database. React calls `/api/*`.
+The browser never connects to the database. React calls the Function URL in `amplify_outputs.json` (`custom.dataApiUrl`).
 
 ## Local development
 
 ```bash
-docker compose up -d
 npm install
 npm run dev
 ```
 
 - React: http://localhost:5173
-- API: http://127.0.0.1:3001
-- Local `.env` points at Docker Postgres (`POSTGRES_SSL=false`)
+- API: production Lambda from `amplify_outputs.json`
+- Sign in uses the production `users` table (same accounts as the live site)
 
-Postgres-backed features:
+Optional: set `VITE_API_URL` in `.env` to override the Function URL.
+
+Postgres-backed features (all on Aurora in AWS):
 
 - Contact form → `contact_submissions`
 - Newsletter checkbox → `newsletter_subscribers`
@@ -24,14 +25,14 @@ Postgres-backed features:
 - Multi-tenant workspaces → `tenants`, `tenant_memberships`, `tenant_invites`
 - News list and press releases → `news_articles`
 - Blogs and papers → `site_content`
-- AI Write / Rewrite / Refine for News, Blogs, and Papers uses **Claude Sonnet 4.5** on Amazon Bedrock (same model as Growgent). Set `AWS_REGION`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`.
+- AI Write / Rewrite / Refine for News, Blogs, and Papers uses **Claude Sonnet 4.5** on Amazon Bedrock in the data-api Lambda.
 
 ## Production: Amplify Gen 2 + Lambda + Aurora (Growgent style)
 
 Same pattern as Growgent: Amplify Hosting for React, a Lambda data API for Express, Aurora PostgreSQL in a VPC. Deploy this as a **separate Amplify app** in the Growgent AWS account (do not attach this repo to the Growgent.ai app).
 
 ```
-React (Amplify Hosting)
+React (local Vite or Amplify Hosting)
    │  amplify_outputs.json custom.dataApiUrl
    ▼
 Lambda Function URL  (Express via serverless-http, 120s, Bedrock IAM)
@@ -40,7 +41,7 @@ Lambda Function URL  (Express via serverless-http, 120s, Bedrock IAM)
 Aurora PostgreSQL Serverless v2  (database ingeniocare)
 ```
 
-Local development is unchanged: Docker Postgres + `npm run dev`. Cloud credentials come from the Lambda role (Bedrock + Secrets Manager), not from `.env` access keys.
+Cloud credentials come from the Lambda role (Bedrock + Secrets Manager), not from a local `.env`.
 
 ### Deploy in the Growgent AWS account
 
@@ -56,7 +57,7 @@ Local development is unchanged: Docker Postgres + `npm run dev`. Cloud credentia
    ```bash
    npm run sandbox
    ```
-   That writes `amplify_outputs.json` so `npm run dev:web` can call the deployed Lambda while you still use Docker for nothing, or keep using local Express.
+   That refreshes `amplify_outputs.json` so `npm run dev` keeps calling the deployed Lambda.
 
 The first deploy creates a VPC, NAT Gateway, and Aurora cluster (`ingenioCareCluster`). That is billed separately from Growgent’s `growgentCluster`. Do not reuse the Growgent Amplify app or Cognito pool — Ingenio Care keeps its own JWT users table.
 

@@ -1,7 +1,7 @@
-export default function HomeHeroGraphic() {
+export default function HomeHeroGraphic({ src = "/assets/images/home-hero.jpg", position }) {
   return (
     <div className="home-hero-graphic" aria-hidden="true">
-      <img src="/assets/images/home-hero.jpg" alt="" />
+      <img src={src} alt="" style={position ? { objectPosition: position } : undefined} />
       <div className="home-hero-shade" />
     </div>
   );

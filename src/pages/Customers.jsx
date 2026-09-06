@@ -12,6 +12,7 @@ import {
   productsForSegment,
   segmentBySlug,
 } from "../data/segments.js";
+import { sectionHero } from "../siteNav.js";
 import NotFound from "./NotFound.jsx";
 
 function ProviderInvite() {
@@ -46,7 +47,7 @@ function ProviderInvite() {
 function CustomersHub() {
   return (
     <>
-      <PageHero title="Customers">
+      <PageHero title="Customers" image={sectionHero.customers} imagePosition="58% 26%">
         <h4 className="is-title-case">
           Driving Network Efficiency to improve Access and Quality while reducing cost - Across the
           healthcare continuum.
@@ -80,7 +81,7 @@ export default function Customers() {
 
   return (
     <>
-      <PageHero title={segment.title}>
+      <PageHero title={segment.title} image={sectionHero.customers} imagePosition="58% 26%">
         <h4>{segment.kicker}</h4>
         <p className="lede">{segment.lede}</p>
       </PageHero>

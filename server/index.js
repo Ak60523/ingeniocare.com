@@ -4,7 +4,7 @@ import cors from "cors";
 import express from "express";
 import jwt from "jsonwebtoken";
 import path from "node:path";
-import { seedArticles } from "./articles.js";
+import { originalPressReleases } from "./originalPressReleases.js";
 import { seedSiteContent } from "./contentSeed.js";
 import { createPool, initSchema } from "./db.js";
 import {
@@ -1149,24 +1149,38 @@ app.use((error, req, res, _next) => {
   res.status(error.status || 503).json({
     error:
       error.code === "ECONNREFUSED"
-        ? "Cannot reach Postgres. Start Docker Postgres or set POSTGRES_HOST / DATABASE_URL."
+        ? "Cannot reach Postgres."
         : error.message,
   });
 });
 
-async function seedNews(db) {
-  const { rows: countRows } = await db.query("SELECT COUNT(*) AS count FROM news_articles");
-  if (Number(countRows[0].count) > 0) return;
-  for (const article of seedArticles) {
-    const { insertId } = await db.query(
-      "INSERT INTO news_articles (slug, date_label, title, headline, summary, body) VALUES (?, ?, ?, ?, ?, ?) RETURNING id",
-      [article.slug, article.dateLabel, article.title, article.headline, article.summary, article.body]
-    );
-    for (const alias of article.aliases) {
-      await db.query("INSERT INTO news_aliases (slug, article_id) VALUES (?, ?)", [
-        alias,
-        insertId,
-      ]);
+async function importOriginalPressReleases(db) {
+  for (const article of originalPressReleases) {
+    const body = persistableBody(article.body);
+    const { rows } = await db.query("SELECT id, body FROM news_articles WHERE slug = ? LIMIT 1", [article.slug]);
+    let articleId = rows[0]?.id;
+    if (!articleId) {
+      const inserted = await db.query(
+        `INSERT INTO news_articles (slug, date_label, title, headline, summary, body, status, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, 'published', ?) RETURNING id`,
+        [article.slug, article.dateLabel, article.title, article.headline, article.summary, body, article.publishedAt]
+      );
+      articleId = inserted.insertId;
+    } else if (article.completeIfMissing && !String(rows[0].body || "").includes(article.completeIfMissing)) {
+      await db.query(
+        `UPDATE news_articles SET
+          date_label = ?, title = ?, headline = ?, summary = ?, body = ?,
+          created_at = ?, updated_at = NOW()
+         WHERE id = ?`,
+        [article.dateLabel, article.title, article.headline, article.summary, body, article.publishedAt, articleId]
+      );
+    }
+    for (const alias of article.aliases || []) {
+      await db.query(
+        `INSERT INTO news_aliases (slug, article_id) VALUES (?, ?)
+         ON CONFLICT (slug) DO UPDATE SET article_id = EXCLUDED.article_id`,
+        [alias, articleId]
+      );
     }
   }
 }
@@ -1204,7 +1218,7 @@ export async function ensureDatabase() {
   }
   try {
     await initSchema(pool);
-    await seedNews(pool);
+    await importOriginalPressReleases(pool);
     await seedContent(pool);
     console.log("Postgres schema ready");
   } catch (error) {

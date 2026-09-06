@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { api } from "../api";
-import { fallbackNews } from "../data/news";
 import PageHero from "../components/PageHero.jsx";
 import { useAuth } from "../AuthContext.jsx";
 import { slugifyTitle } from "../roles";
+import { sectionHero } from "../siteNav.js";
 import { AdminBar, StatusChip } from "./ContentPages.jsx";
 
 export default function News() {
@@ -35,9 +35,9 @@ export default function News() {
       }
       setItems(rows);
       setError("");
-    } catch {
-      setItems(fallbackNews);
-      setError("");
+    } catch (err) {
+      setItems([]);
+      setError(err.message || "Could not load news.");
     } finally {
       setLoading(false);
     }
@@ -90,7 +90,7 @@ export default function News() {
 
   return (
     <>
-      <PageHero title="Ingenio Care News" />
+      <PageHero title="Ingenio Care News" image={sectionHero.news} imagePosition="58% 18%" />
       <section className="section">
         <div className="wrap content-sheet">
           {isEdit ? (

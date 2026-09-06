@@ -313,19 +313,24 @@ ul {
 .page-hero {
   background: var(--brand-gradient);
   color: var(--on-dark);
-  padding: 3.5rem 0 2.8rem;
+  padding: 2.2rem 0 1.8rem;
 }
 
-.page-hero-home {
+.page-hero-photo {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding: 4.6rem 0 4.2rem;
-  min-height: 26rem;
+  padding: 2.2rem 0 1.8rem;
+  min-height: 14rem;
   background: var(--navy-deep);
 }
 
-.page-hero-home::after {
+.page-hero-home {
+  padding: 3.2rem 0 2.8rem;
+  min-height: 20rem;
+}
+
+.page-hero-photo::after {
   content: "";
   position: absolute;
   left: 0;
@@ -338,6 +343,17 @@ ul {
 .page-hero-inner {
   position: relative;
   z-index: 1;
+}
+
+.page-hero-kicker {
+  margin: 0 0 0.4rem;
+  color: color-mix(in srgb, var(--on-dark) 82%, transparent);
+  font-family: var(--font-menu);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1.2;
+  text-transform: uppercase;
 }
 
 .page-hero-top {
@@ -388,6 +404,14 @@ ul {
   text-decoration: none;
 }
 
+.page-hero-photo h1,
+.page-hero-photo h4,
+.page-hero-photo p,
+.page-hero-photo .lede,
+.page-hero-photo .home-hero-lede {
+  max-width: 34rem;
+}
+
 .page-hero-home h1 {
   max-width: 32rem;
   margin-bottom: 0.9rem;
@@ -418,16 +442,27 @@ ul {
 
 .home-hero-graphic {
   position: absolute;
-  inset: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 38%;
   z-index: 0;
   pointer-events: none;
+}
+
+.page-hero-home .home-hero-graphic {
+  left: 34%;
+}
+
+.page-hero-home .home-hero-graphic img {
+  object-position: 56% 18%;
 }
 
 .home-hero-graphic img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 68% 42%;
+  object-position: 58% 38%;
 }
 
 .home-hero-shade {
@@ -436,12 +471,12 @@ ul {
   background:
     linear-gradient(
       90deg,
-      color-mix(in srgb, var(--navy-deep) 88%, transparent) 0%,
-      color-mix(in srgb, var(--navy) 72%, transparent) 34%,
-      color-mix(in srgb, var(--navy) 28%, transparent) 58%,
-      transparent 78%
+      var(--navy-deep) 0%,
+      color-mix(in srgb, var(--navy-deep) 70%, transparent) 14%,
+      color-mix(in srgb, var(--navy) 28%, transparent) 32%,
+      transparent 52%
     ),
-    linear-gradient(180deg, color-mix(in srgb, var(--navy-deep) 28%, transparent), transparent 40%, color-mix(in srgb, var(--navy-deep) 35%, transparent));
+    linear-gradient(180deg, color-mix(in srgb, var(--navy-deep) 18%, transparent), transparent 42%, color-mix(in srgb, var(--navy-deep) 22%, transparent));
 }
 
 .page-hero h1,
@@ -480,9 +515,20 @@ ul {
   margin: 0.4rem 0 1.35rem;
 }
 
+.page-hero-photo .lede,
+.page-hero-photo h4,
+.page-hero-photo p {
+  max-width: 34rem;
+}
+
 .page-hero:has(h1.is-ruled) .lede,
 .page-hero:has(h1.is-ruled) h4 {
   max-width: none;
+}
+
+.page-hero-photo:has(h1.is-ruled) .lede,
+.page-hero-photo:has(h1.is-ruled) h4 {
+  max-width: 34rem;
 }
 
 .quote-panel {
@@ -2205,9 +2251,36 @@ a.solution-flow-box:focus-visible {
   box-shadow: var(--shadow);
 }
 
-@media (max-width: 980px) {
+@media (min-width: 1200px) {
+  .home-hero-graphic {
+    left: 40%;
+  }
+
+  .page-hero-home .home-hero-graphic {
+    left: 36%;
+  }
+
+  .page-hero-home .home-hero-graphic img {
+    object-position: 52% 16%;
+  }
+
   .home-hero-graphic img {
-    object-position: 78% 40%;
+    object-position: 54% 36%;
+  }
+}
+
+@media (max-width: 980px) {
+  .home-hero-graphic,
+  .page-hero-home .home-hero-graphic {
+    left: 0;
+  }
+
+  .home-hero-graphic img {
+    object-position: 62% 38%;
+  }
+
+  .page-hero-home .home-hero-graphic img {
+    object-position: 68% 14%;
   }
 
   .home-hero-shade {

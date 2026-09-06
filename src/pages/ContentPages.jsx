@@ -9,6 +9,7 @@ import { bodyHasContent, ensureEditableBlocks, serializeBody } from "../../serve
 import { useAuth } from "../AuthContext.jsx";
 import { contentPath, contentStatusLabel, formatContentDate, slugifyTitle } from "../roles";
 import { seedSiteContent } from "../../server/contentSeed.js";
+import { sectionHero } from "../siteNav.js";
 
 const CONTENT_META = {
   blog: {
@@ -17,9 +18,11 @@ const CONTENT_META = {
     lede: "Practical posts on AI-enabled, patient-centric care.",
     emptyNoun: "posts",
     itemTitle: "Blog",
+    kicker: "Blog",
     mediaLabel: "PDF URL",
     mediaCta: "Download PDF",
     gated: false,
+    heroImage: sectionHero.blogs,
   },
   whitepaper: {
     listPath: "/papers",
@@ -27,9 +30,11 @@ const CONTENT_META = {
     lede: "White papers and deeper guides from Ingenio Care.",
     emptyNoun: "papers",
     itemTitle: "Paper",
+    kicker: "Paper",
     mediaLabel: "PDF URL",
     mediaCta: "Download PDF",
     gated: true,
+    heroImage: sectionHero.papers,
   },
   podcast: {
     listPath: "/podcasts",
@@ -37,9 +42,12 @@ const CONTENT_META = {
     lede: "Conversations on AI-enabled, patient-centric care.",
     emptyNoun: "episodes",
     itemTitle: "Episode",
+    kicker: "Podcast",
     mediaLabel: "Episode URL",
     mediaCta: "Listen",
     gated: false,
+    heroImage: sectionHero.podcasts,
+    heroPosition: "58% 60%",
   },
 };
 
@@ -178,7 +186,7 @@ export function ContentListPage({ type }) {
 
   return (
     <>
-      <PageHero title={meta.listTitle}>
+      <PageHero title={meta.listTitle} image={meta.heroImage} imagePosition={meta.heroPosition}>
         <p className="lede">{meta.lede}</p>
       </PageHero>
       <section className="section">
@@ -458,7 +466,7 @@ export function ContentDetailPage({ type }) {
 
   return (
     <>
-      <PageHero title={item?.title || meta.itemTitle}>
+      <PageHero kicker={meta.kicker} title={item?.title || meta.itemTitle} image={meta.heroImage} imagePosition={meta.heroPosition}>
         {item?.subtitle ? <h4>{item.subtitle}</h4> : null}
       </PageHero>
       <section className="section">

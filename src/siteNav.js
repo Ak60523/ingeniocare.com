@@ -1,6 +1,17 @@
 import { customersPath } from "./data/segments.js";
 import { solutionsPath } from "./data/products.js";
 
+export const sectionHero = {
+  home: "/assets/images/home-hero.jpg",
+  customers: "/assets/images/customers-hero.jpg",
+  solutions: "/assets/images/solutions-hero.jpg",
+  about: "/assets/images/about-hero.jpg",
+  blogs: "/assets/images/blogs-hero.jpg",
+  papers: "/assets/images/papers-hero.jpg",
+  podcasts: "/assets/images/podcasts-hero.jpg",
+  news: "/assets/images/news-hero.jpg",
+};
+
 export const primaryNav = [
   { id: "home", to: "/", label: "Home", exact: true, icon: "home" },
   { id: "customers", to: customersPath, label: "Customers", icon: "customers" },

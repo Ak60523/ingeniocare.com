@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { api } from "../api";
-import { fallbackNews } from "../data/news";
 import { contentStatusLabel } from "../roles";
 import { seedSiteContent } from "../../server/contentSeed.js";
 import { contentEditPath, footerNav, isSitePathActive, navPath, primaryNav } from "../siteNav.js";
@@ -45,7 +44,7 @@ export default function SettingsPages({ collapsed = false }) {
         .content("podcast")
         .then((data) => data.items || [])
         .catch(() => seedSiteContent.filter((item) => item.type === "podcast")),
-      api.news().then((data) => data.articles || []).catch(() => fallbackNews),
+      api.news().then((data) => data.articles || []).catch(() => []),
     ]).then(([nextBlogs, nextPapers, nextPodcasts, nextNews]) => {
       if (cancelled) return;
       setBlogs(nextBlogs);

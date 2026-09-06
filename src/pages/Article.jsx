@@ -1,30 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { api } from "../api";
-import { seedArticles } from "../../server/articles.js";
 import PageHero from "../components/PageHero.jsx";
 import { StartWithAiSection, WriteSection } from "../components/content/AiAssist.jsx";
 import ArticleBody from "../components/content/ArticleBody.jsx";
 import ArticleBodyEditor from "../components/content/ArticleBodyEditor.jsx";
 import { bodyHasContent, ensureEditableBlocks, serializeBody } from "../../server/contentBody.js";
 import { useAuth } from "../AuthContext.jsx";
+import { sectionHero } from "../siteNav.js";
 import NotFound from "./NotFound.jsx";
 import { AdminBar, ContentBrowseNav, StatusChip } from "./ContentPages.jsx";
-
-function localArticle(slug) {
-  return seedArticles.find((item) => item.slug === slug || item.aliases.includes(slug)) || null;
-}
-
-function newsNeighbors(slug, items) {
-  const index = items.findIndex((item) => item.slug === slug || (item.aliases || []).includes(slug));
-  if (index < 0) return { newer: null, older: null };
-  const newer = index > 0 ? items[index - 1] : null;
-  const older = index < items.length - 1 ? items[index + 1] : null;
-  return {
-    newer: newer ? { slug: newer.slug, title: newer.title } : null,
-    older: older ? { slug: older.slug, title: older.title } : null,
-  };
-}
 
 function formFromArticle(article) {
   return {
@@ -65,16 +50,7 @@ export default function Article() {
       setNewer(data.newer || null);
       setOlder(data.older || null);
     } catch {
-      const fallback = localArticle(slug);
-      if (fallback) {
-        const neighbors = newsNeighbors(slug, seedArticles);
-        setArticle(fallback);
-        setForm(formFromArticle(fallback));
-        setNewer(neighbors.newer);
-        setOlder(neighbors.older);
-      } else {
-        setMissing(true);
-      }
+      setMissing(true);
     }
   }
 
@@ -191,7 +167,7 @@ export default function Article() {
 
   return (
     <>
-      <PageHero title={article.headline || article.title}>
+      <PageHero kicker="News" title={article.headline || article.title} image={sectionHero.news} imagePosition="58% 18%">
         <h4>{article.dateLabel || article.date_label}</h4>
       </PageHero>
       <section className="section">
