@@ -1,16 +1,15 @@
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: ingeniocare-mysql
+  postgres:
+    image: postgres:16
+    container_name: ingeniocare-postgres
     environment:
-      MYSQL_ROOT_PASSWORD: ingenio
-      MYSQL_DATABASE: ingeniocare
-      MYSQL_USER: ingenio
-      MYSQL_PASSWORD: ingenio
+      POSTGRES_USER: ingenio
+      POSTGRES_PASSWORD: ingenio
+      POSTGRES_DB: ingeniocare
     ports:
-      - "3306:3306"
+      - "5432:5432"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
+      test: ["CMD-SHELL", "pg_isready -U ingenio -d ingeniocare"]
       interval: 5s
       timeout: 5s
       retries: 20

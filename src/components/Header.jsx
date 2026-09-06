@@ -1,49 +1,51 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../AuthContext.jsx";
-
-const primary = [
-  ["/", "Home"],
-  ["/network", "Network"],
-  ["/blogs", "Blogs"],
-  ["/news", "News"],
-  ["/about-us", "About Us"],
-];
-
-const moreLinks = [
-  ["/physician-advisory-board", "Physician Advisory Board"],
-  ["/healthcare-advisory-board", "Healthcare Advisory Board"],
-  ["/contact-us", "Contact Us"],
-];
+import { headerNav, isSitePathActive } from "../siteNav.js";
+import { growgentSignupHref } from "../data/products.js";
 
 export default function Header() {
   const { user, signOut } = useAuth();
+  const { pathname, hash } = useLocation();
   const [open, setOpen] = useState(false);
-  const [moreOpen, setMoreOpen] = useState(false);
-  const moreRef = useRef(null);
+  const [openMenu, setOpenMenu] = useState(null);
+  const navRef = useRef(null);
 
   useEffect(() => {
     function onClick(event) {
-      if (moreRef.current && !moreRef.current.contains(event.target)) {
-        setMoreOpen(false);
+      if (navRef.current && !navRef.current.contains(event.target)) {
+        setOpenMenu(null);
       }
     }
     document.addEventListener("click", onClick);
     return () => document.removeEventListener("click", onClick);
   }, []);
 
+  function closeAll() {
+    setOpen(false);
+    setOpenMenu(null);
+  }
+
+  function linkClass(to, isActive) {
+    const href = String(to || "");
+    if (href.includes("#")) {
+      const [path, itemHash] = href.split("#");
+      return pathname === path && hash === `#${itemHash}` ? "active" : undefined;
+    }
+    return isActive ? "active" : undefined;
+  }
+
   return (
     <>
       <div className="banner">
-        <a href="https://ingeniocare.ai" target="_blank" rel="noopener noreferrer">
-          <p>Join us at HLTH Conference in Vegas October 19-22. Digital Health booth 1760-46</p>
+        <a href={growgentSignupHref} target="_blank" rel="noopener noreferrer">
+          Sign up for an AI Receptionist at Growgent.ai →
         </a>
       </div>
       <header className="site-header">
-        <div className={`wrap header-inner${open ? " nav-open" : ""}`}>
-          <Link className="brand" to="/" onClick={() => setOpen(false)}>
+        <div className={`wrap header-inner${open ? " nav-open" : ""}`} ref={navRef}>
+          <Link className="brand" to="/" onClick={closeAll}>
             <img src="/assets/images/logo.png" alt="Ingenio Care" />
-            <span>Ingenio Care, Inc.</span>
           </Link>
           <button
             className="menu-toggle"
@@ -54,43 +56,95 @@ export default function Header() {
             Menu
           </button>
           <nav className="nav">
-            {primary.map(([to, label]) => (
-              <NavLink
-                key={to}
-                to={to}
-                end={to === "/"}
-                className={({ isActive }) => (isActive ? "active" : undefined)}
-                onClick={() => setOpen(false)}
-              >
-                {label}
-              </NavLink>
-            ))}
-            <div className={`nav-more${moreOpen ? " open" : ""}`} ref={moreRef}>
-              <button type="button" onClick={() => setMoreOpen((value) => !value)}>
-                More
-              </button>
-              <div className="nav-more-menu">
-                {moreLinks.map(([to, label]) => (
-                  <NavLink
-                    key={to}
-                    to={to}
-                    className={({ isActive }) => (isActive ? "active" : undefined)}
-                    onClick={() => {
-                      setMoreOpen(false);
-                      setOpen(false);
-                    }}
+            {headerNav.map((item) => {
+              if (item.children?.length) {
+                const sectionActive = isSitePathActive(pathname, item);
+                const expanded = openMenu === item.id;
+                const mega = item.children.some((child) => child.links?.length);
+                return (
+                  <div
+                    key={item.id}
+                    className={`nav-more${expanded ? " open" : ""}${mega ? " is-mega" : ""}`}
                   >
-                    {label}
-                  </NavLink>
-                ))}
-              </div>
-            </div>
+                    <button
+                      type="button"
+                      className={sectionActive ? "active" : undefined}
+                      aria-expanded={expanded}
+                      aria-haspopup="menu"
+                      onClick={() => setOpenMenu((current) => (current === item.id ? null : item.id))}
+                    >
+                      {item.label}
+                    </button>
+                    <div className={`nav-more-menu${mega ? " is-mega" : ""}`} role="menu">
+                      {mega
+                        ? item.children.map((child) => (
+                            <div key={child.id} className="nav-mega-col">
+                              <NavLink
+                                to={child.to}
+                                end={child.exact}
+                                role="menuitem"
+                                className={({ isActive }) =>
+                                  `nav-mega-heading${isActive ? " active" : ""}`
+                                }
+                                onClick={closeAll}
+                              >
+                                {child.label}
+                              </NavLink>
+                              {(child.links || []).map((link) => (
+                                <NavLink
+                                  key={link.id}
+                                  to={link.to}
+                                  role="menuitem"
+                                  className={({ isActive }) => linkClass(link.to, isActive)}
+                                  onClick={closeAll}
+                                >
+                                  {link.label}
+                                </NavLink>
+                              ))}
+                            </div>
+                          ))
+                        : item.children.map((child) => (
+                            <NavLink
+                              key={child.id}
+                              to={child.to}
+                              end={child.exact}
+                              role="menuitem"
+                              className={({ isActive }) => (isActive ? "active" : undefined)}
+                              onClick={closeAll}
+                            >
+                              {child.label}
+                            </NavLink>
+                          ))}
+                    </div>
+                  </div>
+                );
+              }
+
+              return (
+                <NavLink
+                  key={item.id}
+                  to={item.to}
+                  end={item.exact || item.to === "/"}
+                  className={({ isActive }) => (isActive ? "active" : undefined)}
+                  onClick={closeAll}
+                >
+                  {item.label}
+                </NavLink>
+              );
+            })}
             {user ? (
-              <button className="account-link" type="button" onClick={signOut}>
+              <button
+                className="nav-account"
+                type="button"
+                onClick={() => {
+                  closeAll();
+                  signOut();
+                }}
+              >
                 Sign Out
               </button>
             ) : (
-              <NavLink className="account-link" to="/m/account" onClick={() => setOpen(false)}>
+              <NavLink className="nav-account" to="/m/account" onClick={closeAll}>
                 Sign In
               </NavLink>
             )}

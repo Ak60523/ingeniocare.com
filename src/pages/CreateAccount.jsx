@@ -21,8 +21,8 @@ export default function CreateAccount() {
         email: form.get("email"),
         password: form.get("password"),
       });
-      setSession(data.user, data.token);
-      navigate("/m/account");
+      setSession(data);
+      navigate("/");
     } catch (err) {
       setError(err.message);
     } finally {

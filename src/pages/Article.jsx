@@ -1,45 +1,182 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { api } from "../api";
 import { seedArticles } from "../../server/articles.js";
 import PageHero from "../components/PageHero.jsx";
+import { StartWithAiSection, WriteSection } from "../components/content/AiAssist.jsx";
+import ArticleBody from "../components/content/ArticleBody.jsx";
+import ArticleBodyEditor from "../components/content/ArticleBodyEditor.jsx";
+import { bodyHasContent, ensureEditableBlocks, serializeBody } from "../../server/contentBody.js";
+import { useAuth } from "../AuthContext.jsx";
 import NotFound from "./NotFound.jsx";
+import { AdminBar, ContentBrowseNav, StatusChip } from "./ContentPages.jsx";
 
 function localArticle(slug) {
-  return (
-    seedArticles.find((item) => item.slug === slug || item.aliases.includes(slug)) ||
-    null
-  );
+  return seedArticles.find((item) => item.slug === slug || item.aliases.includes(slug)) || null;
+}
+
+function newsNeighbors(slug, items) {
+  const index = items.findIndex((item) => item.slug === slug || (item.aliases || []).includes(slug));
+  if (index < 0) return { newer: null, older: null };
+  const newer = index > 0 ? items[index - 1] : null;
+  const older = index < items.length - 1 ? items[index + 1] : null;
+  return {
+    newer: newer ? { slug: newer.slug, title: newer.title } : null,
+    older: older ? { slug: older.slug, title: older.title } : null,
+  };
+}
+
+function formFromArticle(article) {
+  return {
+    title: article.title || "",
+    slug: article.slug || "",
+    headline: article.headline || "",
+    dateLabel: article.dateLabel || article.date_label || "",
+    summary: article.summary || "",
+    blocks: ensureEditableBlocks(article.body),
+  };
 }
 
 export default function Article() {
   const { slug } = useParams();
+  const { canManageContent } = useAuth();
+  const [params, setParams] = useSearchParams();
+  const mode = params.get("mode") === "edit" ? "edit" : "preview";
+  const isEdit = canManageContent && mode === "edit";
   const [article, setArticle] = useState(null);
+  const [form, setForm] = useState(null);
+  const [newer, setNewer] = useState(null);
+  const [older, setOlder] = useState(null);
   const [missing, setMissing] = useState(false);
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  async function load() {
+    setArticle(null);
+    setForm(null);
+    setNewer(null);
+    setOlder(null);
+    setMissing(false);
+    setError("");
+    try {
+      const data = await api.article(slug);
+      setArticle(data.article);
+      setForm(formFromArticle(data.article));
+      setNewer(data.newer || null);
+      setOlder(data.older || null);
+    } catch {
+      const fallback = localArticle(slug);
+      if (fallback) {
+        const neighbors = newsNeighbors(slug, seedArticles);
+        setArticle(fallback);
+        setForm(formFromArticle(fallback));
+        setNewer(neighbors.newer);
+        setOlder(neighbors.older);
+      } else {
+        setMissing(true);
+      }
+    }
+  }
 
   useEffect(() => {
-    let cancelled = false;
-    setArticle(null);
-    setMissing(false);
-    api
-      .article(slug)
-      .then((data) => {
-        if (!cancelled) setArticle(data.article);
-      })
-      .catch(() => {
-        if (!cancelled) {
-          const fallback = localArticle(slug);
-          if (fallback) setArticle(fallback);
-          else setMissing(true);
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
+    load();
   }, [slug]);
 
+  function updateField(name, value) {
+    setForm((current) => ({ ...current, [name]: value }));
+  }
+
+  async function save(event) {
+    event.preventDefault();
+    if (!article?.id || !form) return;
+    setBusy(true);
+    try {
+      const data = await api.updateNews(article.id, {
+        ...form,
+        body: serializeBody(form.blocks),
+      });
+      setArticle(data.article);
+      setForm(formFromArticle(data.article));
+      setError("");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function setStatus(status) {
+    if (!article?.id) return;
+    setBusy(true);
+    try {
+      const data = await api.updateNews(article.id, { status });
+      setArticle(data.article);
+      setError("");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function applyDraft(draft) {
+    if (!article?.id) return;
+    const data = await api.updateNews(article.id, {
+      title: draft.title || form.title,
+      headline: draft.headline || draft.subtitle || form.headline,
+      dateLabel: draft.dateLabel || form.dateLabel,
+      summary: draft.summary ?? form.summary,
+      body: draft.body || serializeBody(form.blocks),
+      slug: form.slug,
+    });
+    setArticle(data.article);
+    setForm(formFromArticle(data.article));
+  }
+
+  async function generate(instruction = "", generateMode = "write") {
+    if (!article?.id || !form) return;
+    setBusy(true);
+    setError("");
+    try {
+      const guidance = String(instruction || "").trim() || undefined;
+      let draft = {};
+      const current = {
+        type: "news",
+        title: form.title,
+        subtitle: form.headline,
+        headline: form.headline,
+        dateLabel: form.dateLabel,
+        summary: form.summary,
+        body: serializeBody(form.blocks),
+        slug: form.slug,
+        status: article.status,
+      };
+      if (generateMode === "refine") {
+        const rev = await api.reviseContent({
+          instruction: guidance || "Refine the press release for clarity and structure.",
+          draft: current,
+        });
+        draft = rev.draft || {};
+      } else {
+        const gen = await api.generateContent({
+          type: "news",
+          topicTitle: form.title,
+          topicSummary: form.summary || undefined,
+          instruction: guidance,
+          draft: current,
+        });
+        draft = gen.draft || {};
+      }
+      await applyDraft(draft);
+    } catch (err) {
+      setError(err.message || (generateMode === "refine" ? "Refine failed" : "Write failed"));
+    } finally {
+      setBusy(false);
+    }
+  }
+
   if (missing) return <NotFound />;
-  if (!article) {
+  if (!article || !form) {
     return (
       <section className="section">
         <div className="wrap">
@@ -49,13 +186,120 @@ export default function Article() {
     );
   }
 
+  const isPublished = String(article.status || "published").toLowerCase() === "published";
+  const listHref = canManageContent ? "/news?mode=edit" : "/news";
+
   return (
     <>
       <PageHero title={article.headline || article.title}>
         <h4>{article.dateLabel || article.date_label}</h4>
       </PageHero>
       <section className="section">
-        <div className="wrap article" dangerouslySetInnerHTML={{ __html: article.body }} />
+        <div className="wrap content-sheet">
+          <ContentBrowseNav
+            previousHref={newer?.slug ? `/${newer.slug}` : null}
+            indexHref={listHref}
+            nextHref={older?.slug ? `/${older.slug}` : null}
+          />
+
+          {canManageContent ? (
+            <AdminBar mode={isEdit ? "edit" : "preview"} onChange={(next) => setParams({ mode: next })} />
+          ) : null}
+
+          {error ? <p className="form-error">{error}</p> : null}
+
+          {isEdit && article.id ? (
+            <form className="content-editor" onSubmit={save}>
+              <div className="owner-row-actions">
+                <StatusChip item={{ ...article, status: article.status || "published" }} />
+                {!isPublished ? (
+                  <button className="btn ghost" type="button" disabled={busy} onClick={() => setStatus("published")}>
+                    Publish
+                  </button>
+                ) : (
+                  <button className="btn ghost" type="button" disabled={busy} onClick={() => setStatus("draft")}>
+                    Unpublish
+                  </button>
+                )}
+                <button className="btn ghost" type="button" disabled={busy} onClick={() => setStatus("archived")}>
+                  Archive
+                </button>
+              </div>
+              {!isPublished ? (
+                <StartWithAiSection
+                  busy={busy}
+                  disabled={busy}
+                  contentType="news"
+                  currentTitle={form.title}
+                  currentSubtitle={form.headline}
+                  onSelect={async ({ title, subtitle }) => {
+                    setBusy(true);
+                    try {
+                      await applyDraft({
+                        title,
+                        headline: subtitle,
+                        summary: form.summary,
+                        body: serializeBody(form.blocks),
+                        dateLabel: form.dateLabel,
+                      });
+                    } catch (err) {
+                      setError(err.message);
+                    } finally {
+                      setBusy(false);
+                    }
+                  }}
+                />
+              ) : null}
+              <label>
+                Headline
+                <input value={form.headline} onChange={(event) => updateField("headline", event.target.value)} />
+              </label>
+              <label>
+                Date label
+                <input value={form.dateLabel} onChange={(event) => updateField("dateLabel", event.target.value)} />
+              </label>
+              <label>
+                Title
+                <input value={form.title} onChange={(event) => updateField("title", event.target.value)} required />
+              </label>
+              <label>
+                Slug
+                <input value={form.slug} onChange={(event) => updateField("slug", event.target.value)} required />
+              </label>
+              <label>
+                Summary
+                <textarea rows="3" value={form.summary} onChange={(event) => updateField("summary", event.target.value)} />
+              </label>
+              {!isPublished ? (
+                <WriteSection
+                  busy={busy}
+                  disabled={busy || isPublished}
+                  hasBody={bodyHasContent(form.blocks)}
+                  onWrite={(instruction) => generate(instruction, "write")}
+                  onRefine={(instruction) => generate(instruction, "refine")}
+                />
+              ) : (
+                <p className="form-note">Unpublish to rewrite or refine with AI.</p>
+              )}
+              <ArticleBodyEditor
+                value={form.blocks}
+                contentId={article.id}
+                disabled={busy}
+                onChange={(blocks) => updateField("blocks", blocks)}
+              />
+              <button className="btn" type="submit" disabled={busy}>
+                {busy ? "Saving…" : "Save"}
+              </button>
+            </form>
+          ) : (
+            <article className="article">
+              <ArticleBody body={article.body} />
+            </article>
+          )}
+          {isEdit && !article.id ? (
+            <p className="form-note">Connect Postgres to save and use AI editing on this article.</p>
+          ) : null}
+        </div>
       </section>
     </>
   );

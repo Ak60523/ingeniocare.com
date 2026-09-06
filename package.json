@@ -9,22 +9,32 @@
     "dev:api": "node --watch server/index.js",
     "build": "vite build",
     "preview": "vite preview",
-    "start:api": "node server/index.js"
+    "start:api": "node server/index.js",
+    "sandbox": "ampx sandbox"
   },
   "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.1127.0",
+    "@aws-sdk/client-s3": "^3.1127.0",
+    "@aws-sdk/client-secrets-manager": "^3.1045.0",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "mysql2": "^3.14.0",
+    "pg": "^8.23.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.6.0"
+    "react-router-dom": "^7.6.0",
+    "serverless-http": "^3.2.0"
   },
   "devDependencies": {
+    "@aws-amplify/backend": "^1.23.0",
+    "@aws-amplify/backend-cli": "^1.8.3",
+    "@types/aws-lambda": "^8.10.152",
+    "@types/node": "^22.13.10",
     "@vitejs/plugin-react": "^4.5.2",
     "concurrently": "^9.1.2",
+    "typescript": "^5.9.3",
     "vite": "^6.3.5"
   }
 }

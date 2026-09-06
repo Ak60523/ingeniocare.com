@@ -1,7 +1,8 @@
-node_modules/
-dist/
+.amplify/
 .env
 .DS_Store
 Thumbs.db
 *.log
 _preview/
+public/content-images/*
+!public/content-images/.gitkeep

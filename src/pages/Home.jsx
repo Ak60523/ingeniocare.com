@@ -1,230 +1,207 @@
 import { Link } from "react-router-dom";
+import PageHero from "../components/PageHero.jsx";
+import { segmentHref } from "../data/segments.js";
 
 export default function Home() {
   return (
     <>
-      <section className="hero" style={{ backgroundImage: "url('/assets/images/hero.jpg')" }}>
-        <div className="wrap hero-inner">
-          <p className="kicker">Ai Enabled, Patient Centric Digital Health Network</p>
-          <ul>
-            <li>Provide Instant Patient Access</li>
-            <li>Increase Provider Efficiency</li>
-            <li>Seamless Care Coordination</li>
-            <li>Continuity of care</li>
-            <li>Customized Care Plan</li>
-          </ul>
-          <h1>Welcome to Ingenio Care</h1>
-          <p>
-            Efficient Patient Centric Digital Health Network to Improve Quality of Care While Reducing
-            Cost by Over 25% and Increasing Provider Income.
-          </p>
-          <Link className="btn light" to="/network">
-            Find out more
+      <PageHero variant="home" title="AI-Powered Care That Keeps Patients and Care Teams Connected">
+        <p className="home-hero-lede">
+          Ingenio Care brings digital health, clinical expertise, and intelligent care coordination
+          into one patient-centered network.
+        </p>
+        <div className="home-hero-actions">
+          <Link className="btn sky" to="/solutions">
+            See Solutions
+          </Link>
+          <Link className="btn light" to={segmentHref({ slug: "plans" })}>
+            For Plans
+          </Link>
+          <Link className="btn light" to={segmentHref({ slug: "providers" })}>
+            For Providers
+          </Link>
+          <Link className="btn light" to={segmentHref({ slug: "employers" })}>
+            For Employers
           </Link>
         </div>
-      </section>
-
-      <section className="section">
+      </PageHero>
+      <section className="section alt home-intro" id="pillars">
         <div className="wrap">
-          <h3>News Flash</h3>
-          <div className="news-item">
-            <Link to="/7-08-2025-ingenio-care-1">
-              Advisory Board expands with top clinical and business experts guiding Ingenio Care’s
-              AI-enabled platform for connected, patient-centric care
-            </Link>
-          </div>
+          <h2>A Digital Health Network That Coordinates Care When It’s Needed</h2>
+          <p className="lede">
+            Ingenio Care connects patients to the right clinicians, helps close care gaps, coordinates
+            referrals, and supports care beyond the clinical encounter—while reducing administrative
+            burden for healthcare organizations.
+          </p>
+          <ol className="home-pillars">
+            <li>
+              <span className="pillar-step">01</span>
+              <h3>Patient empowerment</h3>
+              <p>
+                Connect patients to available care and help them navigate to the right provider at the
+                right time.
+              </p>
+            </li>
+            <li>
+              <span className="pillar-step">02</span>
+              <h3>Provider enablement</h3>
+              <p>
+                Give clinicians the referrals, visibility, and care-team communication they need to
+                care for patients across the journey.
+              </p>
+            </li>
+            <li>
+              <span className="pillar-step">03</span>
+              <h3>Care coordination and continuity</h3>
+              <p>
+                Keep referrals, care plans, and follow-up connected so patients stay in a continuous
+                journey across settings—not a series of disconnected visits.
+              </p>
+            </li>
+            <li>
+              <span className="pillar-step">04</span>
+              <h3>Better outcomes</h3>
+              <p>
+                Close care gaps, strengthen continuity, and support care beyond the clinical encounter.
+              </p>
+            </li>
+            <li>
+              <span className="pillar-step">05</span>
+              <h3>Lower cost</h3>
+              <p>
+                Improve utilization by matching patients to the right provider, keeping them engaged,
+                and supporting care-plan adherence.
+              </p>
+            </li>
+          </ol>
         </div>
       </section>
 
+      <section className="section">
+        <div className="wrap grid-2">
+          <div>
+            <h2>A Patient-Centric Digital Health Network</h2>
+            <h4>A patient-centric platform to optimize healthcare.</h4>
+            <p>
+              Healthcare costs keep rising, even after a decade of population-health and PCP-centric
+              programs. Ingenio Care focuses on a narrower job: find the patient who needs care, and
+              deliver it quickly through a coordinated provider network—not another disconnected
+              portal.
+            </p>
+          </div>
+          <div className="media-block is-illustration">
+            <img src="/assets/images/delivery-network.png" alt="Digital health network" />
+          </div>
+        </div>
+      </section>
       <section className="section alt">
-        <div className="wrap grid-2">
-          <div>
-            <h2>A Patient Centric Digital Health Network</h2>
-            <p>
-              We are building an Ai enabled patient centric digital health network to provide
-              personalized care for each patient. The network is built upon our proprietary platform
-              to implement processes that will minimize the administrative burden and seamlessly
-              connect patient to the providers, while enabling plans to monitor and provide oversite
-              on utilization.
-            </p>
-            <ul>
-              <li>
-                Our platform leverages an AI-enabled Patient Care Orchestration Model (PCOM) to
-                facilitate care delivery when needed, of the type of care needed with a higher quality
-                while reducing cost.
-              </li>
-              <li>
-                Our patient access solution optimizes patient-physician engagement making patient
-                access instant by tapping unused provider capacity. The solution seamlessly connects
-                providers to patients over an Ai powered channel which leverages Ai for documentation
-                and delivers real-time suggestions to physicians. We expect our model to reduce cost
-                of care while increasing physician income.
-              </li>
-              <li>
-                Eventually our network will create efficiency throughout the care continuum by
-                removing barriers, adoption of best-in-class protocols and patient centric provider
-                incentives.
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h4>Our Approach</h4>
-            <p>
-              <em>
-                Built on an AI-enabled Patient-centric Care Orchestration Model, our solution is
-                designed to:
-              </em>
-            </p>
-            <ul>
-              <li>improve efficiency</li>
-              <li>reduce utilization</li>
-              <li>reduce average unit price</li>
-            </ul>
-            <Link className="btn" to="/contact-us">
-              Schedule a call
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="wrap">
-          <h2 className="center">Serving Our customers, Our Partners</h2>
-          <div className="grid-cards" style={{ marginTop: "2rem" }}>
-            <article className="card">
-              <img src="/assets/images/employer.jpg" alt="Self-Insured Employers" />
-              <div className="card-body">
-                <h4>Self-Insured Employers</h4>
-                <p>
-                  When your colleagues run into a health concern during a busy day, who do they turn
-                  to? They do not have easy options. Our healthcare network will provide them an
-                  instant virtual consult with the right specialist within the plan who can guide them
-                  to efficiently address their concern. No additional cost to the employer or the
-                  employee!
-                </p>
-              </div>
-            </article>
-            <article className="card">
-              <img src="/assets/images/health-plans.jpg" alt="Health Plans" />
-              <div className="card-body">
-                <h4>Health Plans</h4>
-                <p>
-                  For Health Plans, we create instant virtual visits for members by connecting to a
-                  local provider within the network. Once connected, our platform can guide the
-                  patient through the plan's network, while the plan provides timely and seamless Ai
-                  assisted utilization management.
-                </p>
-              </div>
-            </article>
-            <article className="card">
-              <img src="/assets/images/health-systems.jpg" alt="Health Systems" />
-              <div className="card-body">
-                <h4>Health Systems</h4>
-                <p>
-                  Our key solution for health plans is to connect patients with the right provider
-                  instantly and efficiently. By using our solution health system can achieve a great
-                  capacity utilization and provider efficiency resulting in increased net operating
-                  margin. Our end-to-end care model can further deliver higher quality/ cost efficient
-                  care with greater value-based reimbursements.
-                </p>
-              </div>
-            </article>
-            <article className="card">
-              <img src="/assets/images/home-health.jpg" alt="Home Health" />
-              <div className="card-body">
-                <h4>Home Health</h4>
-                <p>
-                  When in home health setting, patients may often need to talk to a provider with
-                  specific questions or to address a symptom. We help home health patients with
-                  real-time access to providers who can guide them to the right solution saving
-                  potential admission. We are also building an Ai bot powered with patient specific
-                  instructions to monitor patient progress and send instant alerts to attending
-                  providers, if needed.
-                </p>
-              </div>
-            </article>
-            <article className="card">
-              <img src="/assets/images/assisted-living.jpg" alt="Assisted Living, SKNF, and Hospice" />
-              <div className="card-body">
-                <h4>Assisted Living/ SKNF/Hospice</h4>
-                <p>
-                  We work with you to develop care plans for your residents that leverage virtual
-                  visits, combined with in-person visits to deliver a high-quality patient experience.
-                </p>
-                <p>
-                  We support customized care plan with real-time access to specialty care, for example
-                  behavior health provider, to address unexpected events. Our model uses nurses
-                  available onsite to deliver complete healthcare solution.
-                </p>
-              </div>
-            </article>
-            <article className="card">
-              <img src="/assets/images/fqhc.png" alt="FQHC" />
-              <div className="card-body">
-                <h4>FQHC</h4>
-                <p>
-                  When caring for underserved population, finding timely specialist consultation is a
-                  challenge. Our network of providers brings a virtual specialist consult to your
-                  patient instantly making care coordination a breeze. Our Ai documenter can further
-                  improve productivity of your providers.
-                </p>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section className="section navy">
-        <div className="wrap grid-2">
-          <div>
-            <h2>We invite providers to join our network</h2>
-            <h4>Take the next step towards a patient centric, higher quality and efficient healthcare network.</h4>
-            <ul>
-              <li>Receive real-time referrals from our network for patients to expand your panel.</li>
-              <li>Ai driven documentation coding and claims processing.</li>
-              <li>Ai driven patient care suggestions.</li>
-              <li>Seamless outbound and inbound referrals</li>
-              <li>Get patient feedback and improve continuity of care.</li>
-              <li>And the best thing is that the enrollment is FREE.</li>
-            </ul>
-            <a className="btn gold" href="https://ingeniocare.ai" target="_blank" rel="noopener noreferrer">
-              Enroll Today and start getting new patients
-            </a>
-          </div>
-          <div className="media-block">
-            <a href="https://ingeniocare.ai" target="_blank" rel="noopener noreferrer">
-              <img src="/assets/images/enroll.jpg" alt="Provider enrollment" />
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
         <div className="wrap grid-2 reverse">
-          <div className="media-block">
-            <img src="/assets/images/invest.jpg" alt="Invest with Ingenio Care" />
+          <div className="media-block is-illustration">
+            <img src="/assets/images/patient-access.png" alt="Patient access" />
           </div>
           <div>
-            <h2>Invest with Us.</h2>
-            <h4>An exciting opportunity to participate at an early stage in a Startup with TAM of over $500B.</h4>
+            <h2>Solve Patient Access</h2>
+            <h4>Connect patients to the right provider when care is needed.</h4>
             <p>
-              <Link to="/4-19-2024-ingenio-care-1">
-                News: Ingenio Care Closes Pre-Seed Funding to Launch AI-Enabled, Patient-Centric
-                Digital Health Network Pilots Now Open for IPAs, Employers, and Health Plans
-              </Link>
+              When access is slow, conditions worsen and cost shows up later—in the ER, out of
+              network, and in avoidable follow-up. Today’s model hides unused capacity and stretches
+              referrals across phone trees, so it takes too long to get an appointment.
             </p>
             <p>
-              We are taking bold steps to solving some of the most complex challenges facing our
-              healthcare system with an innovative approach that enables providers to seamlessly
-              engage with patients. Our approach is fundamentally different than our competitors.
-              While there are risks, we believe returns will be exponential. If you are with an
-              early-stage VC firm, <Link to="/contact-us">contact us</Link>. we will be happy to walk
-              you through the opportunity.
+              Ingenio Care connects patients to available clinicians in real time, including unused
+              sessions across the network. Instant virtual consults can sit in front of home care,
+              SNFs, ERs, clinics, and hospitals—so the first step is a visit, not another hold. Faster
+              access is how quality and cost both move in the right direction.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section className="section">
+        <div className="wrap grid-2">
+          <div>
+            <h2>Increase Provider Efficiency and Income</h2>
+            <h4>Give clinicians time back, a fuller panel, and a clearer path to earnings.</h4>
+            <p>
+              Too much of the visit is spent reconstructing history and entering data that
+              administrators need but the patient does not. An AI physician assistant surfaces what is
+              clinically relevant and drafts the note and coding support, so the physician spends that
+              time with the same patient—or with the next one.
             </p>
             <p>
-              <a className="btn" href="mailto:alex.kumar@ingeniocare.com?subject=Investor%20Interest">
-                <strong>Contact us</strong>
-              </a>
+              Providers on the Ingenio Care network can fill unused sessions with inbound demand,
+              expand their panel, and raise income without adding a matching load of phone tag. Quality
+              and cost scorecards apply across specialties, so bonuses follow the care that was
+              actually delivered—not only what the primary care office documented.
+            </p>
+          </div>
+          <div className="media-block is-illustration">
+            <img src="/assets/images/provider-efficiency.png" alt="Provider efficiency" />
+          </div>
+        </div>
+      </section>
+      <section className="section alt">
+        <div className="wrap grid-2 reverse">
+          <div className="media-block is-illustration">
+            <img src="/assets/images/platform.png" alt="Authorizations platform" />
+          </div>
+          <div>
+            <h2>Seamless Authorizations / Utilization Management</h2>
+            <h4>Move pre-auth into the care stream.</h4>
+            <p>
+              Prior auth pulls physicians off the patient and delays care. Ingenio Care is built to
+              sit between plans and providers, sharing data in-stream so AI can help complete the
+              request. The aim is fewer stalled cases—and, over time, plan guidance that arrives
+              during the visit, not after.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section className="section">
+        <div className="wrap grid-2">
+          <div>
+            <h2>Care Orchestration to Optimize Delivery</h2>
+            <h4>Use the clinicians, sites, and pharmacies you already have.</h4>
+            <p>
+              Every patient journey begins with a real-time virtual consult. A substantial share of
+              cases can be resolved through that digital gateway before anyone is sent to a clinic or
+              hospital.
+            </p>
+            <p>
+              The care plan is owned by the physician responsible for care. The PCP coordinates
+              wellness and chronic care; when the condition requires it, a specialist owns the plan
+              and recovery.
+            </p>
+            <p>
+              For high-cost, frequent surgeries, the network can offer surgeon-led, fixed-price
+              bundles instead of hospital-led packages. Differentiated process and tools are how those
+              bundles stay higher quality and lower cost than what is widely available today.
+            </p>
+            <p>
+              Pharmacy becomes a practical hub for coordination and medication adherence, instead of a
+              remote, centrally located care-coordinator pool that rarely reaches the patient.
+            </p>
+          </div>
+          <div className="media-block is-illustration">
+            <img src="/assets/images/care-orchestration.png" alt="Care orchestration" />
+          </div>
+        </div>
+      </section>
+      <section className="section alt">
+        <div className="wrap grid-2 reverse">
+          <div className="media-block is-illustration">
+            <img src="/assets/images/cost-quality.png" alt="Quality and cost of care" />
+          </div>
+          <div>
+            <h2>Quality and Cost of Care</h2>
+            <h4>Better access, continuity, and use of capacity.</h4>
+            <p>
+              The model combines economics, operations, and technology: use idle capacity, keep the
+              network tightly coordinated, and align incentives so patients, providers, and payers
+              move in the same direction.
+            </p>
+            <p>
+              <Link to="/solutions">See the solutions that make the network work</Link>.{" "}
+              <Link to="/customers">See who we serve</Link>.
             </p>
           </div>
         </div>

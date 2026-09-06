@@ -1,0 +1,15 @@
+[Unit]
+Description=Ingenio Care API
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/ingeniocare.com-1
+EnvironmentFile=/home/ubuntu/ingeniocare.com-1/.env
+ExecStart=/usr/bin/node server/index.js
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

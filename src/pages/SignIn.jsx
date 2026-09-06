@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { api } from "../api";
 import { useAuth } from "../AuthContext.jsx";
+import { useSettings } from "../SettingsContext.jsx";
 import PageHero from "../components/PageHero.jsx";
 
 export default function SignIn() {
-  const { user, setSession } = useAuth();
+  const { user, setSession, role } = useAuth();
+  const { openSettings } = useSettings();
   const navigate = useNavigate();
+  const location = useLocation();
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -20,8 +23,8 @@ export default function SignIn() {
         email: form.get("email"),
         password: form.get("password"),
       });
-      setSession(data.user, data.token);
-      navigate("/");
+      setSession(data);
+      navigate(location.state?.from || "/");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -37,8 +40,18 @@ export default function SignIn() {
           <div className="auth-box">
             {user ? (
               <>
-                <p>Signed in as {user.name} ({user.email}).</p>
-                <p>Account records are stored in Aurora.</p>
+                <p>
+                  Signed in as {user.name} ({user.email}) — {role}.
+                </p>
+                {role === "owner" || role === "admin" ? (
+                  <p>
+                    <button className="btn" type="button" onClick={openSettings}>
+                      Design
+                    </button>
+                  </p>
+                ) : (
+                  <p>You have access to your workspace and published member pages.</p>
+                )}
               </>
             ) : (
               <>

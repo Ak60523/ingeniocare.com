@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import CookieBanner from "./CookieBanner.jsx";
 import Footer from "./Footer.jsx";
+import GrowgentFab from "./GrowgentFab.jsx";
 import Header from "./Header.jsx";
 
 export default function Layout() {
@@ -12,6 +13,7 @@ export default function Layout() {
       </main>
       <Footer />
       <CookieBanner />
+      <GrowgentFab />
     </>
   );
 }
