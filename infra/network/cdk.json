@@ -1,0 +1,11 @@
+{
+  "app": "npx tsx bin/app.ts",
+  "output": "cdk.out",
+  "watch": {
+    "include": ["**"],
+    "exclude": ["cdk.out"]
+  },
+  "context": {
+    "@aws-cdk/aws-rds:lowercaseDbIdentifier": true
+  }
+}

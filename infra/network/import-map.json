@@ -1,0 +1,52 @@
+{
+  "AccountVpc": { "VpcId": "vpc-007b736a57c46f7e2" },
+  "AccountIgw": { "InternetGatewayId": "igw-0917151f76fba682c" },
+  "AccountVpcGatewayAttachment": {
+    "AttachmentType": "IGW",
+    "VpcId": "vpc-007b736a57c46f7e2"
+  },
+  "PublicSubnet1": { "SubnetId": "subnet-02d8e0e9aa8095a66" },
+  "PublicSubnet2": { "SubnetId": "subnet-017b3c66db09d70ad" },
+  "PrivateSubnet1": { "SubnetId": "subnet-05295adaf90c9e4c0" },
+  "PrivateSubnet2": { "SubnetId": "subnet-06ad42445ece5ff5d" },
+  "PublicRouteTable1": { "RouteTableId": "rtb-080282030ba376155" },
+  "PublicRouteTable2": { "RouteTableId": "rtb-03df6c204b9d12d84" },
+  "PrivateRouteTable1": { "RouteTableId": "rtb-0fa44895e5df34a7b" },
+  "PrivateRouteTable2": { "RouteTableId": "rtb-043f9b0c3e518d203" },
+  "PublicSubnet1Assoc": { "Id": "rtbassoc-07084ba945a277abb" },
+  "PublicSubnet2Assoc": { "Id": "rtbassoc-026873f26b2510b7d" },
+  "PrivateSubnet1Assoc": { "Id": "rtbassoc-0f87af7d38decc16a" },
+  "PrivateSubnet2Assoc": { "Id": "rtbassoc-0652e37307abaa84b" },
+  "PublicRoute1": {
+    "RouteTableId": "rtb-080282030ba376155",
+    "CidrBlock": "0.0.0.0/0"
+  },
+  "PublicRoute2": {
+    "RouteTableId": "rtb-03df6c204b9d12d84",
+    "CidrBlock": "0.0.0.0/0"
+  },
+  "PrivateRoute1": {
+    "RouteTableId": "rtb-0fa44895e5df34a7b",
+    "CidrBlock": "0.0.0.0/0"
+  },
+  "PrivateRoute2": {
+    "RouteTableId": "rtb-043f9b0c3e518d203",
+    "CidrBlock": "0.0.0.0/0"
+  },
+  "AccountNatEip": {
+    "PublicIp": "100.59.93.51",
+    "AllocationId": "eipalloc-0ef6f76dc6391846d"
+  },
+  "AccountNatGateway": { "NatGatewayId": "nat-003b09228e1ec0b03" },
+  "AccountDbSg": { "Id": "sg-035aaf8580c1fc67e" },
+  "AccountDbSubnetGroup": {
+    "DBSubnetGroupName": "amplify-d578rlejynwf1-main-branch-fee583e4ef-populationdata17553ce0-7pokvruw34kx-populationaurorasubnetsad24d274-6nrl906fl8p8"
+  },
+  "AccountDbSecret": {
+    "Id": "arn:aws:secretsmanager:us-east-1:711387140392:secret:PopulationDbSecret8C5F0FC7-VKk24ZDTyfxn-UyOd67"
+  },
+  "AccountAurora": { "DBClusterIdentifier": "ingenio-pop-local-main" },
+  "AccountAuroraWriter": {
+    "DBInstanceIdentifier": "amplify-d578rlejynwf1-mai-populationauroraprivatew-zokupk3vrpqs"
+  }
+}
