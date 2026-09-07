@@ -241,7 +241,7 @@ export function ContentListPage({ type }) {
       <PageHero title={meta.listTitle} image={meta.heroImage} imagePosition={meta.heroPosition}>
         <p className="lede">{meta.lede}</p>
       </PageHero>
-      <section className="section">
+      <section className="section content-index">
         <div className="wrap content-sheet">
           {canManageContent ? (
             <AdminBar

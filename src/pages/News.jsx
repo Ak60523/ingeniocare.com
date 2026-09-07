@@ -92,7 +92,7 @@ export default function News() {
   return (
     <>
       <PageHero title="Ingenio Care News" image={sectionHero.news} imagePosition="58% 18%" />
-      <section className="section">
+      <section className="section content-index">
         <div className="wrap content-sheet">
           {canManageContent ? (
             <AdminBar

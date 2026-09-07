@@ -6,7 +6,7 @@ import { resolvePageSection } from "./pageSections.js";
 const SettingsContext = createContext(null);
 
 const IGNORE =
-  ".settings-rail, .owner-rail, .design-fab, .growgent-fab, .growgent-fab-panel, .account-menu, .cookie, a, button, input, textarea, select, label";
+  ".settings-rail, .owner-rail, .design-fab, .growgent-fab, .growgent-fab-panel, .account-menu, a, button, input, textarea, select, label";
 
 function DesignSectionOutline({ node }) {
   const [box, setBox] = useState(null);
