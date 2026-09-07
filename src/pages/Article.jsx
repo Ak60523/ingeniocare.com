@@ -70,6 +70,10 @@ export default function Article() {
   async function save(event) {
     event.preventDefault();
     if (!article?.id || !form) return;
+    if (String(article.status || "").toLowerCase() === "published") {
+      setError("Published articles can only be unpublished or archived");
+      return;
+    }
     setBusy(true);
     try {
       const data = await api.updateNews(article.id, {
@@ -108,6 +112,10 @@ export default function Article() {
 
   async function applyDraft(draft) {
     if (!article?.id) return;
+    if (String(article.status || "").toLowerCase() === "published") {
+      setError("Published articles can only be unpublished or archived");
+      return;
+    }
     const data = await api.updateNews(article.id, {
       title: draft.title || form.title,
       headline: draft.headline || draft.subtitle || form.headline,
@@ -231,59 +239,52 @@ export default function Article() {
                   }}
                 />
               ) : null}
-              <label>
-                Headline
-                <input value={form.headline} onChange={(event) => updateField("headline", event.target.value)} />
-              </label>
-              <label>
-                Date label
-                <input value={form.dateLabel} onChange={(event) => updateField("dateLabel", event.target.value)} />
-              </label>
-              <label>
-                Title
-                <input value={form.title} onChange={(event) => updateField("title", event.target.value)} required />
-              </label>
-              <label>
-                Slug
-                <input value={form.slug} onChange={(event) => updateField("slug", event.target.value)} required />
-              </label>
-              <label>
-                Summary
-                <textarea rows="3" value={form.summary} onChange={(event) => updateField("summary", event.target.value)} />
-              </label>
-              {!isPublished ? (
-                <WriteSection
-                  busy={busy}
-                  disabled={busy || isPublished}
-                  hasBody={bodyHasContent(form.blocks)}
-                  extraActions={
-                    <button className="btn" type="submit" disabled={busy}>
-                      {busy ? "Saving…" : "Save"}
-                    </button>
-                  }
-                  onWrite={(instruction) => generate(instruction, "write")}
-                  onRefine={(instruction) => generate(instruction, "refine")}
-                />
-              ) : (
-                <div className="ai-panel">
-                  <div className="ai-panel-head">
-                    <p className="form-note">Unpublish to rewrite or refine with AI.</p>
-                    <div className="ai-panel-actions">
+              <fieldset className="content-editor-fields" disabled={isPublished}>
+                <label>
+                  Headline
+                  <input value={form.headline} onChange={(event) => updateField("headline", event.target.value)} />
+                </label>
+                <label>
+                  Date label
+                  <input value={form.dateLabel} onChange={(event) => updateField("dateLabel", event.target.value)} />
+                </label>
+                <label>
+                  Title
+                  <input value={form.title} onChange={(event) => updateField("title", event.target.value)} required />
+                </label>
+                <label>
+                  Slug
+                  <input value={form.slug} onChange={(event) => updateField("slug", event.target.value)} required />
+                </label>
+                <label>
+                  Summary
+                  <textarea rows="3" value={form.summary} onChange={(event) => updateField("summary", event.target.value)} />
+                </label>
+                {!isPublished ? (
+                  <WriteSection
+                    busy={busy}
+                    disabled={busy}
+                    hasBody={bodyHasContent(form.blocks)}
+                    extraActions={
                       <button className="btn" type="submit" disabled={busy}>
                         {busy ? "Saving…" : "Save"}
                       </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-              <ArticleBodyEditor
-                value={form.blocks}
-                contentId={article.id}
-                disabled={busy}
-                review={bodyReview}
-                reviewEpoch={reviewEpoch}
-                onChange={(blocks) => updateField("blocks", blocks)}
-              />
+                    }
+                    onWrite={(instruction) => generate(instruction, "write")}
+                    onRefine={(instruction) => generate(instruction, "refine")}
+                  />
+                ) : (
+                  <p className="form-note">Published articles can only be unpublished or archived.</p>
+                )}
+                <ArticleBodyEditor
+                  value={form.blocks}
+                  contentId={article.id}
+                  disabled={busy || isPublished}
+                  review={bodyReview}
+                  reviewEpoch={reviewEpoch}
+                  onChange={(blocks) => updateField("blocks", blocks)}
+                />
+              </fieldset>
             </form>
           ) : (
             <article className="article">

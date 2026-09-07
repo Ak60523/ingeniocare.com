@@ -165,6 +165,7 @@ ul {
   justify-content: space-between;
   gap: 1.25rem;
   min-height: 88px;
+  position: relative;
 }
 
 .brand {
@@ -690,6 +691,15 @@ ul {
 
 .section {
   padding: 4rem 0;
+}
+
+.section.legal {
+  padding-top: 1.35rem;
+  padding-bottom: 3rem;
+}
+
+.section.legal .article > :first-child {
+  margin-top: 0;
 }
 
 .section.alt {
@@ -1951,6 +1961,10 @@ a.solution-flow-box:focus-visible {
   width: 100%;
 }
 
+.wrap.article {
+  width: min(var(--max), calc(100% - 2 * var(--page-pad)));
+}
+
 .article::after {
   content: "";
   display: table;
@@ -2573,16 +2587,27 @@ a.solution-flow-box:focus-visible {
   .header-inner.nav-open .nav {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     position: absolute;
     left: 0;
     right: 0;
     top: 100%;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     background: var(--paper);
-    padding: 1rem 1.25rem 1.4rem;
+    padding: 1rem 0 1.4rem;
     border-bottom: 1px solid var(--line);
     box-shadow: var(--shadow);
     z-index: 30;
+  }
+
+  .header-inner.nav-open .nav > a,
+  .header-inner.nav-open .nav > button,
+  .header-inner.nav-open .nav-more {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
   }
 
   .header-inner.nav-open .account-link,
@@ -2604,14 +2629,23 @@ a.solution-flow-box:focus-visible {
     box-shadow: none;
     border: 0;
     display: block;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
     padding-left: 0.5rem;
+  }
+
+  .nav-more-menu a {
+    white-space: normal;
   }
 
   .nav-more-menu.is-mega,
   .nav-more.open .nav-more-menu.is-mega,
   .nav-more:hover .nav-more-menu.is-mega {
     display: grid;
+    width: 100%;
     min-width: 0;
+    max-width: 100%;
     grid-template-columns: 1fr;
     padding: 0.25rem 0 0.5rem 0.5rem;
   }
@@ -3050,6 +3084,15 @@ a.solution-flow-box:focus-visible {
 .owner-inline-form {
   display: grid;
   gap: 0.85rem;
+}
+
+.content-editor-fields {
+  display: grid;
+  gap: 0.85rem;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-inline-size: 0;
 }
 
 .dialog-backdrop {
@@ -4312,7 +4355,9 @@ body.settings-rail-open .site-footer:hover {
 
   .footer-bottom {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
 
   .footer-social {
@@ -4394,6 +4439,11 @@ body.settings-rail-open .site-footer:hover {
 
   .section {
     padding: 2.6rem 0;
+  }
+
+  .section.legal {
+    padding-top: 1rem;
+    padding-bottom: 2.2rem;
   }
 
   .section.content-index {

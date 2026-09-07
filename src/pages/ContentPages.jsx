@@ -122,9 +122,15 @@ export function ContentStatusActions({ item, busy, onSetStatus }) {
           Unpublish
         </button>
       )}
-      <button type="button" disabled={busy} onClick={() => onSetStatus("archived")}>
-        Archive
-      </button>
+      {status !== "archived" ? (
+        <button type="button" disabled={busy} onClick={() => onSetStatus("archived")}>
+          Archive
+        </button>
+      ) : (
+        <button type="button" disabled={busy} onClick={() => onSetStatus("draft")}>
+          Restore
+        </button>
+      )}
     </>
   );
 }
@@ -215,10 +221,11 @@ export function ContentListPage({ type }) {
   async function setStatus(item, status) {
     setBusy(true);
     try {
-      await api.updateContent(item.id, {
-        status,
-        publishedAt: status === "published" ? item.publishedAt || new Date().toISOString() : item.publishedAt,
-      });
+      const payload = { status };
+      if (status === "published") {
+        payload.publishedAt = item.publishedAt || new Date().toISOString();
+      }
+      await api.updateContent(item.id, payload);
       await load();
     } catch (err) {
       setError(err.message);
@@ -400,6 +407,10 @@ export function ContentDetailPage({ type }) {
   async function save(event) {
     event.preventDefault();
     if (!item?.id || !form) return;
+    if (String(item.status || "").toLowerCase() === "published") {
+      setError("Published articles can only be unpublished or archived");
+      return;
+    }
     setBusy(true);
     try {
       const data = await api.updateContent(item.id, {
@@ -431,10 +442,11 @@ export function ContentDetailPage({ type }) {
   async function setStatus(status) {
     setBusy(true);
     try {
-      const data = await api.updateContent(item.id, {
-        status,
-        publishedAt: status === "published" ? item.publishedAt || new Date().toISOString() : item.publishedAt,
-      });
+      const payload = { status };
+      if (status === "published") {
+        payload.publishedAt = item.publishedAt || new Date().toISOString();
+      }
+      const data = await api.updateContent(item.id, payload);
       setItem(data.item);
       setError("");
     } catch (err) {
@@ -446,6 +458,10 @@ export function ContentDetailPage({ type }) {
 
   async function applyDraft(draft) {
     if (!item?.id) return;
+    if (String(item.status || "").toLowerCase() === "published") {
+      setError("Published articles can only be unpublished or archived");
+      return;
+    }
     const data = await api.updateContent(item.id, {
       title: draft.title || form.title,
       subtitle: draft.subtitle ?? form.subtitle,
@@ -561,65 +577,58 @@ export function ContentDetailPage({ type }) {
                   }}
                 />
               ) : null}
-              <label>
-                Title
-                <input name="title" value={form.title} onChange={(event) => updateField("title", event.target.value)} required />
-              </label>
-              <label>
-                Slug
-                <input name="slug" value={form.slug} onChange={(event) => updateField("slug", event.target.value)} required />
-              </label>
-              <label>
-                Subtitle
-                <input name="subtitle" value={form.subtitle} onChange={(event) => updateField("subtitle", event.target.value)} />
-              </label>
-              <label>
-                Summary
-                <textarea name="summary" rows="3" value={form.summary} onChange={(event) => updateField("summary", event.target.value)} />
-              </label>
-              <label>
-                Hashtags
-                <input name="hashtags" value={form.hashtags} onChange={(event) => updateField("hashtags", event.target.value)} />
-              </label>
-              {!isPublished ? (
-                <WriteSection
-                  busy={busy}
-                  disabled={writeDisabled}
-                  hasBody={bodyHasContent(form.blocks)}
-                  extraActions={
-                    <button className="btn" type="submit" disabled={busy}>
-                      {busy ? "Saving…" : "Save"}
-                    </button>
-                  }
-                  onWrite={(instruction) => generate(instruction, "write")}
-                  onRefine={(instruction) => generate(instruction, "refine")}
-                />
-              ) : (
-                <div className="ai-panel">
-                  <div className="ai-panel-head">
-                    <p className="form-note">Unpublish to rewrite or refine with AI.</p>
-                    <div className="ai-panel-actions">
+              <fieldset className="content-editor-fields" disabled={isPublished}>
+                <label>
+                  Title
+                  <input name="title" value={form.title} onChange={(event) => updateField("title", event.target.value)} required />
+                </label>
+                <label>
+                  Slug
+                  <input name="slug" value={form.slug} onChange={(event) => updateField("slug", event.target.value)} required />
+                </label>
+                <label>
+                  Subtitle
+                  <input name="subtitle" value={form.subtitle} onChange={(event) => updateField("subtitle", event.target.value)} />
+                </label>
+                <label>
+                  Summary
+                  <textarea name="summary" rows="3" value={form.summary} onChange={(event) => updateField("summary", event.target.value)} />
+                </label>
+                <label>
+                  Hashtags
+                  <input name="hashtags" value={form.hashtags} onChange={(event) => updateField("hashtags", event.target.value)} />
+                </label>
+                {!isPublished ? (
+                  <WriteSection
+                    busy={busy}
+                    disabled={writeDisabled}
+                    hasBody={bodyHasContent(form.blocks)}
+                    extraActions={
                       <button className="btn" type="submit" disabled={busy}>
                         {busy ? "Saving…" : "Save"}
                       </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-              <ArticleBodyEditor
-                value={form.blocks}
-                contentId={item.id}
-                disabled={busy}
-                review={bodyReview}
-                reviewEpoch={reviewEpoch}
-                onChange={(blocks) => updateField("blocks", blocks)}
-              />
-              {isPaper || isPodcast ? (
-                <label>
-                  {meta.mediaLabel}
-                  <input name="pdfUrl" value={form.pdfUrl} onChange={(event) => updateField("pdfUrl", event.target.value)} />
-                </label>
-              ) : null}
+                    }
+                    onWrite={(instruction) => generate(instruction, "write")}
+                    onRefine={(instruction) => generate(instruction, "refine")}
+                  />
+                ) : (
+                  <p className="form-note">Published articles can only be unpublished or archived.</p>
+                )}
+                <ArticleBodyEditor
+                  value={form.blocks}
+                  contentId={item.id}
+                  disabled={busy || isPublished}
+                  review={bodyReview}
+                  reviewEpoch={reviewEpoch}
+                  onChange={(blocks) => updateField("blocks", blocks)}
+                />
+                {isPaper || isPodcast ? (
+                  <label>
+                    {meta.mediaLabel}
+                    <input name="pdfUrl" value={form.pdfUrl} onChange={(event) => updateField("pdfUrl", event.target.value)} />
+                  </label>
+                ) : null}
+              </fieldset>
             </form>
           ) : (
             <article className="article">

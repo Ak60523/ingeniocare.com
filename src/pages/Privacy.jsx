@@ -4,9 +4,9 @@ export default function Privacy() {
   return (
     <>
       <PageHero title="Privacy Policy" />
-      <section className="section">
-        <div className="wrap article">
-          <h2>Privacy Policy</h2>
+      <section className="section legal">
+        <div className="wrap">
+          <div className="article">
           <p>
             At Ingenio Healthcare, we take the privacy of our website visitors very seriously. This
             Privacy Policy explains what information we collect and how we use it.
@@ -63,6 +63,7 @@ export default function Privacy() {
             </a>
             .
           </p>
+          </div>
         </div>
       </section>
     </>

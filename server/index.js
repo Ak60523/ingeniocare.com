@@ -208,6 +208,26 @@ function isNewsVisible(item) {
   return String(item.status || "published").toLowerCase() === "published";
 }
 
+const CONTENT_STATUSES = ["draft", "published", "archived"];
+
+function normalizeContentStatus(value, fallback = "draft") {
+  const status = String(value || "").toLowerCase();
+  return CONTENT_STATUSES.includes(status) ? status : fallback;
+}
+
+function publishedArticleMutationError(currentStatus, body, lockedFields) {
+  if (String(currentStatus || "").toLowerCase() !== "published") return null;
+  const hasLockedMutation = lockedFields.some((field) => body[field] !== undefined);
+  // Published content is immutable; only a status-only move to draft or archived is allowed.
+  if (hasLockedMutation) {
+    return "Published articles can only be unpublished or archived";
+  }
+  if (body.status == null) return null;
+  const next = normalizeContentStatus(body.status, "");
+  if (next === "draft" || next === "archived" || next === "published") return null;
+  return "Published articles can only be unpublished or archived";
+}
+
 async function tryContentAdmin(req) {
   const header = req.headers.authorization || "";
   const token = header.startsWith("Bearer ") ? header.slice(7) : "";
@@ -612,6 +632,15 @@ app.patch(
       );
       if (clash[0]) return res.status(409).json({ error: "That slug is already in use" });
     }
+    const locked = publishedArticleMutationError(current.status, req.body, [
+      "title",
+      "slug",
+      "dateLabel",
+      "headline",
+      "summary",
+      "body",
+    ]);
+    if (locked) return res.status(400).json({ error: locked });
     const status = ["draft", "published", "archived"].includes(req.body.status)
       ? req.body.status
       : current.status || "published";
@@ -863,6 +892,20 @@ app.patch(
       ]);
       if (clash[0]) return res.status(409).json({ error: "That slug is already in use" });
     }
+    const locked = publishedArticleMutationError(current.status, req.body, [
+      "title",
+      "slug",
+      "subtitle",
+      "summary",
+      "body",
+      "hashtags",
+      "gated",
+      "pdfUrl",
+      "publishedAt",
+      "seoTitle",
+      "seoDescription",
+    ]);
+    if (locked) return res.status(400).json({ error: locked });
     const status = ["draft", "published", "archived"].includes(req.body.status)
       ? req.body.status
       : current.status;

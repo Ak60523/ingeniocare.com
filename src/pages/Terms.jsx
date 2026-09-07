@@ -5,9 +5,9 @@ export default function Terms() {
   return (
     <>
       <PageHero title="Terms of Use" />
-      <section className="section">
-        <div className="wrap article">
-          <h2>Terms of Use</h2>
+      <section className="section legal">
+        <div className="wrap">
+          <div className="article">
           <p>
             These Terms of Use govern your access to and use of the Ingenio Care website. By using
             this site, you agree to these terms.
@@ -42,6 +42,7 @@ export default function Terms() {
             </a>
             .
           </p>
+          </div>
         </div>
       </section>
     </>
