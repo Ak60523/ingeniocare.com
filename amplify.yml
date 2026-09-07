@@ -3,7 +3,7 @@ backend:
   phases:
     build:
       commands:
-        - npm ci --prefer-offline
+        - npm ci
         - |
           set -e
           echo "Backend deploy context: AWS_BRANCH=${AWS_BRANCH:-} AWS_APP_ID=${AWS_APP_ID:-} AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-}"
@@ -19,7 +19,7 @@ frontend:
   phases:
     preBuild:
       commands:
-        - test -d node_modules || npm ci --prefer-offline
+        - test -d node_modules || npm ci
     build:
       commands:
         - npm run build
@@ -32,6 +32,6 @@ frontend:
       - node_modules/**/*
       - ~/.npm/**/*
 customRules:
-  - source: </^[^.]+$|\\.(?!(css|gif|ico|jpg|jpeg|js|png|txt|svg|woff|woff2|webp)$)([^.]+$)/>
+  - source: </^[^.]+$|\\.(?!(css|gif|ico|jpg|jpeg|js|png|txt|svg|woff|woff2|webp|xml)$)([^.]+$)/>
     status: "200"
     target: /index.html

@@ -46,6 +46,7 @@ import {
   listLibraryImages,
   uploadContentImage,
 } from "./contentImages.js";
+import { buildSitemapXml } from "./sitemap.js";
 
 import {
   countActiveOwners,
@@ -265,6 +266,13 @@ function requireRole(check) {
     next();
   });
 }
+
+app.get(["/sitemap.xml", "/api/sitemap.xml"], asyncHandler(async (_req, res) => {
+  const xml = await buildSitemapXml({ pool });
+  res.set("Content-Type", "application/xml; charset=utf-8");
+  res.set("Cache-Control", "public, max-age=3600");
+  res.send(xml);
+}));
 
 app.get("/api/health", async (_req, res) => {
   if (!pool) {

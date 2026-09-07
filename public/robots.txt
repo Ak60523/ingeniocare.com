@@ -1,3 +1,14 @@
 User-agent: *
-Disallow: /404
 Allow: /
+Disallow: /404
+Disallow: /m/
+Disallow: /invite/
+Disallow: /tenants
+Disallow: /users
+Disallow: /settings
+Disallow: /builds
+Disallow: /errors
+Disallow: /cursor
+Disallow: /data-model
+
+Sitemap: https://ingeniocare.com/sitemap.xml
