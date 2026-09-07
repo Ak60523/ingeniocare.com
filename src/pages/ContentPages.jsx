@@ -243,19 +243,17 @@ export function ContentListPage({ type }) {
       </PageHero>
       <section className="section">
         <div className="wrap content-sheet">
-          {isEdit ? (
-            <div className="content-sheet-head">
-              <button className="btn" type="button" disabled={busy} onClick={createBlank}>
-                + Add
-              </button>
-            </div>
-          ) : null}
-
           {canManageContent ? (
             <AdminBar
               mode={showAdmin ? mode : "edit"}
               onChange={(next) => setParams(next === "view" ? {} : { mode: next })}
-            />
+            >
+              {isEdit ? (
+                <button type="button" disabled={busy} onClick={createBlank}>
+                  + Add
+                </button>
+              ) : null}
+            </AdminBar>
           ) : null}
 
           {error ? <p className="form-error">{error}</p> : null}
@@ -281,7 +279,19 @@ export function ContentListPage({ type }) {
               const href = item.slug ? contentPath({ ...item, type }) : null;
               return (
                 <article className="content-index-item" key={item.id || item.slug}>
-                  <div className="content-index-meta">
+                  {href ? (
+                    <h2 className="content-piece-title">
+                      <Link to={href}>{item.title}</Link>
+                    </h2>
+                  ) : (
+                    <h2 className="content-piece-title">{item.title}</h2>
+                  )}
+                  <div className="content-index-meta content-index-toolbar">
+                    <div className="content-tags">
+                      {(item.hashtags || []).map((tag) => (
+                        <span key={tag}>#{tag}</span>
+                      ))}
+                    </div>
                     {isEdit ? (
                       <ContentIndexActions
                         item={item}
@@ -292,21 +302,9 @@ export function ContentListPage({ type }) {
                     ) : showAdmin ? (
                       <StatusChip item={item} />
                     ) : null}
-                    <time>{formatContentDate(item.publishedAt) || "—"}</time>
                   </div>
-                  {href ? (
-                    <h2>
-                      <Link to={href}>{item.title}</Link>
-                    </h2>
-                  ) : (
-                    <h2>{item.title}</h2>
-                  )}
                   {item.summary ? <p>{item.summary}</p> : null}
-                  <div className="content-tags">
-                    {(item.hashtags || []).map((tag) => (
-                      <span key={tag}>#{tag}</span>
-                    ))}
-                  </div>
+                  <time>{formatContentDate(item.publishedAt) || "—"}</time>
                 </article>
               );
             })
@@ -334,6 +332,8 @@ export function ContentDetailPage({ type }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [bodyReview, setBodyReview] = useState(false);
+  const [reviewEpoch, setReviewEpoch] = useState(0);
 
   function formFromItem(next) {
     return {
@@ -350,6 +350,8 @@ export function ContentDetailPage({ type }) {
 
   async function load() {
     setLoading(true);
+    setBodyReview(false);
+    setReviewEpoch(0);
     try {
       const data = await api.contentBySlug(slug);
       setItem(data.item);
@@ -493,6 +495,8 @@ export function ContentDetailPage({ type }) {
         draft = gen.draft || {};
       }
       await applyDraft(draft);
+      setBodyReview(true);
+      setReviewEpoch((n) => n + 1);
     } catch (err) {
       setError(err.message || (generateMode === "refine" ? "Refine failed" : "Write failed"));
     } finally {
@@ -506,16 +510,26 @@ export function ContentDetailPage({ type }) {
 
   return (
     <>
-      <PageHero kicker={meta.kicker} title={item?.title || meta.itemTitle} image={meta.heroImage} imagePosition={meta.heroPosition}>
-        {item?.subtitle ? <h4>{item.subtitle}</h4> : null}
+      <PageHero
+        variant="article"
+        kicker={meta.kicker}
+        title={item?.title || meta.itemTitle}
+        titleClassName="is-title-case is-content-title"
+        image={meta.heroImage}
+        imagePosition={meta.heroPosition}
+      >
+        {item?.subtitle ? <h4 className="is-title-case is-content-subtitle">{item.subtitle}</h4> : null}
       </PageHero>
-      <section className="section">
+      <section className="section content-detail">
         <div className="wrap content-sheet">
-          <ContentBrowseNav
-            previousHref={newer ? contentPath({ ...newer, type }) : null}
-            indexHref={listHref}
-            nextHref={older ? contentPath({ ...older, type }) : null}
-          />
+          <div className="article-toolbar">
+            {!isEdit && item ? <p className="date">{formatContentDate(item.publishedAt)}</p> : <span />}
+            <ContentBrowseNav
+              previousHref={newer ? contentPath({ ...newer, type }) : null}
+              indexHref={listHref}
+              nextHref={older ? contentPath({ ...older, type }) : null}
+            />
+          </div>
 
           {canManageContent ? (
             <AdminBar mode={isEdit ? "edit" : "preview"} onChange={(next) => setParams({ mode: next })}>
@@ -572,16 +586,32 @@ export function ContentDetailPage({ type }) {
                   busy={busy}
                   disabled={writeDisabled}
                   hasBody={bodyHasContent(form.blocks)}
+                  extraActions={
+                    <button className="btn" type="submit" disabled={busy}>
+                      {busy ? "Saving…" : "Save"}
+                    </button>
+                  }
                   onWrite={(instruction) => generate(instruction, "write")}
                   onRefine={(instruction) => generate(instruction, "refine")}
                 />
               ) : (
-                <p className="form-note">Unpublish to rewrite or refine with AI.</p>
+                <div className="ai-panel">
+                  <div className="ai-panel-head">
+                    <p className="form-note">Unpublish to rewrite or refine with AI.</p>
+                    <div className="ai-panel-actions">
+                      <button className="btn" type="submit" disabled={busy}>
+                        {busy ? "Saving…" : "Save"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
               )}
               <ArticleBodyEditor
                 value={form.blocks}
                 contentId={item.id}
                 disabled={busy}
+                review={bodyReview}
+                reviewEpoch={reviewEpoch}
                 onChange={(blocks) => updateField("blocks", blocks)}
               />
               {isPaper || isPodcast ? (
@@ -590,13 +620,9 @@ export function ContentDetailPage({ type }) {
                   <input name="pdfUrl" value={form.pdfUrl} onChange={(event) => updateField("pdfUrl", event.target.value)} />
                 </label>
               ) : null}
-              <button className="btn" type="submit" disabled={busy}>
-                {busy ? "Saving…" : "Save"}
-              </button>
             </form>
           ) : (
             <article className="article">
-              <p className="date">{formatContentDate(item.publishedAt)}</p>
               {item.summary ? <p className="lede">{item.summary}</p> : null}
               <div className="content-tags">
                 {(item.hashtags || []).map((tag) => (

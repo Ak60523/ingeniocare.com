@@ -36,6 +36,8 @@ export default function Article() {
   const [missing, setMissing] = useState(false);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [bodyReview, setBodyReview] = useState(false);
+  const [reviewEpoch, setReviewEpoch] = useState(0);
 
   async function load() {
     setArticle(null);
@@ -44,6 +46,8 @@ export default function Article() {
     setOlder(null);
     setMissing(false);
     setError("");
+    setBodyReview(false);
+    setReviewEpoch(0);
     try {
       const data = await api.article(slug);
       setArticle(data.article);
@@ -151,6 +155,8 @@ export default function Article() {
         draft = gen.draft || {};
       }
       await applyDraft(draft);
+      setBodyReview(true);
+      setReviewEpoch((n) => n + 1);
     } catch (err) {
       setError(err.message || (generateMode === "refine" ? "Refine failed" : "Write failed"));
     } finally {
@@ -174,16 +180,19 @@ export default function Article() {
 
   return (
     <>
-      <PageHero kicker="News" title={article.headline || article.title} image={sectionHero.news} imagePosition="58% 18%">
+      <PageHero variant="article" kicker="News" title={article.headline || article.title} image={sectionHero.news} imagePosition="58% 18%">
         <h4>{article.dateLabel || article.date_label}</h4>
       </PageHero>
-      <section className="section">
+      <section className="section content-detail">
         <div className="wrap content-sheet">
-          <ContentBrowseNav
-            previousHref={newer?.slug ? `/${newer.slug}` : null}
-            indexHref={listHref}
-            nextHref={older?.slug ? `/${older.slug}` : null}
-          />
+          <div className="article-toolbar">
+            <span />
+            <ContentBrowseNav
+              previousHref={newer?.slug ? `/${newer.slug}` : null}
+              indexHref={listHref}
+              nextHref={older?.slug ? `/${older.slug}` : null}
+            />
+          </div>
 
           {canManageContent ? (
             <AdminBar mode={isEdit ? "edit" : "preview"} onChange={(next) => setParams({ mode: next })}>
@@ -247,21 +256,34 @@ export default function Article() {
                   busy={busy}
                   disabled={busy || isPublished}
                   hasBody={bodyHasContent(form.blocks)}
+                  extraActions={
+                    <button className="btn" type="submit" disabled={busy}>
+                      {busy ? "Saving…" : "Save"}
+                    </button>
+                  }
                   onWrite={(instruction) => generate(instruction, "write")}
                   onRefine={(instruction) => generate(instruction, "refine")}
                 />
               ) : (
-                <p className="form-note">Unpublish to rewrite or refine with AI.</p>
+                <div className="ai-panel">
+                  <div className="ai-panel-head">
+                    <p className="form-note">Unpublish to rewrite or refine with AI.</p>
+                    <div className="ai-panel-actions">
+                      <button className="btn" type="submit" disabled={busy}>
+                        {busy ? "Saving…" : "Save"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
               )}
               <ArticleBodyEditor
                 value={form.blocks}
                 contentId={article.id}
                 disabled={busy}
+                review={bodyReview}
+                reviewEpoch={reviewEpoch}
                 onChange={(blocks) => updateField("blocks", blocks)}
               />
-              <button className="btn" type="submit" disabled={busy}>
-                {busy ? "Saving…" : "Save"}
-              </button>
             </form>
           ) : (
             <article className="article">

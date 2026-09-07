@@ -94,19 +94,17 @@ export default function News() {
       <PageHero title="Ingenio Care News" image={sectionHero.news} imagePosition="58% 18%" />
       <section className="section">
         <div className="wrap content-sheet">
-          {isEdit ? (
-            <div className="content-sheet-head">
-              <button className="btn" type="button" disabled={busy} onClick={createBlank}>
-                + Add
-              </button>
-            </div>
-          ) : null}
-
           {canManageContent ? (
             <AdminBar
               mode={showAdmin ? mode : "edit"}
               onChange={(next) => setParams(next === "view" ? {} : { mode: next })}
-            />
+            >
+              {isEdit ? (
+                <button type="button" disabled={busy} onClick={createBlank}>
+                  + Add
+                </button>
+              ) : null}
+            </AdminBar>
           ) : null}
 
           {error ? <p className="form-error">{error}</p> : null}

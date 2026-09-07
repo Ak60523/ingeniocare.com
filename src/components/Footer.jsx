@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import SocialLinks from "./SocialLinks.jsx";
 
 export default function Footer() {
   return (
@@ -13,6 +14,12 @@ export default function Footer() {
             <a href="tel:+16306570303">+1.630.657.0303</a>
           </div>
           <p className="footer-address">1900 S Highland Ave, Suite 105, Lombard, IL 60148</p>
+          <div className="footer-social">
+            <SocialLinks />
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <p>© 2026 Ingenio Care. All rights reserved.</p>
           <nav className="footer-links" aria-label="Legal">
             <Link to="/terms-of-use">Terms of Use</Link>
             <span className="footer-sep" aria-hidden="true">
@@ -20,9 +27,6 @@ export default function Footer() {
             </span>
             <Link to="/privacy-policy">Privacy Policy</Link>
           </nav>
-        </div>
-        <div className="footer-bottom">
-          <p>© 2026 Ingenio Care. All rights reserved.</p>
         </div>
       </div>
     </footer>

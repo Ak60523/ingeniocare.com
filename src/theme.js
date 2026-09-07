@@ -50,7 +50,7 @@ export const FONT_FIELDS = [
 ];
 
 export const FONTS = [
-  { id: "Cinzel", label: "Cinzel", stack: 'Cinzel, "Times New Roman", serif', google: "Cinzel:wght@400;500;600" },
+  { id: "Cinzel", label: "Cinzel", stack: 'Cinzel, "Times New Roman", serif', google: "Cinzel:wght@400;500;600;700" },
   { id: "Playfair Display", label: "Playfair Display", stack: '"Playfair Display", Georgia, serif', google: "Playfair+Display:wght@400;500;600;700" },
   { id: "Merriweather", label: "Merriweather", stack: "Merriweather, Georgia, serif", google: "Merriweather:ital,wght@0,400;0,700;1,400" },
   { id: "Libre Baskerville", label: "Libre Baskerville", stack: '"Libre Baskerville", Georgia, serif', google: "Libre+Baskerville:ital,wght@0,400;0,700;1,400" },

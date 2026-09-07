@@ -275,7 +275,7 @@ export function StartWithAiSection({
   );
 }
 
-export function WriteSection({ busy = false, disabled = false, hasBody = false, onWrite, onRefine }) {
+export function WriteSection({ busy = false, disabled = false, hasBody = false, extraActions = null, onWrite, onRefine }) {
   const [intent, setIntent] = useState(null);
   const [prompt, setPrompt] = useState("");
   const [sections, setSections] = useState(DEFAULT_SECTIONS);
@@ -403,20 +403,23 @@ export function WriteSection({ busy = false, disabled = false, hasBody = false, 
             <p className="ai-panel-label">{title}</p>
             <p className="form-note">{description}</p>
           </div>
-          {hasBody ? (
-            <div className="owner-row-actions">
-              <button className="btn ghost" type="button" disabled={disabled || busy || !onWrite} onClick={() => setIntent("rewrite")}>
-                Rewrite
+          <div className="ai-panel-actions">
+            {extraActions}
+            {hasBody ? (
+              <>
+                <button className="btn ghost" type="button" disabled={disabled || busy || !onWrite} onClick={() => setIntent("rewrite")}>
+                  Rewrite
+                </button>
+                <button className="btn" type="button" disabled={disabled || busy || !onRefine} onClick={() => setIntent("refine")}>
+                  Refine
+                </button>
+              </>
+            ) : (
+              <button className="btn" type="button" disabled={disabled || busy || !onWrite} onClick={() => setIntent("write")}>
+                Write with AI
               </button>
-              <button className="btn" type="button" disabled={disabled || busy || !onRefine} onClick={() => setIntent("refine")}>
-                Refine
-              </button>
-            </div>
-          ) : (
-            <button className="btn" type="button" disabled={disabled || busy || !onWrite} onClick={() => setIntent("write")}>
-              Write with AI
-            </button>
-          )}
+            )}
+          </div>
         </div>
       ) : (
         <div className="ai-panel-form">
@@ -489,7 +492,8 @@ export function WriteSection({ busy = false, disabled = false, hasBody = false, 
             onOverrideChange={setAudienceOverride}
             overridePlaceholder="Override audience (e.g. hospital CIOs)"
           />
-          <div className="owner-row-actions">
+          <div className="ai-panel-actions">
+            {extraActions}
             <button
               className="btn ghost"
               type="button"

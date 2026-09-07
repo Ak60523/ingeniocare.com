@@ -1,11 +1,12 @@
 import HomeHeroGraphic from "./HomeHeroGraphic.jsx";
 import NewsFlash from "./NewsFlash.jsx";
+import SocialLinks from "./SocialLinks.jsx";
 
-export default function PageHero({ title, children, variant, aside, ruled, kicker, image, imagePosition }) {
+export default function PageHero({ title, children, variant, aside, ruled, kicker, image, imagePosition, titleClassName }) {
   const home = variant === "home";
   const photo = image || (home ? "/assets/images/home-hero.jpg" : null);
-  const headingClass = ruled ? "is-ruled" : undefined;
-  const classes = ["page-hero", photo ? "page-hero-photo" : "", home ? "page-hero-home" : ""]
+  const headingClass = [ruled ? "is-ruled" : "", titleClassName].filter(Boolean).join(" ") || undefined;
+  const classes = ["page-hero", photo ? "page-hero-photo" : "", home ? "page-hero-home" : "", variant === "article" ? "is-article" : ""]
     .filter(Boolean)
     .join(" ");
   return (
@@ -31,6 +32,11 @@ export default function PageHero({ title, children, variant, aside, ruled, kicke
           {children}
         </div>
       </section>
+      <div className="page-hero-social">
+        <div className="wrap page-hero-social-inner">
+          <SocialLinks compact />
+        </div>
+      </div>
       {home ? <NewsFlash /> : null}
     </>
   );
