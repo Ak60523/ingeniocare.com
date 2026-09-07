@@ -6,13 +6,28 @@ import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client
 
 const MIN_IMAGE_BYTES = 1024;
 const MAX_UPLOAD_BYTES = 4.5 * 1024 * 1024;
-const DEFAULT_IMAGE_MODEL = "amazon.nova-canvas-v1:0";
-const TITAN_IMAGE_MODEL = "amazon.titan-image-generator-v2:0";
+const DEFAULT_IMAGE_MODEL = "stability.stable-image-core-v1:1";
+const DEFAULT_STABILITY_REGION = "us-west-2";
 
 const s3 = new S3Client({});
 
 function region() {
   return process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION || "us-east-1";
+}
+
+function imageModelId() {
+  return process.env.BEDROCK_IMAGE_MODEL_ID?.trim() || DEFAULT_IMAGE_MODEL;
+}
+
+function imageRegion(modelId = imageModelId()) {
+  const override = process.env.BEDROCK_IMAGE_REGION?.trim();
+  if (override) return override;
+  if (String(modelId).startsWith("stability.")) return DEFAULT_STABILITY_REGION;
+  return region();
+}
+
+function aspectRatioFor(size) {
+  return size.height === size.width ? "1:1" : "3:2";
 }
 
 function bucketName() {
@@ -110,7 +125,7 @@ function decodeInvokeBody(body) {
 }
 
 async function invokeImageModel(modelId, payload) {
-  const client = new BedrockRuntimeClient({ region: region() });
+  const client = new BedrockRuntimeClient({ region: imageRegion(modelId) });
   const out = await client.send(
     new InvokeModelCommand({
       modelId,
@@ -128,57 +143,24 @@ function imageFromModelResponse(parsed) {
   return Buffer.from(String(b64), "base64");
 }
 
-async function generateWithNova(fullPrompt, size) {
-  const parsed = await invokeImageModel(process.env.BEDROCK_IMAGE_MODEL_ID?.trim() || DEFAULT_IMAGE_MODEL, {
-    taskType: "TEXT_IMAGE",
-    textToImageParams: {
-      text: fullPrompt,
-      negativeText: "watermark, caption, title text, logo lockup, UI chrome, blurry, low quality, stock photo watermark",
-    },
-    imageGenerationConfig: {
-      numberOfImages: 1,
-      quality: "standard",
-      height: size.height,
-      width: size.width,
-      cfgScale: 6.5,
-    },
+async function generateImageBuffer(fullPrompt, size) {
+  const modelId = imageModelId();
+  const parsed = await invokeImageModel(modelId, {
+    prompt: fullPrompt,
+    negative_prompt: "watermark, caption, title text, logo lockup, UI chrome, blurry, low quality, stock photo watermark",
+    aspect_ratio: aspectRatioFor(size),
+    output_format: "png",
   });
+  const finish = parsed?.finish_reasons?.[0];
+  if (finish) {
+    throw new Error(String(finish));
+  }
   const error = String(parsed?.error || parsed?.message || "").trim();
   const buffer = imageFromModelResponse(parsed);
   if (!buffer) {
     throw new Error(error || "Bedrock image model returned no image");
   }
   return buffer;
-}
-
-async function generateWithTitan(fullPrompt, size) {
-  const parsed = await invokeImageModel(TITAN_IMAGE_MODEL, {
-    taskType: "TEXT_IMAGE",
-    textToImageParams: { text: fullPrompt.slice(0, 512) },
-    imageGenerationConfig: {
-      numberOfImages: 1,
-      height: size.height === 1024 && size.width === 1536 ? 1024 : size.height,
-      width: size.height === 1024 && size.width === 1536 ? 1024 : size.width,
-      cfgScale: 8,
-    },
-  });
-  const buffer = imageFromModelResponse(parsed);
-  if (!buffer) {
-    throw new Error(String(parsed?.error || parsed?.message || "Titan image generation failed"));
-  }
-  return buffer;
-}
-
-async function generateImageBuffer(fullPrompt, size) {
-  try {
-    return await generateWithNova(fullPrompt, size);
-  } catch (err) {
-    const message = String(err?.message || err);
-    if (/ValidationException|AccessDenied|not found|UnrecognizedClient|ResourceNotFound/i.test(message) && !process.env.BEDROCK_IMAGE_MODEL_ID) {
-      return generateWithTitan(fullPrompt, size);
-    }
-    throw err;
-  }
 }
 
 async function storeLocal(buffer, key, ext) {
@@ -364,6 +346,14 @@ export async function generateContentImage(opts) {
         ok: false,
         statusCode: 503,
         message: "AWS credentials are not configured for Bedrock image generation.",
+      };
+    }
+    if (/marked by provider as Legacy/i.test(message)) {
+      return {
+        ok: false,
+        statusCode: 503,
+        message:
+          "The Bedrock image model is Legacy and this account lost access after inactivity. Use an Active model such as stability.stable-image-core-v1:1 (us-west-2).",
       };
     }
     const statusCode =

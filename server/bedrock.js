@@ -112,6 +112,14 @@ export async function bedrockJsonRequest(systemPrompt, userPrompt, maxTokens = 4
           message: "AWS credentials are not configured for Bedrock. Set AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_REGION.",
         };
       }
+      if (/marked by provider as Legacy/i.test(message)) {
+        return {
+          ok: false,
+          statusCode: 503,
+          message:
+            "The configured Bedrock text model is Legacy and this account lost access after inactivity. Use an Active model such as us.anthropic.claude-sonnet-4-5-20250929-v1:0.",
+        };
+      }
       const statusCode =
         name === "ValidationException" ? 400 : name === "ThrottlingException" || name === "ServiceUnavailableException" ? 429 : 502;
       return { ok: false, statusCode, message };
