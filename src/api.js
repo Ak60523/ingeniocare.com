@@ -83,8 +83,24 @@ export const api = {
       body: JSON.stringify({ password }),
     }),
   ownerBuilds: () => request("/api/owner/builds"),
-  ownerErrors: () => request("/api/owner/errors"),
-  clearOwnerErrors: () => request("/api/owner/errors", { method: "DELETE" }),
+  ownerBuildLog: (branch, jobId) =>
+    request(`/api/owner/builds/${encodeURIComponent(branch)}/${encodeURIComponent(jobId)}`),
+  deleteOwnerBuild: (branch, jobId) =>
+    request(`/api/owner/builds/${encodeURIComponent(branch)}/${encodeURIComponent(jobId)}`, { method: "DELETE" }),
+  ownerErrors: (opts = {}) => {
+    const params = new URLSearchParams();
+    if (opts.limit) params.set("limit", String(opts.limit));
+    if (opts.offset) params.set("offset", String(opts.offset));
+    if (opts.source) params.set("source", opts.source);
+    if (opts.severity) params.set("severity", opts.severity);
+    if (opts.q) params.set("q", opts.q);
+    const query = params.toString();
+    return request(`/api/owner/errors${query ? `?${query}` : ""}`);
+  },
+  ownerError: (id) => request(`/api/owner/errors/${encodeURIComponent(id)}`),
+  deleteOwnerError: (id) => request(`/api/owner/errors/${encodeURIComponent(id)}`, { method: "DELETE" }),
+  deleteOwnerErrors: (ids) => request("/api/owner/errors", { method: "DELETE", body: JSON.stringify({ ids }) }),
+  recordClientError: (body) => request("/api/errors", { method: "POST", body: JSON.stringify(body) }),
   ownerCursor: () => request("/api/owner/cursor"),
   createCursorBrief: (body) => request("/api/owner/cursor", { method: "POST", body: JSON.stringify(body) }),
   dataModel: () => request("/api/owner/data-model"),

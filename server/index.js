@@ -20,10 +20,16 @@ import {
   normalizeAppRole,
 } from "./roles.js";
 import {
-  clearErrors,
+  amplifyBuildsConfigured,
+  deleteAmplifyBuild,
+  getAmplifyBuildLog,
+  listAmplifyBuilds,
+} from "./amplifyBuilds.js";
+import {
   createCursorBrief,
+  deleteErrorsByIds,
   formatCursorPrompt,
-  getBuildInfo,
+  getErrorById,
   listCursorBriefs,
   listErrors,
   listRows,
@@ -310,7 +316,53 @@ app.get(
   requireAuth,
   requireRole((role) => canManageBuilds(role)),
   asyncHandler(async (_req, res) => {
-    res.json({ build: await getBuildInfo() });
+    try {
+      const result = await listAmplifyBuilds(10);
+      res.json({ configured: amplifyBuildsConfigured(), ...result });
+    } catch (err) {
+      res.status(502).json({ error: err?.message || "Failed to list builds", configured: true });
+    }
+  })
+);
+
+app.get(
+  "/api/owner/builds/:branch/:jobId",
+  requireAuth,
+  requireRole((role) => canManageBuilds(role)),
+  asyncHandler(async (req, res) => {
+    if (!amplifyBuildsConfigured()) {
+      return res.status(503).json({
+        error: "Build history is unavailable until AMPLIFY_APP_ID is set on the API",
+      });
+    }
+    try {
+      const branch = decodeURIComponent(req.params.branch);
+      const jobId = decodeURIComponent(req.params.jobId);
+      res.json(await getAmplifyBuildLog(branch, jobId));
+    } catch (err) {
+      res.status(502).json({ error: err?.message || "Failed to load build log" });
+    }
+  })
+);
+
+app.delete(
+  "/api/owner/builds/:branch/:jobId",
+  requireAuth,
+  requireRole((role) => canManageBuilds(role)),
+  asyncHandler(async (req, res) => {
+    if (!amplifyBuildsConfigured()) {
+      return res.status(503).json({
+        error: "Build history is unavailable until AMPLIFY_APP_ID is set on the API",
+      });
+    }
+    try {
+      const branch = decodeURIComponent(req.params.branch);
+      const jobId = decodeURIComponent(req.params.jobId);
+      const result = await deleteAmplifyBuild(branch, jobId);
+      res.json({ ok: true, ...result });
+    } catch (err) {
+      res.status(502).json({ error: err?.message || "Failed to delete build" });
+    }
   })
 );
 
@@ -319,8 +371,39 @@ app.get(
   requireDb,
   requireAuth,
   requireRole((role) => canManageBuilds(role)),
-  asyncHandler(async (_req, res) => {
-    res.json({ errors: await listErrors(pool) });
+  asyncHandler(async (req, res) => {
+    res.json(
+      await listErrors(pool, {
+        limit: req.query.limit,
+        offset: req.query.offset,
+        source: req.query.source,
+        severity: req.query.severity,
+        q: req.query.q,
+      })
+    );
+  })
+);
+
+app.get(
+  "/api/owner/errors/:id",
+  requireDb,
+  requireAuth,
+  requireRole((role) => canManageBuilds(role)),
+  asyncHandler(async (req, res) => {
+    const item = await getErrorById(pool, req.params.id);
+    if (!item) return res.status(404).json({ error: "Not found" });
+    res.json({ item });
+  })
+);
+
+app.delete(
+  "/api/owner/errors/:id",
+  requireDb,
+  requireAuth,
+  requireRole((role) => canManageBuilds(role)),
+  asyncHandler(async (req, res) => {
+    const deleted = await deleteErrorsByIds(pool, [req.params.id]);
+    res.json({ ok: true, deleted });
   })
 );
 
@@ -329,9 +412,35 @@ app.delete(
   requireDb,
   requireAuth,
   requireRole((role) => canManageBuilds(role)),
-  asyncHandler(async (_req, res) => {
-    await clearErrors(pool);
-    res.json({ ok: true });
+  asyncHandler(async (req, res) => {
+    const ids = Array.isArray(req.body?.ids) ? req.body.ids : [];
+    if (!ids.length) return res.status(400).json({ error: "ids array is required" });
+    if (ids.length > 100) return res.status(400).json({ error: "ids cannot exceed 100" });
+    const deleted = await deleteErrorsByIds(pool, ids);
+    res.json({ ok: true, deleted });
+  })
+);
+
+app.post(
+  "/api/errors",
+  requireDb,
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const message = String(req.body?.message || "").trim();
+    if (!message) return res.status(400).json({ error: "message is required" });
+    const actor = await actorForRequest(req);
+    const id = await recordError(pool, null, req, {
+      message,
+      source: "client",
+      severity: req.body?.severity === "warn" ? "warn" : "error",
+      code: typeof req.body?.code === "string" ? req.body.code : undefined,
+      path: typeof req.body?.path === "string" ? req.body.path : undefined,
+      method: req.method,
+      tenantId: req.body?.tenantId || actor?.tenantId,
+      userId: actor?.user?.id,
+      context: req.body?.context && typeof req.body.context === "object" ? req.body.context : undefined,
+    });
+    res.json({ ok: true, id });
   })
 );
 
@@ -1161,7 +1270,12 @@ app.post(
 
 app.use((error, req, res, _next) => {
   console.error(error);
-  void recordError(pool, error, req);
+  void recordError(pool, error, req, {
+    source: "api",
+    severity: "error",
+    code: error.code ? String(error.code) : undefined,
+    context: { status: error.status || 503 },
+  });
   res.status(error.status || 503).json({
     error:
       error.code === "ECONNREFUSED"

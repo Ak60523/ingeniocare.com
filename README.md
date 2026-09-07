@@ -26,6 +26,7 @@ Postgres-backed features (all on Aurora in AWS):
 - News list and press releases → `news_articles`
 - Blogs and papers → `site_content`
 - AI Write / Rewrite / Refine for News, Blogs, and Papers uses **Claude Sonnet 4.5** on Amazon Bedrock in the data-api Lambda.
+- Article figure generation (image / infographic) uses the **OpenAI Images API** (`gpt-image-1`) in that same Lambda, same pattern as Growgent.
 
 ## Production: Amplify Gen 2 + Lambda + shared Aurora
 
@@ -59,11 +60,12 @@ That writes `amplify/network/constants.ts`. Commit the result. Amplify Hosting c
 
 1. AWS Console → account `711387140392` → **Amplify** → **Create new app** (name it `ingeniocare`, Gen 2). Use the GitHub App; do not use `amplify create-app`.
 2. Connect this GitHub repo and the branch you want to host.
-3. After the first backend deploy, set the hosting secret:
+3. After the first backend deploy, set the hosting secrets:
    ```bash
    npx ampx secret set JWT_SECRET
+   npx ampx secret set OPENAI_API_KEY
    ```
-   Use a long random value. Redeploy so the data-api Lambda picks it up.
+   Use a long random value for `JWT_SECRET`. Reuse the Growgent OpenAI key for `OPENAI_API_KEY`. Redeploy so the data-api Lambda picks them up.
 4. Amplify Hosting builds `amplify.yml`: `ampx pipeline-deploy` then `vite build`. The frontend reads `custom.dataApiUrl` from `amplify_outputs.json`.
 5. Optional local cloud backend (AWS CLI profile must be the Care account):
    ```bash
@@ -78,8 +80,9 @@ CDKToolkit must already exist in the region. Bootstrap it once from a Care-accou
 | Secret | Purpose |
 |---|---|
 | `JWT_SECRET` | Signs Ingenio Care sessions |
+| `OPENAI_API_KEY` | OpenAI Images API (`gpt-image-1`) for article figures |
 
-Bedrock uses the Lambda IAM role (Claude Sonnet 4.5).
+Bedrock uses the Lambda IAM role (Claude Sonnet 4.5 for write/rewrite). Override the image model with `OPENAI_IMAGE_MODEL` if needed.
 
 ### Optional: EC2 instead of Lambda
 

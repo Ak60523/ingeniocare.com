@@ -11,6 +11,7 @@
     "select-network": "node scripts/select-network.mjs"
   },
   "dependencies": {
+    "@aws-sdk/client-amplify": "^3.1127.0",
     "@aws-sdk/client-bedrock-runtime": "^3.1127.0",
     "@aws-sdk/client-s3": "^3.1127.0",
     "@aws-sdk/client-secrets-manager": "^3.1045.0",

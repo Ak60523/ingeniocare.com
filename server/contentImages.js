@@ -1,13 +1,11 @@
 import { randomUUID } from "node:crypto";
 import { mkdir, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { BedrockRuntimeClient, InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime";
 import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 const MIN_IMAGE_BYTES = 1024;
 const MAX_UPLOAD_BYTES = 4.5 * 1024 * 1024;
-const DEFAULT_IMAGE_MODEL = "stability.stable-image-core-v1:1";
-const DEFAULT_STABILITY_REGION = "us-west-2";
+const DEFAULT_OPENAI_IMAGE_MODEL = "gpt-image-1";
 
 const s3 = new S3Client({});
 
@@ -15,19 +13,8 @@ function region() {
   return process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION || "us-east-1";
 }
 
-function imageModelId() {
-  return process.env.BEDROCK_IMAGE_MODEL_ID?.trim() || DEFAULT_IMAGE_MODEL;
-}
-
-function imageRegion(modelId = imageModelId()) {
-  const override = process.env.BEDROCK_IMAGE_REGION?.trim();
-  if (override) return override;
-  if (String(modelId).startsWith("stability.")) return DEFAULT_STABILITY_REGION;
-  return region();
-}
-
-function aspectRatioFor(size) {
-  return size.height === size.width ? "1:1" : "3:2";
+function openAiImageModel() {
+  return String(process.env.OPENAI_IMAGE_MODEL ?? DEFAULT_OPENAI_IMAGE_MODEL).trim() || DEFAULT_OPENAI_IMAGE_MODEL;
 }
 
 function bucketName() {
@@ -51,7 +38,7 @@ function sanitizeKeyPart(value, fallback = "item") {
 }
 
 function imageSizeFor(placement) {
-  return placement === "pullout" ? { width: 1024, height: 1024, label: "1024x1024" } : { width: 1536, height: 1024, label: "1536x1024" };
+  return placement === "pullout" ? "1024x1024" : "1536x1024";
 }
 
 function validateImageBuffer(buffer) {
@@ -84,83 +71,98 @@ function buildImagePrompt({ prompt, placement, kind }) {
   const userPrompt = String(prompt || "").trim();
   const sizeHint =
     placement === "pullout"
-      ? "Square 1:1 composition. Design for a pull-out sidebar figure — bold subject, limited detail, legible when small."
-      : "Landscape ~3:2 composition. Design for a full-width inline article figure — clear focal point, readable at column width.";
+      ? "Square 1:1 composition (1024×1024). Design for a pull-out sidebar figure — bold subject, limited detail, legible when small."
+      : "Landscape ~3:2 composition (1536×1024). Design for a full-width inline article figure — clear focal point, readable at column width.";
 
   if (kind === "image") {
     return [
-      "High-quality editorial photograph or photorealistic scene for a professional healthcare article.",
+      "Create a high-quality editorial photograph or photorealistic scene for a professional healthcare article.",
       "Natural lighting, authentic clinical or workplace context, no watermarks, no mockup frames, no UI chrome.",
-      "Single strong subject — not a diagram, chart, icon grid, or labeled flowchart.",
+      "Prefer a single strong subject or moment — not a diagram, chart, icon grid, or labeled flowchart.",
       sizeHint,
-      "Do not render any title, caption, headline, logo, or heading text in the image.",
+      "Do NOT render any title, caption, headline, logo lockup, or article heading text in the image — captions are added separately in the layout.",
       userPrompt,
     ]
       .filter(Boolean)
       .join(" ")
-      .slice(0, 1024);
+      .slice(0, 4000);
   }
 
   return [
-    "Clean editorial infographic illustration for a professional healthcare article.",
+    "Create a clean editorial infographic illustration for a professional healthcare article.",
     "Modern flat diagram style, clear hierarchy, no watermarks, no mockup frames, no UI chrome.",
     sizeHint,
-    "Do not render any title, caption, headline, or article heading text in the image.",
+    "Do NOT render any title, caption, headline, or article heading text in the image — captions are added separately in the layout.",
     "Short diagram labels inside the graphic are OK only when needed for the chart itself.",
     userPrompt,
   ]
     .filter(Boolean)
     .join(" ")
-    .slice(0, 1024);
+    .slice(0, 4000);
 }
 
-function decodeInvokeBody(body) {
-  if (!body) return {};
-  const text = Buffer.isBuffer(body) ? body.toString("utf8") : new TextDecoder().decode(body);
-  try {
-    return JSON.parse(text);
-  } catch {
-    return {};
+function buildOpenAiImageRequestBody(model, prompt, size, quality) {
+  // Do not send response_format — gpt-image-* rejects it (returns b64_json by default).
+  const body = {
+    model,
+    prompt: String(prompt || "").slice(0, 4000),
+    size,
+    n: 1,
+  };
+  const q = String(quality ?? "").trim().toLowerCase();
+  if (q === "low" || q === "medium" || q === "high" || q === "auto") {
+    body.quality = q;
   }
+  return body;
 }
 
-async function invokeImageModel(modelId, payload) {
-  const client = new BedrockRuntimeClient({ region: imageRegion(modelId) });
-  const out = await client.send(
-    new InvokeModelCommand({
-      modelId,
-      contentType: "application/json",
-      accept: "application/json",
-      body: JSON.stringify(payload),
-    })
-  );
-  return decodeInvokeBody(out.body);
-}
-
-function imageFromModelResponse(parsed) {
-  const b64 = parsed?.images?.[0] || parsed?.image || parsed?.artifacts?.[0]?.base64;
-  if (!b64) return null;
-  return Buffer.from(String(b64), "base64");
+async function imageBytesFromOpenAiResponse(data) {
+  const item = data?.data?.[0];
+  if (item?.b64_json) {
+    return { buffer: Buffer.from(item.b64_json, "base64"), contentType: "image/png" };
+  }
+  if (item?.url) {
+    const imgRes = await fetch(item.url);
+    if (!imgRes.ok) return { ok: false, error: `Could not download generated image (${imgRes.status})` };
+    const buffer = Buffer.from(await imgRes.arrayBuffer());
+    if (!buffer.length) return { ok: false, error: "Downloaded image was empty" };
+    const contentType = imgRes.headers.get("content-type") || "image/png";
+    return { buffer, contentType };
+  }
+  return { ok: false, error: "OpenAI returned no image bytes" };
 }
 
 async function generateImageBuffer(fullPrompt, size) {
-  const modelId = imageModelId();
-  const parsed = await invokeImageModel(modelId, {
-    prompt: fullPrompt,
-    negative_prompt: "watermark, caption, title text, logo lockup, UI chrome, blurry, low quality, stock photo watermark",
-    aspect_ratio: aspectRatioFor(size),
-    output_format: "png",
-  });
-  const finish = parsed?.finish_reasons?.[0];
-  if (finish) {
-    throw new Error(String(finish));
+  const openAiKey = String(process.env.OPENAI_API_KEY ?? "").trim();
+  if (!openAiKey) {
+    return {
+      ok: false,
+      statusCode: 503,
+      message: "OPENAI_API_KEY is not configured — set it as an Amplify secret for the data-api Lambda.",
+    };
   }
-  const error = String(parsed?.error || parsed?.message || "").trim();
-  const buffer = imageFromModelResponse(parsed);
-  if (!buffer) {
-    throw new Error(error || "Bedrock image model returned no image");
+  try {
+    const res = await fetch("https://api.openai.com/v1/images/generations", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${openAiKey}`,
+      },
+      body: JSON.stringify(buildOpenAiImageRequestBody(openAiImageModel(), fullPrompt, size, "medium")),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      const statusCode = res.status === 429 ? 429 : res.status >= 400 && res.status < 500 ? 400 : 502;
+      return { ok: false, statusCode, message: data?.error?.message || "OpenAI image generation failed" };
+    }
+    const parsed = await imageBytesFromOpenAiResponse(data);
+    if (!("buffer" in parsed)) {
+      return { ok: false, statusCode: 502, message: parsed.error };
+    }
+    return { ok: true, buffer: parsed.buffer, contentType: parsed.contentType };
+  } catch (err) {
+    return { ok: false, statusCode: 502, message: err instanceof Error ? err.message : String(err) };
   }
-  return buffer;
 }
 
 async function storeLocal(buffer, key, ext) {
@@ -300,66 +302,45 @@ export async function generateContentImage(opts) {
   if (!prompt) return { ok: false, statusCode: 400, message: "prompt is required" };
   const kind = resolveImageKind(opts.kind);
   const placement = resolvePlacement(opts.placement);
-  const size = imageSizeFor(placement);
+  const imageSize = imageSizeFor(placement);
   const fullPrompt = buildImagePrompt({ prompt, placement, kind });
-  try {
-    const buffer = await generateImageBuffer(fullPrompt, size);
-    const folder = kind === "infographic" ? "content-infographics" : "content-images";
-    const imageId = randomUUID().replace(/-/g, "").slice(0, 16);
-    const contentKey = sanitizeKeyPart(opts.contentId, "content");
-    const stored = await storeImageBuffer({
-      buffer,
-      contentType: "image/png",
-      key: `${folder}/${contentKey}/${imageId}`,
-    });
-    if (!stored.ok) return stored;
-    const fileName = `content-${kind}-${contentKey}-${imageId}.png`;
-    const library = opts.db
-      ? await persistLibraryImage(opts.db, {
-          kind,
-          fileName,
-          imageUrl: stored.imageUrl,
-          prompt,
-          caption: opts.title,
-          placement,
-          imageSize: size.label,
-          source: kind === "infographic" ? "content-infographic" : "content-image",
-          contentId: opts.contentId,
-          createdBy: opts.createdBy,
-        })
-      : null;
-    return {
-      ok: true,
-      imageUrl: stored.imageUrl,
-      prompt,
-      placement,
-      kind,
-      imageSize: size.label,
-      libraryImageId: library?.id != null ? String(library.id) : null,
-      fileName,
-    };
-  } catch (err) {
-    const name = err?.name || "";
-    const message = err?.message || String(err);
-    if (/CredentialsProviderError|Could not load credentials|Missing credentials/i.test(name + message)) {
-      return {
-        ok: false,
-        statusCode: 503,
-        message: "AWS credentials are not configured for Bedrock image generation.",
-      };
-    }
-    if (/marked by provider as Legacy/i.test(message)) {
-      return {
-        ok: false,
-        statusCode: 503,
-        message:
-          "The Bedrock image model is Legacy and this account lost access after inactivity. Use an Active model such as stability.stable-image-core-v1:1 (us-west-2).",
-      };
-    }
-    const statusCode =
-      name === "ValidationException" ? 400 : name === "ThrottlingException" || name === "ServiceUnavailableException" ? 429 : 502;
-    return { ok: false, statusCode, message: message || "Image generation failed" };
-  }
+  const gen = await generateImageBuffer(fullPrompt, imageSize);
+  if (!gen.ok) return gen;
+  const folder = kind === "infographic" ? "content-infographics" : "content-images";
+  const imageId = randomUUID().replace(/-/g, "").slice(0, 16);
+  const contentKey = sanitizeKeyPart(opts.contentId, "content");
+  const stored = await storeImageBuffer({
+    buffer: gen.buffer,
+    contentType: gen.contentType || "image/png",
+    key: `${folder}/${contentKey}/${imageId}`,
+  });
+  if (!stored.ok) return stored;
+  const ext = (stored.contentType || gen.contentType || "image/png").includes("jpeg") ? "jpg" : "png";
+  const fileName = `content-${kind}-${contentKey}-${imageId}.${ext}`;
+  const library = opts.db
+    ? await persistLibraryImage(opts.db, {
+        kind,
+        fileName,
+        imageUrl: stored.imageUrl,
+        prompt,
+        caption: opts.title,
+        placement,
+        imageSize,
+        source: kind === "infographic" ? "content-infographic" : "content-image",
+        contentId: opts.contentId,
+        createdBy: opts.createdBy,
+      })
+    : null;
+  return {
+    ok: true,
+    imageUrl: stored.imageUrl,
+    prompt,
+    placement,
+    kind,
+    imageSize,
+    libraryImageId: library?.id != null ? String(library.id) : null,
+    fileName,
+  };
 }
 
 export async function uploadContentImage(opts) {
@@ -386,7 +367,7 @@ export async function uploadContentImage(opts) {
         prompt: opts.prompt,
         caption: opts.title,
         placement,
-        imageSize: imageSizeFor(placement).label,
+        imageSize: imageSizeFor(placement),
         source: "upload",
         contentId: opts.contentId,
         createdBy: opts.createdBy,

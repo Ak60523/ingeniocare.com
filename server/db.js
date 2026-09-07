@@ -331,9 +331,26 @@ export async function initSchema(db) {
       stack TEXT,
       path VARCHAR(500),
       method VARCHAR(16),
+      source VARCHAR(50) NOT NULL DEFAULT 'api',
+      severity VARCHAR(20) NOT NULL DEFAULT 'error',
+      code VARCHAR(100),
+      tenant_id BIGINT,
+      user_id BIGINT,
+      request_id VARCHAR(100),
+      context JSONB,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
   `);
+  await addColumnIfMissing(db, "site_errors", "source", "VARCHAR(50) NOT NULL DEFAULT 'api'");
+  await addColumnIfMissing(db, "site_errors", "severity", "VARCHAR(20) NOT NULL DEFAULT 'error'");
+  await addColumnIfMissing(db, "site_errors", "code", "VARCHAR(100)");
+  await addColumnIfMissing(db, "site_errors", "tenant_id", "BIGINT");
+  await addColumnIfMissing(db, "site_errors", "user_id", "BIGINT");
+  await addColumnIfMissing(db, "site_errors", "request_id", "VARCHAR(100)");
+  await addColumnIfMissing(db, "site_errors", "context", "JSONB");
+  await db.query(`CREATE INDEX IF NOT EXISTS site_errors_created_at_idx ON site_errors (created_at DESC)`);
+  await db.query(`CREATE INDEX IF NOT EXISTS site_errors_source_idx ON site_errors (source)`);
+  await db.query(`CREATE INDEX IF NOT EXISTS site_errors_severity_idx ON site_errors (severity)`);
 
   await db.query(`
     CREATE TABLE IF NOT EXISTS cursor_briefs (

@@ -11,5 +11,7 @@ export const dataApiFunction = defineFunction({
     OWNER_EMAIL: "alex.kumar@ingeniocare.com",
     CORS_ORIGIN: "*",
     DB_NAME: "ingeniocare",
+    OPENAI_API_KEY: secret("OPENAI_API_KEY"),
+    OPENAI_IMAGE_MODEL: "gpt-image-1",
   },
 });

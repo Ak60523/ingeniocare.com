@@ -20,6 +20,30 @@ dataApiLambda.addToRolePolicy(
   })
 );
 
+const amplifyAppId = process.env.AWS_APP_ID?.trim();
+if (amplifyAppId) {
+  dataApiLambda.addEnvironment("AMPLIFY_APP_ID", amplifyAppId);
+}
+const amplifyBranch = process.env.AWS_BRANCH?.trim();
+if (amplifyBranch) {
+  dataApiLambda.addEnvironment("AMPLIFY_BRANCH", amplifyBranch);
+}
+
+dataApiLambda.addToRolePolicy(
+  new PolicyStatement({
+    effect: Effect.ALLOW,
+    actions: [
+      "amplify:ListApps",
+      "amplify:ListBranches",
+      "amplify:ListJobs",
+      "amplify:GetJob",
+      "amplify:DeleteJob",
+      "amplify:StopJob",
+    ],
+    resources: ["*"],
+  })
+);
+
 const pg = wirePostgresAndDataApi(Stack.of(dataApiLambda), dataApiLambda);
 
 const contentImagesBucket = new s3.Bucket(Stack.of(dataApiLambda), "ContentImagesBucket", {

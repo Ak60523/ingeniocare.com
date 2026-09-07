@@ -1994,7 +1994,7 @@ a.solution-flow-box:focus-visible {
 .dialog input,
 .dialog select,
 .dialog textarea,
-.owner-page input,
+.owner-page input:not([type="checkbox"]),
 .owner-page select,
 .owner-page textarea,
 .content-editor input,
@@ -2436,6 +2436,21 @@ a.solution-flow-box:focus-visible {
 
 .chip.ok {
   border-color: var(--navy-mid);
+  color: var(--navy);
+}
+
+.chip.fail {
+  border-color: #b42318;
+  color: #b42318;
+}
+
+.chip.warn {
+  border-color: #b54708;
+  color: #b54708;
+}
+
+.chip.info {
+  border-color: var(--sky);
   color: var(--navy);
 }
 
@@ -3384,6 +3399,172 @@ a.solution-flow-box:focus-visible {
   background: var(--navy-soft);
   padding: 0.8rem 1rem;
   margin-bottom: 1rem;
+}
+
+.owner-card-flush {
+  padding: 0;
+  overflow: hidden;
+}
+
+.owner-card-flush .owner-card-head {
+  padding: 1.25rem 1.25rem 0.75rem;
+  margin-bottom: 0;
+}
+
+.owner-card-flush .owner-card-head h2 {
+  margin: 0;
+}
+
+.owner-card-flush .owner-table th,
+.owner-card-flush .owner-table td {
+  padding-left: 1.15rem;
+  padding-right: 0.75rem;
+}
+
+.owner-head-actions,
+.owner-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.owner-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: end;
+  margin-bottom: 1.25rem;
+}
+
+.owner-filters label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 600;
+  min-width: 140px;
+}
+
+.owner-filters input,
+.owner-filters select {
+  width: auto;
+  min-width: 160px;
+}
+
+.owner-table .sticky-col {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: #fff;
+}
+
+.owner-table .check-col {
+  width: 42px;
+}
+
+.owner-table .mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.82rem;
+}
+
+.owner-table .cell-clip {
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.owner-table .nowrap {
+  white-space: nowrap;
+}
+
+.owner-table tbody tr.is-clickable {
+  cursor: pointer;
+}
+
+.owner-table tbody tr.is-clickable:hover {
+  background: var(--fog);
+}
+
+.owner-table tbody tr.is-selected {
+  background: var(--navy-soft);
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--navy);
+  cursor: pointer;
+}
+
+.icon-btn:hover:not(:disabled) {
+  background: var(--navy-soft);
+}
+
+.icon-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.icon-btn.is-ok {
+  color: #1b6b3a;
+}
+
+.dialog-actions-split {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.owner-pre-wrap {
+  white-space: pre-wrap;
+  margin: 0.75rem 0 1rem;
+}
+
+.owner-detail-line {
+  margin: 0 0 0.4rem;
+  font-size: 0.92rem;
+}
+
+.owner-detail-line span {
+  color: var(--muted);
+  margin-right: 0.5rem;
+}
+
+.owner-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(8, 0, 47, 0.28);
+}
+
+.owner-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: min(480px, 100%);
+  height: 100%;
+  background: #fff;
+  padding: 1.25rem;
+  overflow: auto;
+  box-shadow: var(--shadow);
+}
+
+.owner-drawer-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.owner-drawer h3 {
+  margin: 1.15rem 0 0.45rem;
+  font-size: 0.95rem;
 }
 
 .settings-rail-root {

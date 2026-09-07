@@ -1,11 +1,3 @@
-import { execFile } from "child_process";
-import { promisify } from "util";
-import { readFile } from "fs/promises";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const execFileAsync = promisify(execFile);
-const startedAt = new Date().toISOString();
 const IDENT = /^[a-z_][a-z0-9_]*$/i;
 const SECRET = /hash|password|secret|token/i;
 const TABLE_NOTES = {
@@ -20,7 +12,7 @@ const TABLE_NOTES = {
   site_content: "Blogs, papers, and podcasts.",
   content_images: "Generated and uploaded article figures.",
   site_settings: "Public appearance (fonts, sizes, colors).",
-  site_errors: "Captured API failures.",
+  site_errors: "Application error logs from the API, workers, and clients.",
   cursor_briefs: "Owner Cursor prompts.",
 };
 
@@ -28,44 +20,6 @@ const CURSOR_MODES = ["agent", "ask", "plan"];
 
 export function isCursorMode(value) {
   return CURSOR_MODES.includes(value);
-}
-
-async function gitInfo() {
-  try {
-    const opts = { timeout: 4000, windowsHide: true };
-    const { stdout: branch } = await execFileAsync("git", ["rev-parse", "--abbrev-ref", "HEAD"], opts);
-    const { stdout: log } = await execFileAsync("git", ["log", "-1", "--format=%h|%s|%ci"], opts);
-    const [hash, subject, date] = String(log).trim().split("|");
-    return {
-      branch: String(branch).trim(),
-      hash: hash || null,
-      subject: subject || null,
-      date: date || null,
-    };
-  } catch {
-    return null;
-  }
-}
-
-export async function getBuildInfo() {
-  let version = "1.0.0";
-  try {
-    const pkgPath = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "package.json");
-    const pkg = JSON.parse(await readFile(pkgPath, "utf8"));
-    version = pkg.version || version;
-  } catch {
-    /* keep default */
-  }
-  return {
-    name: "Ingenio Care",
-    version,
-    node: process.version,
-    env: process.env.NODE_ENV || "development",
-    uptimeSec: Math.round(process.uptime()),
-    startedAt,
-    database: process.env.POSTGRES_DATABASE || process.env.PGDATABASE || "ingeniocare",
-    git: await gitInfo(),
-  };
 }
 
 export async function listTables(db) {
@@ -163,29 +117,122 @@ function labelize(name) {
     .replace(/\b\w/g, (ch) => ch.toUpperCase());
 }
 
-export async function recordError(db, error, req) {
-  if (!db) return;
+const MESSAGE_MAX = 2000;
+const STACK_MAX = 8000;
+const CONTEXT_MAX = 8000;
+const ERROR_SOURCES = new Set(["api", "client", "worker"]);
+const ERROR_SEVERITIES = new Set(["error", "warn"]);
+
+function truncate(value, max) {
+  const text = String(value || "");
+  if (text.length <= max) return text;
+  return `${text.slice(0, max - 1)}…`;
+}
+
+function sanitizeContext(context) {
+  if (!context || typeof context !== "object") return null;
   try {
-    await db.query(
-      `INSERT INTO site_errors (message, stack, path, method) VALUES (?, ?, ?, ?)`,
-      [String(error?.message || error), error?.stack || null, req?.originalUrl || null, req?.method || null]
-    );
+    const raw = JSON.stringify(context);
+    if (raw.length <= CONTEXT_MAX) return raw;
+    return JSON.stringify({ truncated: true, preview: truncate(raw, CONTEXT_MAX) });
   } catch {
-    /* ignore logging failures */
+    return JSON.stringify({ note: "context_serialize_failed" });
   }
 }
 
-export async function listErrors(db, limit = 50) {
-  const { rows } = await db.query(
-    `SELECT id, message, stack, path, method, created_at AS "createdAt"
-     FROM site_errors ORDER BY id DESC LIMIT ?`,
-    [limit]
-  );
-  return rows;
+export function isErrorSource(value) {
+  return ERROR_SOURCES.has(String(value || ""));
 }
 
-export async function clearErrors(db) {
-  await db.query("DELETE FROM site_errors");
+export function isErrorSeverity(value) {
+  return ERROR_SEVERITIES.has(String(value || ""));
+}
+
+export async function recordError(db, error, req, extra = {}) {
+  if (!db) return null;
+  const source = isErrorSource(extra.source) ? extra.source : "api";
+  const severity = isErrorSeverity(extra.severity) ? extra.severity : "error";
+  const message = truncate(extra.message || error?.message || error || "Unknown error", MESSAGE_MAX);
+  const stack = truncate(error?.stack || extra.stack || "", STACK_MAX) || null;
+  const context = sanitizeContext(extra.context);
+  try {
+    const { rows } = await db.query(
+      `INSERT INTO site_errors
+         (message, stack, path, method, source, severity, code, tenant_id, user_id, request_id, context)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?::jsonb)
+       RETURNING id`,
+      [
+        message,
+        stack,
+        extra.path || (extra.source === "client" ? null : req?.originalUrl) || null,
+        extra.method || (extra.source === "client" ? null : req?.method) || null,
+        source,
+        severity,
+        extra.code ? String(extra.code).slice(0, 100) : null,
+        extra.tenantId || req?.actor?.tenantId || null,
+        extra.userId || req?.actor?.user?.id || req?.user?.id || null,
+        extra.requestId || req?.headers?.["x-amzn-requestid"] || req?.headers?.["x-request-id"] || null,
+        context,
+      ]
+    );
+    return rows[0]?.id || null;
+  } catch (persistErr) {
+    console.error("[site_errors] persist failed", persistErr?.message || persistErr);
+    return null;
+  }
+}
+
+const ERROR_SELECT = `id, message, stack, path, method, source, severity, code,
+      tenant_id AS "tenantId", user_id AS "userId", request_id AS "requestId",
+      context, created_at AS "createdAt"`;
+
+export async function listErrors(db, opts = {}) {
+  const limit = Math.min(Math.max(Number(opts.limit) || 50, 1), 100);
+  const offset = Math.max(Number(opts.offset) || 0, 0);
+  const filters = [];
+  const params = [];
+  if (isErrorSource(opts.source)) {
+    filters.push("source = ?");
+    params.push(opts.source);
+  }
+  if (isErrorSeverity(opts.severity)) {
+    filters.push("severity = ?");
+    params.push(opts.severity);
+  }
+  const q = String(opts.q || "").trim();
+  if (q) {
+    const pattern = `%${q}%`;
+    filters.push(
+      `(message ILIKE ? OR COALESCE(code, '') ILIKE ? OR COALESCE(path, '') ILIKE ? OR COALESCE(request_id, '') ILIKE ?)`
+    );
+    params.push(pattern, pattern, pattern, pattern);
+  }
+  const where = filters.length ? `WHERE ${filters.join(" AND ")}` : "";
+  const { rows } = await db.query(
+    `SELECT ${ERROR_SELECT} FROM site_errors ${where} ORDER BY id DESC LIMIT ? OFFSET ?`,
+    [...params, limit, offset]
+  );
+  const { rows: countRows } = await db.query(`SELECT COUNT(*)::int AS count FROM site_errors ${where}`, params);
+  return {
+    items: rows,
+    total: countRows[0]?.count || 0,
+    limit,
+    offset,
+  };
+}
+
+export async function getErrorById(db, id) {
+  if (!/^\d+$/.test(String(id || ""))) return null;
+  const { rows } = await db.query(`SELECT ${ERROR_SELECT} FROM site_errors WHERE id = ? LIMIT 1`, [id]);
+  return rows[0] || null;
+}
+
+export async function deleteErrorsByIds(db, ids) {
+  const next = [...new Set((ids || []).map((id) => String(id || "").trim()).filter((id) => /^\d+$/.test(id)))];
+  if (!next.length) return 0;
+  const placeholders = next.map(() => "?").join(", ");
+  const { rowCount } = await db.query(`DELETE FROM site_errors WHERE id IN (${placeholders})`, next);
+  return rowCount || 0;
 }
 
 export async function listCursorBriefs(db) {

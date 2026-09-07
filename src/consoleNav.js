@@ -22,7 +22,7 @@ export function isConsolePath(pathname) {
 
 export const technicalItems = [
   { to: "/builds", label: "Builds", icon: "builds" },
-  { to: "/errors", label: "Errors", icon: "errors" },
+  { to: "/errors", label: "Error logs", icon: "errors" },
   { to: "/cursor", label: "Cursor", icon: "cursor" },
   { to: "/data-model", label: "Data Model", icon: "schema" },
 ];
