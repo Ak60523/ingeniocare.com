@@ -48,8 +48,16 @@ export function wirePostgresAndDataApi(stack: Stack, dataApiLambda: LambdaFuncti
   const dbSg = new SecurityGroup(stack, "IngenioDbSecurityGroup", { vpc });
   dbSg.addIngressRule(lambdaSg, Port.tcp(5432), "Lambda to Aurora");
 
+  // Keep the live cluster name on the original app. A second Git-connected
+  // app must use a different identifier or RDS rejects the create.
+  const appId = String(process.env.AWS_APP_ID || "");
+  const clusterIdentifier =
+    !appId || appId === "d56s4au6w3by7"
+      ? "ingenioCareCluster"
+      : `ingeniocare-${appId}`;
+
   const cluster = new rds.DatabaseCluster(stack, "IngenioAurora", {
-    clusterIdentifier: "ingenioCareCluster",
+    clusterIdentifier,
     engine: rds.DatabaseClusterEngine.auroraPostgres({
       version: rds.AuroraPostgresEngineVersion.of("15.17", "15"),
     }),
