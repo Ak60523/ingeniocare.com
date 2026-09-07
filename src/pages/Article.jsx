@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { api } from "../api";
 import PageHero from "../components/PageHero.jsx";
 import { StartWithAiSection, WriteSection } from "../components/content/AiAssist.jsx";
@@ -25,6 +25,7 @@ function formFromArticle(article) {
 export default function Article() {
   const { slug } = useParams();
   const { canManageContent } = useAuth();
+  const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
   const mode = params.get("mode") === "edit" ? "edit" : "preview";
   const isEdit = canManageContent && mode === "edit";
@@ -74,6 +75,12 @@ export default function Article() {
       setArticle(data.article);
       setForm(formFromArticle(data.article));
       setError("");
+      const nextSlug = data.article?.slug;
+      if (nextSlug && nextSlug !== slug) {
+        navigate(`/${nextSlug}?mode=preview`);
+      } else {
+        setParams({ mode: "preview" });
+      }
     } catch (err) {
       setError(err.message);
     } finally {

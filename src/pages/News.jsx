@@ -6,7 +6,7 @@ import { useAuth } from "../AuthContext.jsx";
 import { slugifyTitle } from "../roles";
 import { sectionHero } from "../siteNav.js";
 import { sortNewestFirst } from "../../server/contentSort.js";
-import { AdminBar, StatusChip } from "./ContentPages.jsx";
+import { AdminBar, ContentIndexActions, StatusChip } from "./ContentPages.jsx";
 
 export default function News() {
   const { canManageContent } = useAuth();
@@ -129,7 +129,16 @@ export default function News() {
               return (
                 <article className="content-index-item" key={item.id || item.slug}>
                   <div className="content-index-meta">
-                    {showAdmin ? <StatusChip item={{ ...item, status: item.status || "published" }} /> : null}
+                    {isEdit ? (
+                      <ContentIndexActions
+                        item={{ ...item, status: item.status || "published" }}
+                        href={href}
+                        busy={busy}
+                        onSetStatus={(status) => setStatus(item, status)}
+                      />
+                    ) : showAdmin ? (
+                      <StatusChip item={{ ...item, status: item.status || "published" }} />
+                    ) : null}
                     <time>{item.dateLabel || "—"}</time>
                   </div>
                   {href ? (
@@ -140,33 +149,6 @@ export default function News() {
                     <h2>{item.title}</h2>
                   )}
                   {item.summary ? <p>{item.summary}</p> : null}
-                  {isEdit ? (
-                    <div className="owner-row-actions">
-                      {href ? (
-                        <Link className="btn ghost" to={`${href}?mode=edit`}>
-                          Open
-                        </Link>
-                      ) : null}
-                      {String(item.status || "published") !== "published" ? (
-                        <button className="btn ghost" type="button" disabled={busy} onClick={() => setStatus(item, "published")}>
-                          Publish
-                        </button>
-                      ) : (
-                        <button className="btn ghost" type="button" disabled={busy} onClick={() => setStatus(item, "draft")}>
-                          Unpublish
-                        </button>
-                      )}
-                      {String(item.status || "") !== "archived" ? (
-                        <button className="btn ghost" type="button" disabled={busy} onClick={() => setStatus(item, "archived")}>
-                          Archive
-                        </button>
-                      ) : (
-                        <button className="btn ghost" type="button" disabled={busy} onClick={() => setStatus(item, "draft")}>
-                          Restore
-                        </button>
-                      )}
-                    </div>
-                  ) : null}
                 </article>
               );
             })

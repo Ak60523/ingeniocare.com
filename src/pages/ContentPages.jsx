@@ -75,6 +75,38 @@ export function StatusChip({ item }) {
   return <span className={`chip status-${label}`}>{label}</span>;
 }
 
+export function ContentIndexActions({ item, href, busy, onSetStatus }) {
+  const status = String(item.status || "published").toLowerCase();
+  return (
+    <div className="content-index-status">
+      <StatusChip item={{ ...item, status }} />
+      {href ? (
+        <Link to={`${href}?mode=edit`}>
+          Edit
+        </Link>
+      ) : null}
+      {status !== "published" ? (
+        <button type="button" disabled={busy} onClick={() => onSetStatus("published")}>
+          Publish
+        </button>
+      ) : (
+        <button type="button" disabled={busy} onClick={() => onSetStatus("draft")}>
+          Unpublish
+        </button>
+      )}
+      {status !== "archived" ? (
+        <button type="button" disabled={busy} onClick={() => onSetStatus("archived")}>
+          Archive
+        </button>
+      ) : (
+        <button type="button" disabled={busy} onClick={() => onSetStatus("draft")}>
+          Restore
+        </button>
+      )}
+    </div>
+  );
+}
+
 export function ContentStatusActions({ item, busy, onSetStatus }) {
   if (!item) return null;
   const status = String(item.status || "published").toLowerCase();
@@ -250,7 +282,16 @@ export function ContentListPage({ type }) {
               return (
                 <article className="content-index-item" key={item.id || item.slug}>
                   <div className="content-index-meta">
-                    {showAdmin ? <StatusChip item={item} /> : null}
+                    {isEdit ? (
+                      <ContentIndexActions
+                        item={item}
+                        href={href}
+                        busy={busy}
+                        onSetStatus={(status) => setStatus(item, status)}
+                      />
+                    ) : showAdmin ? (
+                      <StatusChip item={item} />
+                    ) : null}
                     <time>{formatContentDate(item.publishedAt) || "—"}</time>
                   </div>
                   {href ? (
@@ -266,33 +307,6 @@ export function ContentListPage({ type }) {
                       <span key={tag}>#{tag}</span>
                     ))}
                   </div>
-                  {isEdit ? (
-                    <div className="owner-row-actions">
-                      {href ? (
-                        <Link className="btn ghost" to={href}>
-                          Open
-                        </Link>
-                      ) : null}
-                      {item.status !== "published" ? (
-                        <button className="btn ghost" type="button" disabled={busy} onClick={() => setStatus(item, "published")}>
-                          Publish
-                        </button>
-                      ) : (
-                        <button className="btn ghost" type="button" disabled={busy} onClick={() => setStatus(item, "draft")}>
-                          Unpublish
-                        </button>
-                      )}
-                      {item.status !== "archived" ? (
-                        <button className="btn ghost" type="button" disabled={busy} onClick={() => setStatus(item, "archived")}>
-                          Archive
-                        </button>
-                      ) : (
-                        <button className="btn ghost" type="button" disabled={busy} onClick={() => setStatus(item, "draft")}>
-                          Restore
-                        </button>
-                      )}
-                    </div>
-                  ) : null}
                 </article>
               );
             })
@@ -310,6 +324,7 @@ export function ContentDetailPage({ type }) {
   const isPodcast = type === "podcast";
   const { canManageContent } = useAuth();
   const [params, setParams] = useSearchParams();
+  const navigate = useNavigate();
   const mode = params.get("mode") === "edit" ? "edit" : "preview";
   const isEdit = canManageContent && mode === "edit";
   const [item, setItem] = useState(null);
@@ -398,6 +413,12 @@ export function ContentDetailPage({ type }) {
       setItem(data.item);
       setForm(formFromItem(data.item));
       setError("");
+      const nextSlug = data.item?.slug;
+      if (nextSlug && nextSlug !== slug) {
+        navigate(`${contentPath({ ...data.item, type })}?mode=preview`);
+      } else {
+        setParams({ mode: "preview" });
+      }
     } catch (err) {
       setError(err.message);
     } finally {
