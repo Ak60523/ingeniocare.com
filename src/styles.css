@@ -2605,8 +2605,21 @@ a.solution-flow-box:focus-visible {
 
 .content-admin-bar {
   display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
   gap: 0.4rem;
   margin: 0 0 1.25rem;
+  overflow-x: auto;
+}
+
+.content-admin-bar-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0.4rem;
+  margin-left: 0.35rem;
+  padding-left: 0.75rem;
+  border-left: 1px solid var(--line);
 }
 
 .content-admin-bar button {
@@ -2616,12 +2629,24 @@ a.solution-flow-box:focus-visible {
   padding: 0.4rem 0.8rem;
   font-family: var(--font-menu);
   cursor: pointer;
+  white-space: nowrap;
+}
+
+.content-admin-bar button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .content-admin-bar button.active {
   background: var(--navy);
   color: var(--on-dark);
   border-color: var(--navy);
+}
+
+.content-admin-bar .chip {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
 }
 
 .content-index-item {
@@ -2654,14 +2679,16 @@ a.solution-flow-box:focus-visible {
 
 .content-browse {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  gap: 1rem;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
   margin-bottom: 1.5rem;
 }
 
 .content-browse .btn {
   min-width: 6.5rem;
+  margin: 0;
   text-align: center;
 }
 

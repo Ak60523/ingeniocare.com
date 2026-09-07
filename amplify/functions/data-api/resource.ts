@@ -4,7 +4,7 @@ export const dataApiFunction = defineFunction({
   name: "data-api",
   entry: "./handler.ts",
   runtime: 22,
-  timeoutSeconds: 120,
+  timeoutSeconds: 300,
   memoryMB: 1024,
   environment: {
     JWT_SECRET: secret("JWT_SECRET"),

@@ -36,7 +36,7 @@ Amplify Hosting for React, a Lambda data API for Express. Care **does not create
 React (local Vite or Amplify Hosting)
    │  amplify_outputs.json custom.dataApiUrl
    ▼
-Lambda Function URL  (Express via serverless-http, 120s, Bedrock IAM)
+Lambda Function URL  (Express via serverless-http, 300s, Bedrock IAM)
    │  shared IngenioNetwork VPC
    ▼
 Aurora PostgreSQL  (database ingeniocare on the shared cluster)

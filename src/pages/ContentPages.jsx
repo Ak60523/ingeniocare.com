@@ -56,7 +56,7 @@ function metaFor(type) {
   return CONTENT_META[type] || CONTENT_META.blog;
 }
 
-export function AdminBar({ mode, onChange }) {
+export function AdminBar({ mode, onChange, children }) {
   return (
     <div className="content-admin-bar">
       <button type="button" className={mode === "edit" ? "active" : ""} onClick={() => onChange("edit")}>
@@ -65,6 +65,7 @@ export function AdminBar({ mode, onChange }) {
       <button type="button" className={mode === "preview" ? "active" : ""} onClick={() => onChange("preview")}>
         Preview
       </button>
+      {children ? <div className="content-admin-bar-actions">{children}</div> : null}
     </div>
   );
 }
@@ -74,16 +75,36 @@ export function StatusChip({ item }) {
   return <span className={`chip status-${label}`}>{label}</span>;
 }
 
+export function ContentStatusActions({ item, busy, onSetStatus }) {
+  if (!item) return null;
+  const status = String(item.status || "published").toLowerCase();
+  return (
+    <>
+      <StatusChip item={{ ...item, status }} />
+      {status !== "published" ? (
+        <button type="button" disabled={busy} onClick={() => onSetStatus("published")}>
+          Publish
+        </button>
+      ) : (
+        <button type="button" disabled={busy} onClick={() => onSetStatus("draft")}>
+          Unpublish
+        </button>
+      )}
+      <button type="button" disabled={busy} onClick={() => onSetStatus("archived")}>
+        Archive
+      </button>
+    </>
+  );
+}
+
 export function ContentBrowseNav({ previousHref, indexHref, nextHref }) {
   return (
-    <nav className="content-browse">
+    <nav className="content-browse" aria-label="Article">
       {previousHref ? (
         <Link className="btn ghost" to={previousHref}>
           Previous
         </Link>
-      ) : (
-        <span />
-      )}
+      ) : null}
       <Link className="btn ghost" to={indexHref}>
         Index
       </Link>
@@ -91,9 +112,7 @@ export function ContentBrowseNav({ previousHref, indexHref, nextHref }) {
         <Link className="btn ghost" to={nextHref}>
           Next
         </Link>
-      ) : (
-        <span />
-      )}
+      ) : null}
     </nav>
   );
 }
@@ -478,7 +497,9 @@ export function ContentDetailPage({ type }) {
           />
 
           {canManageContent ? (
-            <AdminBar mode={isEdit ? "edit" : "preview"} onChange={(next) => setParams({ mode: next })} />
+            <AdminBar mode={isEdit ? "edit" : "preview"} onChange={(next) => setParams({ mode: next })}>
+              {item?.id ? <ContentStatusActions item={item} busy={busy} onSetStatus={setStatus} /> : null}
+            </AdminBar>
           ) : null}
 
           {error ? <p className="form-error">{error}</p> : null}
@@ -486,21 +507,6 @@ export function ContentDetailPage({ type }) {
             <p>Loading…</p>
           ) : isEdit ? (
             <form className="content-editor" onSubmit={save}>
-              <div className="owner-row-actions">
-                <StatusChip item={item} />
-                {item.status !== "published" ? (
-                  <button className="btn ghost" type="button" disabled={busy} onClick={() => setStatus("published")}>
-                    Publish
-                  </button>
-                ) : (
-                  <button className="btn ghost" type="button" disabled={busy} onClick={() => setStatus("draft")}>
-                    Unpublish
-                  </button>
-                )}
-                <button className="btn ghost" type="button" disabled={busy} onClick={() => setStatus("archived")}>
-                  Archive
-                </button>
-              </div>
               {!isPublished ? (
                 <StartWithAiSection
                   busy={busy}

@@ -9,7 +9,7 @@ import { bodyHasContent, ensureEditableBlocks, serializeBody } from "../../serve
 import { useAuth } from "../AuthContext.jsx";
 import { sectionHero } from "../siteNav.js";
 import NotFound from "./NotFound.jsx";
-import { AdminBar, ContentBrowseNav, StatusChip } from "./ContentPages.jsx";
+import { AdminBar, ContentBrowseNav, ContentStatusActions } from "./ContentPages.jsx";
 
 function formFromArticle(article) {
   return {
@@ -179,28 +179,17 @@ export default function Article() {
           />
 
           {canManageContent ? (
-            <AdminBar mode={isEdit ? "edit" : "preview"} onChange={(next) => setParams({ mode: next })} />
+            <AdminBar mode={isEdit ? "edit" : "preview"} onChange={(next) => setParams({ mode: next })}>
+              {article.id ? (
+                <ContentStatusActions item={article} busy={busy} onSetStatus={setStatus} />
+              ) : null}
+            </AdminBar>
           ) : null}
 
           {error ? <p className="form-error">{error}</p> : null}
 
           {isEdit && article.id ? (
             <form className="content-editor" onSubmit={save}>
-              <div className="owner-row-actions">
-                <StatusChip item={{ ...article, status: article.status || "published" }} />
-                {!isPublished ? (
-                  <button className="btn ghost" type="button" disabled={busy} onClick={() => setStatus("published")}>
-                    Publish
-                  </button>
-                ) : (
-                  <button className="btn ghost" type="button" disabled={busy} onClick={() => setStatus("draft")}>
-                    Unpublish
-                  </button>
-                )}
-                <button className="btn ghost" type="button" disabled={busy} onClick={() => setStatus("archived")}>
-                  Archive
-                </button>
-              </div>
               {!isPublished ? (
                 <StartWithAiSection
                   busy={busy}

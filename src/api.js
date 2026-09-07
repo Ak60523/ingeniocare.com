@@ -14,21 +14,34 @@ function tenantHeader() {
   return tenantId ? { "X-Tenant-Id": tenantId } : {};
 }
 
+/** Write/revise/image jobs can take a few minutes; keep this under the Lambda timeout. */
+const CONTENT_AI_TIMEOUT_MS = 290_000;
+
 async function request(path, options = {}) {
-  const response = await fetch(`${base}${path}`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...authHeader(),
-      ...tenantHeader(),
-      ...(options.headers || {}),
-    },
-    ...options,
-  });
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    throw new Error(data.error || "Request failed");
+  const { timeoutMs, headers, signal: callerSignal, ...fetchOptions } = options;
+  const signal = callerSignal || (timeoutMs ? AbortSignal.timeout(timeoutMs) : undefined);
+  try {
+    const response = await fetch(`${base}${path}`, {
+      ...fetchOptions,
+      headers: {
+        "Content-Type": "application/json",
+        ...authHeader(),
+        ...tenantHeader(),
+        ...headers,
+      },
+      ...(signal ? { signal } : {}),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new Error(data.error || "Request failed");
+    }
+    return data;
+  } catch (err) {
+    if (err?.name === "TimeoutError" || err?.name === "AbortError") {
+      throw new Error("This is taking longer than expected. Keep this tab open and try again.");
+    }
+    throw err;
   }
-  return data;
 }
 
 export const api = {
@@ -50,15 +63,29 @@ export const api = {
   createNews: (body) => request("/api/news", { method: "POST", body: JSON.stringify(body) }),
   updateNews: (id, body) =>
     request(`/api/news/${encodeURIComponent(id)}`, { method: "PATCH", body: JSON.stringify(body) }),
-  generateContent: (body) => request("/api/content/generate", { method: "POST", body: JSON.stringify(body) }),
-  reviseContent: (body) => request("/api/content/revise", { method: "POST", body: JSON.stringify(body) }),
+  generateContent: (body) =>
+    request("/api/content/generate", { method: "POST", body: JSON.stringify(body), timeoutMs: CONTENT_AI_TIMEOUT_MS }),
+  reviseContent: (body) =>
+    request("/api/content/revise", { method: "POST", body: JSON.stringify(body), timeoutMs: CONTENT_AI_TIMEOUT_MS }),
   contentTitleAlternatives: (body) =>
-    request("/api/content/title-alternatives", { method: "POST", body: JSON.stringify(body) }),
+    request("/api/content/title-alternatives", {
+      method: "POST",
+      body: JSON.stringify(body),
+      timeoutMs: CONTENT_AI_TIMEOUT_MS,
+    }),
   contentImages: () => request("/api/content/images"),
   generateContentImage: (body) =>
-    request("/api/content/images/generate", { method: "POST", body: JSON.stringify(body) }),
+    request("/api/content/images/generate", {
+      method: "POST",
+      body: JSON.stringify(body),
+      timeoutMs: CONTENT_AI_TIMEOUT_MS,
+    }),
   uploadContentImage: (body) =>
-    request("/api/content/images/upload", { method: "POST", body: JSON.stringify(body) }),
+    request("/api/content/images/upload", {
+      method: "POST",
+      body: JSON.stringify(body),
+      timeoutMs: CONTENT_AI_TIMEOUT_MS,
+    }),
   deleteContentImage: (id) => request(`/api/content/images/${encodeURIComponent(id)}`, { method: "DELETE" }),
   tenants: () => request("/api/tenants"),
   createTenant: (name) => request("/api/tenants", { method: "POST", body: JSON.stringify({ name }) }),
