@@ -5,7 +5,7 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import path from "node:path";
 import { seedSiteContent } from "./contentSeed.js";
-import { createPool, initSchema } from "./db.js";
+import { createPool, ensureTargetDatabase, initSchema } from "./db.js";
 import {
   canAssignRole,
   canExploreDataModel,
@@ -1203,6 +1203,7 @@ export async function ensureDatabase() {
     return;
   }
   try {
+    await ensureTargetDatabase();
     await initSchema(pool);
     await seedContent(pool);
     console.log("Postgres schema ready");

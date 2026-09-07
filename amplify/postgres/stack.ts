@@ -1,11 +1,19 @@
 import { Duration, Stack } from "aws-cdk-lib";
-import { Vpc, SubnetType, SecurityGroup, Port } from "aws-cdk-lib/aws-ec2";
+import { Port, SecurityGroup } from "aws-cdk-lib/aws-ec2";
 import { ManagedPolicy } from "aws-cdk-lib/aws-iam";
-import * as rds from "aws-cdk-lib/aws-rds";
 import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 import { Rule, Schedule } from "aws-cdk-lib/aws-events";
 import { LambdaFunction as LambdaWarmTarget } from "aws-cdk-lib/aws-events-targets";
-import { Function as LambdaFunction, CfnFunction, FunctionUrlAuthType, HttpMethod } from "aws-cdk-lib/aws-lambda";
+import { Function as LambdaFunction, CfnFunction, FunctionUrlAuthType } from "aws-cdk-lib/aws-lambda";
+import {
+  ACCOUNT_CLUSTER_ENDPOINT,
+  ACCOUNT_CLUSTER_PORT,
+  ACCOUNT_CLUSTER_SG_ID,
+  ACCOUNT_DB_SECRET_ARN,
+  ACCOUNT_MAINTENANCE_DB,
+  CARE_DATABASE_NAME,
+} from "../network/constants";
+import { resolveAccountVpc } from "./vpc";
 
 export type PostgresStackResult = {
   dbSecret: secretsmanager.ISecret;
@@ -13,7 +21,11 @@ export type PostgresStackResult = {
   dataApiUrl: string;
 };
 
-function attachLambdaToVpc(fn: LambdaFunction, vpc: Vpc, sg: SecurityGroup) {
+function attachLambdaToVpc(
+  fn: LambdaFunction,
+  vpc: ReturnType<typeof resolveAccountVpc>,
+  sg: SecurityGroup
+) {
   fn.role?.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole"));
   const cfn = fn.node.defaultChild as CfnFunction;
   cfn.vpcConfig = {
@@ -25,55 +37,29 @@ function attachLambdaToVpc(fn: LambdaFunction, vpc: Vpc, sg: SecurityGroup) {
 function wireDbEnv(fn: LambdaFunction, dbSecret: secretsmanager.ISecret, clusterEndpoint: string) {
   fn.addEnvironment("DATABASE_SECRET_ARN", dbSecret.secretArn);
   fn.addEnvironment("DB_HOST", clusterEndpoint);
-  fn.addEnvironment("DB_NAME", "ingeniocare");
-  fn.addEnvironment("DB_PORT", "5432");
+  fn.addEnvironment("DB_NAME", CARE_DATABASE_NAME);
+  fn.addEnvironment("DB_MAINTENANCE_NAME", ACCOUNT_MAINTENANCE_DB);
+  fn.addEnvironment("DB_PORT", String(ACCOUNT_CLUSTER_PORT));
   dbSecret.grantRead(fn);
 }
 
+/** Care Lambda joins IngenioNetwork. Does not create a VPC or Aurora cluster. */
 export function wirePostgresAndDataApi(stack: Stack, dataApiLambda: LambdaFunction): PostgresStackResult {
-  const vpc = new Vpc(stack, "IngenioVpc", {
-    maxAzs: 2,
-    natGateways: 1,
-  });
-
-  const dbSecret = new secretsmanager.Secret(stack, "IngenioDbSecret", {
-    generateSecretString: {
-      secretStringTemplate: JSON.stringify({ username: "ingenio" }),
-      generateStringKey: "password",
-      excludePunctuation: true,
-    },
-  });
+  const vpc = resolveAccountVpc(stack);
+  const dbSecret = secretsmanager.Secret.fromSecretCompleteArn(
+    stack,
+    "AccountDbSecret",
+    ACCOUNT_DB_SECRET_ARN
+  );
 
   const lambdaSg = new SecurityGroup(stack, "DbLambdaSecurityGroup", { vpc });
-  const dbSg = new SecurityGroup(stack, "IngenioDbSecurityGroup", { vpc });
-  dbSg.addIngressRule(lambdaSg, Port.tcp(5432), "Lambda to Aurora");
-
-  // Keep the live cluster name on the original app. A second Git-connected
-  // app must use a different identifier or RDS rejects the create.
-  const appId = String(process.env.AWS_APP_ID || "");
-  const clusterIdentifier =
-    !appId || appId === "d56s4au6w3by7"
-      ? "ingenioCareCluster"
-      : `ingeniocare-${appId}`;
-
-  const cluster = new rds.DatabaseCluster(stack, "IngenioAurora", {
-    clusterIdentifier,
-    engine: rds.DatabaseClusterEngine.auroraPostgres({
-      version: rds.AuroraPostgresEngineVersion.of("15.17", "15"),
-    }),
-    credentials: rds.Credentials.fromSecret(dbSecret),
-    serverlessV2MinCapacity: 0.5,
-    serverlessV2MaxCapacity: 2,
-    writer: rds.ClusterInstance.serverlessV2("writer"),
-    vpc,
-    vpcSubnets: { subnetType: SubnetType.PRIVATE_WITH_EGRESS },
-    securityGroups: [dbSg],
-    defaultDatabaseName: "ingeniocare",
+  const dbSg = SecurityGroup.fromSecurityGroupId(stack, "AccountDbSg", ACCOUNT_CLUSTER_SG_ID, {
+    mutable: true,
   });
+  dbSg.addIngressRule(lambdaSg, Port.tcp(ACCOUNT_CLUSTER_PORT), "Ingenio Care Lambda to account Aurora");
 
-  const clusterEndpoint = cluster.clusterEndpoint.hostname;
   attachLambdaToVpc(dataApiLambda, vpc, lambdaSg);
-  wireDbEnv(dataApiLambda, dbSecret, clusterEndpoint);
+  wireDbEnv(dataApiLambda, dbSecret, ACCOUNT_CLUSTER_ENDPOINT);
 
   new Rule(stack, "DataApiWarmSchedule", {
     schedule: Schedule.rate(Duration.minutes(5)),
@@ -88,7 +74,7 @@ export function wirePostgresAndDataApi(stack: Stack, dataApiLambda: LambdaFuncti
 
   return {
     dbSecret,
-    clusterEndpoint,
+    clusterEndpoint: ACCOUNT_CLUSTER_ENDPOINT,
     dataApiUrl: fnUrl.url,
   };
 }

@@ -79,6 +79,56 @@ async function createPgPool() {
   });
 }
 
+function quoteIdent(name) {
+  if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(name)) {
+    throw new Error(`Invalid Postgres identifier: ${name}`);
+  }
+  return name;
+}
+
+async function adminConnectionConfig() {
+  let user = process.env.POSTGRES_USER || process.env.PGUSER || process.env.AURORA_USER || process.env.DB_USER;
+  let password = process.env.POSTGRES_PASSWORD || process.env.PGPASSWORD || process.env.AURORA_PASSWORD;
+  if (process.env.DATABASE_SECRET_ARN) {
+    const creds = await loadDbSecret();
+    user = creds.username || user;
+    password = creds.password || password;
+  }
+  return {
+    host: process.env.DB_HOST || process.env.POSTGRES_HOST || process.env.PGHOST || process.env.AURORA_HOST,
+    port: Number(process.env.DB_PORT || process.env.POSTGRES_PORT || process.env.PGPORT || process.env.AURORA_PORT || 5432),
+    user,
+    password,
+    ssl: sslConfig(),
+    max: 1,
+  };
+}
+
+/**
+ * Create DB_NAME on the shared account cluster if it is missing.
+ * Connects to the existing maintenance database, not a new Aurora cluster.
+ */
+export async function ensureTargetDatabase() {
+  const targetDb = process.env.DB_NAME || "ingeniocare";
+  const maintenanceDb =
+    process.env.DB_MAINTENANCE_NAME || process.env.POSTGRES_MAINTENANCE_DB || "ingenio_population";
+  if (targetDb === maintenanceDb) return;
+
+  const base = await adminConnectionConfig();
+  if (!base.host || !base.user) return;
+
+  const admin = new pg.Pool({ ...base, database: maintenanceDb });
+  try {
+    const { rows } = await admin.query("SELECT 1 FROM pg_database WHERE datname = $1", [targetDb]);
+    if (!rows.length) {
+      await admin.query(`CREATE DATABASE ${quoteIdent(targetDb)}`);
+      console.log(`Created database ${targetDb} on shared Aurora cluster`);
+    }
+  } finally {
+    await admin.end();
+  }
+}
+
 export function createPool() {
   if (!isDbConfigured()) return null;
   let inner = null;
