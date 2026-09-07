@@ -11,15 +11,29 @@ backend:
             echo "ERROR: AWS_BRANCH and AWS_APP_ID are required for ampx pipeline-deploy."
             exit 1
           fi
-          aws cloudformation describe-stacks --stack-name CDKToolkit --region "$AWS_DEFAULT_REGION" > /dev/null 2>&1 \
-            || (ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text) \
-              && npx cdk bootstrap "aws://${ACCOUNT_ID}/${AWS_DEFAULT_REGION}")
-          npx ampx pipeline-deploy --branch "$AWS_BRANCH" --app-id "$AWS_APP_ID" --debug
+          ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+          echo "Build account: ${ACCOUNT_ID}"
+          if [ "$ACCOUNT_ID" != "711387140392" ]; then
+            echo "ERROR: Hosting is running in AWS account ${ACCOUNT_ID}, not Ingenio Care (711387140392)."
+            echo "Create this Amplify app from the AWS Console with the GitHub App."
+            echo "Do not use amplify create-app; that runs CodeBuild in Amplify's service account."
+            exit 1
+          fi
+          if ! aws cloudformation describe-stacks --stack-name CDKToolkit --region "$AWS_DEFAULT_REGION" >/dev/null 2>&1; then
+            echo "ERROR: CDKToolkit is missing in ${AWS_DEFAULT_REGION}."
+            echo "Bootstrap once from a Care-account admin role, not from Amplify Hosting."
+            exit 1
+          fi
+          npx ampx pipeline-deploy --branch "$AWS_BRANCH" --app-id "$AWS_APP_ID"
 frontend:
   phases:
     preBuild:
       commands:
         - test -d node_modules || npm ci
+        - |
+          if [ -n "${AWS_BRANCH:-}" ] && [ -n "${AWS_APP_ID:-}" ]; then
+            npx ampx generate outputs --branch "$AWS_BRANCH" --app-id "$AWS_APP_ID"
+          fi
     build:
       commands:
         - npm run build
