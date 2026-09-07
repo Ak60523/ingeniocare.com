@@ -11,7 +11,13 @@ export default function PageHero({ title, children, variant, aside, ruled, kicke
   return (
     <>
       <section className={classes}>
-        {photo ? <HomeHeroGraphic src={photo} position={imagePosition} /> : null}
+        {photo ? (
+          <div className="page-hero-media" aria-hidden="true">
+            <div className="wrap page-hero-media-inner">
+              <HomeHeroGraphic src={photo} position={imagePosition} />
+            </div>
+          </div>
+        ) : null}
         <div className="wrap page-hero-inner">
           {kicker ? <p className="page-hero-kicker">{kicker}</p> : null}
           {aside ? (

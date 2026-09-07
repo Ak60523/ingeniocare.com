@@ -429,7 +429,7 @@ export function ContentDetailPage({ type }) {
         title: form.title,
         subtitle: form.subtitle,
         summary: form.summary,
-        body: serializeBody(form.blocks),
+        body: form.blocks,
         hashtags: form.hashtags,
         gated: false,
         pdfUrl: form.pdfUrl,

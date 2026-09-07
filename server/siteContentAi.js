@@ -1,5 +1,10 @@
 import { bedrockJsonRequest, getBedrockSonnetModelId } from "./bedrock.js";
-import { bodyHasContent, mergeGeneratedBody, normalizeFigureList } from "./contentBody.js";
+import {
+  applyFigurePromptOnlyPolicy,
+  bodyHasContent,
+  mergeGeneratedBody,
+  parseBody,
+} from "./contentBody.js";
 
 export const CONTENT_AI_TYPES = new Set(["blog", "whitepaper", "news", "podcast"]);
 
@@ -53,18 +58,24 @@ Return ONLY valid JSON with this shape:
   "hashtags": string[],
   "seoTitle": string,
   "seoDescription": string,
-  "body": string,
-  "figures": [
-    { "type": "image" | "infographic", "title": string, "prompt": string, "placement": "inline" | "pullout" }
+  "body": [
+    { "type": "heading", "text": string, "level": 2 | 3 },
+    { "type": "text", "text": string (one or more paragraphs separated by blank lines; may include **bold** and *italic* markdown; never use # markdown headings) },
+    { "type": "list", "title": string, "items": string[], "placement": "sidebar" (optional — place immediately before the section it summarizes) },
+    { "type": "quote", "text": string, "speaker": string, "title": string },
+    { "type": "infographic", "title": string (optional short caption under the figure only — not drawn in the image), "prompt": string (diagram/infographic generation brief only), "imageUrl": "", "placement": "inline" | "pullout" },
+    { "type": "image", "title": string (optional short caption under the figure only — not drawn in the image), "prompt": string (photographic / editorial scene brief only — not a diagram), "imageUrl": "", "placement": "inline" | "pullout" }
   ]
 }
 
 Rules:
-- body is HTML only: use <h3>, <p>, <ul><li>, <strong>, <em>, <a href>, and <p class="quote"> for pull quotes. No markdown. No <html>, <head>, or <body> wrappers. Never include <script> or <img>.
-- figures is optional. Include it only when the instruction asks for an Image or Infographic. Leave image URLs out — do not invent URLs. Captions go in title; the prompt describes the photo or diagram only.
+- body is an ordered array of section blocks. Do not return a single HTML string. Do not wrap the article in <html>, <head>, or <body>. Never include <script> or <img>.
+- Use heading blocks (level 2 for section titles, level 3 for subsections) — never put # or ## markdown inside text blocks.
+- For sidebar lists and pullout figures: place each immediately before the related text section so it floats beside that content; do not collect all sidebars at the end.
+- Include infographic or image blocks only when the instruction asks for them. Write ONLY a concrete prompt in "prompt" and an optional short caption in "title". ALWAYS set "imageUrl" to "" (empty). Never invent URLs.
 - hashtags: 3-8 lowercase tags without #.
 - summary: 1-2 sentences.
-- For blog: 5-8 short sections. For whitepaper: 8-14 sections with a takeaways list. For news: a wire-style press release with a dateline, at least one attributed quote, an About Ingenio Care paragraph, and a media contact. For podcast: episode show notes with a short intro, 4-8 talking points, and a closing call to action.
+- For blog: 5-8 body blocks. For whitepaper: 8-14 body blocks with heading structure and a short list of takeaways. For news: a wire-style press release with a dateline, at least one attributed quote, an About Ingenio Care heading + text, and a media contact heading + text. For podcast: episode show notes with a short intro heading, 4-8 talking-point list or text blocks, and a closing call to action.
 - news headline is a short kicker such as "Press Release - 9/5/2026". news dateLabel looks like "September 5, 2026, PRESS RELEASE".
 - Default spokesperson is Alex Kumar, CEO of Ingenio Care, when a quote is needed and no other speaker is specified.
 - Default media contact is Rohin Gopalka, rohin.gopalka@ingeniocare.com, unless the instruction says otherwise.
@@ -78,14 +89,24 @@ function typeLabel(type) {
   return "a blog post";
 }
 
+function bodyFromParsed(parsed, input) {
+  const rawBody = parsed.body ?? parsed.blocks;
+  const previousBody = input.draft?.body;
+  if (Array.isArray(rawBody) || (typeof rawBody === "string" && rawBody.trim().startsWith("["))) {
+    return applyFigurePromptOnlyPolicy(parseBody(rawBody), previousBody);
+  }
+  const html = sanitizeHtml(typeof rawBody === "string" ? rawBody : parsed.html || "");
+  return parseBody(
+    mergeGeneratedBody({
+      html,
+      figures: parsed.figures,
+      previousBody,
+    })
+  );
+}
+
 function draftFromParsed(parsed, input, type) {
-  const html = sanitizeHtml(parsed.body ?? parsed.html ?? "");
-  const figures = normalizeFigureList(parsed.figures ?? parsed.blocks);
-  const body = mergeGeneratedBody({
-    html,
-    figures,
-    previousBody: input.draft?.body,
-  });
+  const body = bodyFromParsed(parsed, input);
   return {
     type,
     title: String(parsed.title ?? input.topicTitle ?? input.draft?.title ?? "Untitled").trim() || "Untitled",
@@ -170,7 +191,7 @@ export async function generateSiteContentDraft(input) {
     input.topicTitle ? `Topic title: ${input.topicTitle}` : "",
     input.topicSummary ? `Topic brief: ${input.topicSummary}` : "",
     input.instruction ? `Extra instruction: ${input.instruction}` : "",
-    "Write the full draft now.",
+    "Write the full draft now as ordered section blocks.",
   ]
     .filter(Boolean)
     .join("\n");
@@ -200,8 +221,12 @@ export async function reviseSiteContentDraft(input) {
   const type = CONTENT_AI_TYPES.has(String(current.type)) ? String(current.type) : "blog";
   const system = `${GENERATE_SYSTEM}
 
-Revise the provided draft according to the instruction. Keep the same JSON shape. Preserve useful structure and accurate claims unless the instruction asks otherwise.`;
-  const userPrompt = [`Instruction: ${instruction}`, `Current draft JSON:\n${JSON.stringify(current)}`].join("\n\n");
+Revise the provided draft according to the instruction. Keep the same JSON shape, with body as an array of section blocks. Preserve useful structure and accurate claims unless the instruction asks otherwise.`;
+  const currentForModel = {
+    ...current,
+    body: parseBody(current.body),
+  };
+  const userPrompt = [`Instruction: ${instruction}`, `Current draft JSON:\n${JSON.stringify(currentForModel)}`].join("\n\n");
 
   const result = await bedrockJsonRequest(system, userPrompt, 8192, {
     modelId: getBedrockSonnetModelId(),

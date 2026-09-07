@@ -131,10 +131,23 @@ function asyncHandler(fn) {
 function persistableBody(raw) {
   const blocks = parseBody(raw).map((block) => {
     if (block.type === "html") return { ...block, html: sanitizeHtml(block.html) };
-    const imageUrl = String(block.imageUrl || "").trim();
+    if (block.type === "image" || block.type === "infographic") {
+      const imageUrl = String(block.imageUrl || "").trim();
+      return {
+        ...block,
+        imageUrl: /^javascript:/i.test(imageUrl) ? "" : imageUrl,
+      };
+    }
+    if (block.type === "list") {
+      return {
+        ...block,
+        title: String(block.title || ""),
+        items: (block.items || []).map((item) => String(item ?? "")),
+      };
+    }
     return {
       ...block,
-      imageUrl: /^javascript:/i.test(imageUrl) ? "" : imageUrl,
+      text: String(block.text || ""),
     };
   });
   return serializeBody(blocks);

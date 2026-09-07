@@ -9,6 +9,7 @@ const SECTION_OPTIONS = [
   { id: "use-cases", label: "Use cases" },
   { id: "takeaways", label: "Takeaways" },
   { id: "quote", label: "Quote" },
+  { id: "sidebar", label: "Sidebar list" },
   { id: "conclusion", label: "Conclusion" },
   { id: "references", label: "References" },
   { id: "infographic", label: "Infographic" },
@@ -124,12 +125,16 @@ function buildInstruction({
         ? `Focus refinement on these sections when present: ${sectionLabels.join(", ")}.`
         : `Include these sections (in a sensible order): ${sectionLabels.join(", ")}.`
       : "",
+    sections.includes("sidebar")
+      ? "Include a sidebar list placed immediately before the section it summarizes (not at the end of the article)."
+      : "",
     sections.includes("infographic")
-      ? 'Include one infographic figure with placement "inline" or "pullout" and a concrete diagram/chart prompt only; optional short caption in title; ALWAYS leave image URLs empty — do not invent URLs; the author will Generate or pick from the library afterward.'
+      ? 'Include one infographic body block with placement "inline" or "pullout" and a concrete diagram/chart prompt only; optional short caption in title; ALWAYS leave imageUrl as an empty string — do not invent URLs; the author will Generate or pick from the library afterward.'
       : "",
     sections.includes("image")
-      ? 'Include one image figure with placement "inline" or "pullout" and a concrete photographic/editorial-scene prompt only (not a diagram or labeled flowchart); optional short caption in title; ALWAYS leave image URLs empty — do not invent URLs; the author will Generate or pick from the library afterward.'
+      ? 'Include one image body block with placement "inline" or "pullout" and a concrete photographic/editorial-scene prompt only (not a diagram or labeled flowchart); optional short caption in title; ALWAYS leave imageUrl as an empty string — do not invent URLs; the author will Generate or pick from the library afterward.'
       : "",
+    "Use heading blocks (level 2/3) for section titles — never use # markdown inside text blocks. Return the article body as ordered section blocks (heading, text, quote, list, image, infographic), not a single HTML string.",
     `Length: ${paramLabel(SIZE_OPTIONS, size, sizeOverride)}.`,
     `Tone: ${paramLabel(TONE_OPTIONS, tone, toneOverride)}.`,
     `Style: ${paramLabel(STYLE_OPTIONS, style, styleOverride)}.`,

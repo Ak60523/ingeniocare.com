@@ -123,7 +123,7 @@ export default function Article() {
         headline: form.headline,
         dateLabel: form.dateLabel,
         summary: form.summary,
-        body: serializeBody(form.blocks),
+        body: form.blocks,
         slug: form.slug,
         status: article.status,
       };
