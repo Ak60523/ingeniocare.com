@@ -1,4 +1,6 @@
-/** IngenioNetwork VPC. Do not create another VPC in this app. */
+/** IngenioNetwork VPC. Do not create another VPC in this app.
+ * Refresh with: npm run select-network
+ */
 export const ACCOUNT_VPC_ID = "vpc-007b736a57c46f7e2";
 export const ACCOUNT_VPC_AZS = ["us-east-1a", "us-east-1b"] as const;
 export const ACCOUNT_PRIVATE_SUBNET_IDS = [

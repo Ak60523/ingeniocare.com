@@ -27,25 +27,37 @@ Postgres-backed features (all on Aurora in AWS):
 - Blogs and papers → `site_content`
 - AI Write / Rewrite / Refine for News, Blogs, and Papers uses **Claude Sonnet 4.5** on Amazon Bedrock in the data-api Lambda.
 
-## Production: Amplify Gen 2 + Lambda + Aurora (Growgent style)
+## Production: Amplify Gen 2 + Lambda + shared Aurora
 
-Same pattern as Growgent: Amplify Hosting for React, a Lambda data API for Express, Aurora PostgreSQL in a VPC. Deploy this as a **separate Amplify app** in the Growgent AWS account (do not attach this repo to the Growgent.ai app).
+Amplify Hosting for React, a Lambda data API for Express. Care **does not create** a VPC or RDS cluster. It joins the shared IngenioNetwork VPC and Aurora cluster whose IDs live in `amplify/network/constants.ts`. Deploy this as a **separate Amplify app** in the Care AWS account (`711387140392`). Do not attach this repo to the Growgent.ai app.
 
 ```
 React (local Vite or Amplify Hosting)
    │  amplify_outputs.json custom.dataApiUrl
    ▼
 Lambda Function URL  (Express via serverless-http, 120s, Bedrock IAM)
-   │  VPC
+   │  shared IngenioNetwork VPC
    ▼
-Aurora PostgreSQL Serverless v2  (database ingeniocare)
+Aurora PostgreSQL  (database ingeniocare on the shared cluster)
 ```
 
 Cloud credentials come from the Lambda role (Bedrock + Secrets Manager), not from a local `.env`.
 
-### Deploy in the Growgent AWS account
+### Shared network IDs
 
-1. AWS Console → the Growgent account → **Amplify** → **Create new app** (name it `ingeniocare`, Gen 2).
+Refresh the committed import IDs when the cluster or subnets change:
+
+```bash
+npm run select-network
+# or
+npm run select-network -- --cluster ingenio-pop-local-main
+```
+
+That writes `amplify/network/constants.ts`. Commit the result. Amplify Hosting cannot prompt; if a build must retarget, set `INGENIO_CLUSTER_IDENTIFIER` and the build runs the same script non-interactively. If that env is unset, the committed IDs are used.
+
+### Deploy in the Care AWS account
+
+1. AWS Console → account `711387140392` → **Amplify** → **Create new app** (name it `ingeniocare`, Gen 2). Use the GitHub App; do not use `amplify create-app`.
 2. Connect this GitHub repo and the branch you want to host.
 3. After the first backend deploy, set the hosting secret:
    ```bash
@@ -53,13 +65,13 @@ Cloud credentials come from the Lambda role (Bedrock + Secrets Manager), not fro
    ```
    Use a long random value. Redeploy so the data-api Lambda picks it up.
 4. Amplify Hosting builds `amplify.yml`: `ampx pipeline-deploy` then `vite build`. The frontend reads `custom.dataApiUrl` from `amplify_outputs.json`.
-5. Optional local cloud backend (AWS CLI profile must be the Growgent account):
+5. Optional local cloud backend (AWS CLI profile must be the Care account):
    ```bash
    npm run sandbox
    ```
    That refreshes `amplify_outputs.json` so `npm run dev` keeps calling the deployed Lambda.
 
-The first deploy creates a VPC, NAT Gateway, and Aurora cluster (`ingenioCareCluster`). That is billed separately from Growgent’s `growgentCluster`. Do not reuse the Growgent Amplify app or Cognito pool — Ingenio Care keeps its own JWT users table.
+CDKToolkit must already exist in the region. Bootstrap it once from a Care-account admin role, not from Amplify Hosting. Ingenio Care keeps its own JWT users table — do not reuse the Growgent Amplify app or Cognito pool.
 
 ### Amplify secrets
 
@@ -67,8 +79,8 @@ The first deploy creates a VPC, NAT Gateway, and Aurora cluster (`ingenioCareClu
 |---|---|
 | `JWT_SECRET` | Signs Ingenio Care sessions |
 
-Bedrock uses the Lambda IAM role (Claude Sonnet 4.5), same as Growgent’s data-api.
+Bedrock uses the Lambda IAM role (Claude Sonnet 4.5).
 
 ### Optional: EC2 instead of Lambda
 
-`deploy/nginx-api.conf` and `deploy/ingenio-api.service` remain if you want Express on a VM with Postgres on the box. Prefer the Amplify Lambda path above for the Growgent account.
+`deploy/nginx-api.conf` and `deploy/ingenio-api.service` remain if you want Express on a VM with Postgres on the box. Prefer the Amplify Lambda path above.

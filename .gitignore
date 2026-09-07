@@ -8,9 +8,7 @@ _preview/
 node_modules/
 dist/
 cdk.out/
-infra/network/cdk.out/
 cdk.context.json
-infra/network/cdk.context.json
 amplify-hosting.zip
 public/content-images/*
 !public/content-images/.gitkeep
