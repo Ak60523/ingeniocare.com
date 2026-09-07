@@ -37,8 +37,6 @@
     "@aws-cdk/cloud-assembly-api": {
       "semver": "7.8.5"
     },
-    "@aws-cdk/toolkit-lib": {
-      "semver": "7.8.5"
-    }
+    "@aws-cdk/toolkit-lib": "1.40.1"
   }
 }
