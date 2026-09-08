@@ -22,7 +22,7 @@ function blockLabel(block) {
   return BLOCK_TYPES.find((item) => item.value === block.type)?.label || "Text";
 }
 
-function groupSectionIndexes(blocks) {
+export function groupSectionIndexes(blocks) {
   const sections = [];
   let current = [];
   blocks.forEach((block, index) => {
@@ -35,6 +35,26 @@ function groupSectionIndexes(blocks) {
   });
   if (current.length) sections.push(current);
   return sections;
+}
+
+export function getSectionBlocks(blocks, sectionIndex) {
+  const sections = groupSectionIndexes(blocks);
+  const indexes = sections[sectionIndex];
+  if (!indexes?.length) return null;
+  return indexes.map((index) => structuredClone(blocks[index]));
+}
+
+export function replaceSectionBlocks(blocks, sectionIndex, nextSectionBlocks) {
+  const sections = groupSectionIndexes(blocks);
+  const indexes = sections[sectionIndex];
+  if (!indexes?.length) return blocks;
+  const start = indexes[0];
+  const end = indexes[indexes.length - 1] + 1;
+  return [...blocks.slice(0, start), ...ensureEditableBlocks(nextSectionBlocks || []), ...blocks.slice(end)];
+}
+
+function sectionContentKey(blocks) {
+  return JSON.stringify(blocks || []);
 }
 
 function BodyBlockEditor({
@@ -222,16 +242,67 @@ function BodyBlockEditor({
   );
 }
 
-export default function ArticleBodyEditor({ value, onChange, contentId, disabled = false, review = false, reviewEpoch = 0 }) {
+export default function ArticleBodyEditor({
+  value,
+  onChange,
+  contentId,
+  disabled = false,
+  review = false,
+  reviewEpoch = 0,
+  precedingBlocks = null,
+  onResetSection,
+  onSectionDone,
+}) {
   const blocks = ensureEditableBlocks(value);
+  const preceding = precedingBlocks ? ensureEditableBlocks(precedingBlocks) : null;
   const [editingSection, setEditingSection] = useState(null);
+  const [sectionSnapshots, setSectionSnapshots] = useState({});
 
   useEffect(() => {
     setEditingSection(null);
+    setSectionSnapshots({});
   }, [review, reviewEpoch]);
 
   function commit(next) {
     onChange?.(ensureEditableBlocks(parseBody(next)));
+  }
+
+  function precedingForSection(sectionIndex) {
+    if (sectionSnapshots[sectionIndex]) return sectionSnapshots[sectionIndex];
+    return getSectionBlocks(preceding, sectionIndex);
+  }
+
+  function canResetSection(sectionIndex) {
+    if (disabled || typeof onResetSection !== "function") return false;
+    const current = getSectionBlocks(blocks, sectionIndex);
+    const previous = precedingForSection(sectionIndex);
+    if (!current || !previous) return false;
+    return sectionContentKey(current) !== sectionContentKey(previous);
+  }
+
+  async function handleToggleEdit(sectionIndex, isEditing) {
+    if (isEditing) {
+      setEditingSection(null);
+      await onSectionDone?.(sectionIndex, blocks);
+      return;
+    }
+    const snapshot = getSectionBlocks(blocks, sectionIndex);
+    if (snapshot) {
+      setSectionSnapshots((current) => ({ ...current, [sectionIndex]: snapshot }));
+    }
+    setEditingSection(sectionIndex);
+  }
+
+  async function handleReset(sectionIndex) {
+    const previous = precedingForSection(sectionIndex);
+    if (!previous) return;
+    await onResetSection?.(sectionIndex, previous);
+    setEditingSection(null);
+    setSectionSnapshots((current) => {
+      const next = { ...current };
+      delete next[sectionIndex];
+      return next;
+    });
   }
 
   function updateAt(index, patch) {
@@ -299,10 +370,18 @@ export default function ArticleBodyEditor({ value, onChange, contentId, disabled
       <div className="body-editor is-review">
         {sections.map((indexes, sectionIndex) => {
           const isEditing = editingSection === sectionIndex;
+          const resetEnabled = canResetSection(sectionIndex);
           return (
             <div className="article-section-review" key={`section-${sectionIndex}`}>
               <div className="article-section-bar">
-                <button type="button" disabled={disabled} onClick={() => setEditingSection(isEditing ? null : sectionIndex)}>
+                <button
+                  type="button"
+                  disabled={disabled || !resetEnabled}
+                  onClick={() => handleReset(sectionIndex)}
+                >
+                  Reset
+                </button>
+                <button type="button" disabled={disabled} onClick={() => handleToggleEdit(sectionIndex, isEditing)}>
                   {isEditing ? "Done" : "Edit"}
                 </button>
               </div>

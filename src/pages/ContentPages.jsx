@@ -4,7 +4,9 @@ import { api } from "../api";
 import PageHero from "../components/PageHero.jsx";
 import { StartWithAiSection, WriteSection } from "../components/content/AiAssist.jsx";
 import ArticleBody from "../components/content/ArticleBody.jsx";
-import ArticleBodyEditor from "../components/content/ArticleBodyEditor.jsx";
+import ArticleBodyEditor, {
+  replaceSectionBlocks,
+} from "../components/content/ArticleBodyEditor.jsx";
 import { bodyHasContent, ensureEditableBlocks, serializeBody } from "../../server/contentBody.js";
 import { useAuth } from "../AuthContext.jsx";
 import { contentPath, contentStatusLabel, formatContentDate, slugifyTitle } from "../roles";
@@ -341,6 +343,7 @@ export function ContentDetailPage({ type }) {
   const [busy, setBusy] = useState(false);
   const [bodyReview, setBodyReview] = useState(false);
   const [reviewEpoch, setReviewEpoch] = useState(0);
+  const [precedingBlocks, setPrecedingBlocks] = useState(null);
 
   function formFromItem(next) {
     return {
@@ -359,6 +362,7 @@ export function ContentDetailPage({ type }) {
     setLoading(true);
     setBodyReview(false);
     setReviewEpoch(0);
+    setPrecedingBlocks(null);
     try {
       const data = await api.contentBySlug(slug);
       setItem(data.item);
@@ -480,6 +484,7 @@ export function ContentDetailPage({ type }) {
     setBusy(true);
     setError("");
     try {
+      setPrecedingBlocks(structuredClone(ensureEditableBlocks(form.blocks)));
       const guidance = String(instruction || "").trim() || undefined;
       let draft = {};
       const current = {
@@ -520,9 +525,52 @@ export function ContentDetailPage({ type }) {
     }
   }
 
+  async function resetSection(sectionIndex, previousSection) {
+    if (!item?.id || !form || !previousSection) return;
+    const nextBlocks = replaceSectionBlocks(form.blocks, sectionIndex, previousSection);
+    setBusy(true);
+    setError("");
+    try {
+      await applyDraft({
+        title: form.title,
+        subtitle: form.subtitle,
+        summary: form.summary,
+        body: serializeBody(nextBlocks),
+        hashtags: form.hashtags,
+      });
+      setPrecedingBlocks(structuredClone(ensureEditableBlocks(nextBlocks)));
+    } catch (err) {
+      setError(err.message || "Reset failed");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function persistSectionEdits(_sectionIndex, nextBlocks) {
+    if (!item?.id || !form) return;
+    const blocks = nextBlocks || form.blocks;
+    setBusy(true);
+    setError("");
+    try {
+      await applyDraft({
+        title: form.title,
+        subtitle: form.subtitle,
+        summary: form.summary,
+        body: serializeBody(blocks),
+        hashtags: form.hashtags,
+      });
+    } catch (err) {
+      setError(err.message || "Could not save section");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   const listHref = canManageContent ? `${meta.listPath}?mode=edit` : meta.listPath;
   const isPublished = String(item?.status || "").toLowerCase() === "published";
   const writeDisabled = busy || isPublished;
+  const hasBody = Boolean(form && bodyHasContent(form.blocks));
+  const showSectionReview = bodyReview || hasBody;
 
   return (
     <>
@@ -569,6 +617,7 @@ export function ContentDetailPage({ type }) {
                     setBusy(true);
                     try {
                       await applyDraft({ title, subtitle, summary: form.summary, body: serializeBody(form.blocks), hashtags: form.hashtags });
+                      setParams({ mode: "preview" });
                     } catch (err) {
                       setError(err.message);
                     } finally {
@@ -602,12 +651,7 @@ export function ContentDetailPage({ type }) {
                   <WriteSection
                     busy={busy}
                     disabled={writeDisabled}
-                    hasBody={bodyHasContent(form.blocks)}
-                    extraActions={
-                      <button className="btn" type="submit" disabled={busy}>
-                        {busy ? "Saving…" : "Save"}
-                      </button>
-                    }
+                    hasBody={hasBody}
                     onWrite={(instruction) => generate(instruction, "write")}
                     onRefine={(instruction) => generate(instruction, "refine")}
                   />
@@ -618,8 +662,11 @@ export function ContentDetailPage({ type }) {
                   value={form.blocks}
                   contentId={item.id}
                   disabled={busy || isPublished}
-                  review={bodyReview}
+                  review={showSectionReview}
                   reviewEpoch={reviewEpoch}
+                  precedingBlocks={precedingBlocks}
+                  onResetSection={resetSection}
+                  onSectionDone={persistSectionEdits}
                   onChange={(blocks) => updateField("blocks", blocks)}
                 />
                 {isPaper || isPodcast ? (
@@ -627,6 +674,14 @@ export function ContentDetailPage({ type }) {
                     {meta.mediaLabel}
                     <input name="pdfUrl" value={form.pdfUrl} onChange={(event) => updateField("pdfUrl", event.target.value)} />
                   </label>
+                ) : null}
+                {!isPublished ? (
+                  <div className="content-editor-save">
+                    <p className="form-note">Refine, Rewrite, section Done, and Reset save automatically. Use Save for title, summary, and other fields.</p>
+                    <button className="btn ghost" type="submit" disabled={busy}>
+                      {busy ? "Saving…" : "Save"}
+                    </button>
+                  </div>
                 ) : null}
               </fieldset>
             </form>

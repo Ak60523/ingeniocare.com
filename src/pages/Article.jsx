@@ -4,7 +4,9 @@ import { api } from "../api";
 import PageHero from "../components/PageHero.jsx";
 import { StartWithAiSection, WriteSection } from "../components/content/AiAssist.jsx";
 import ArticleBody from "../components/content/ArticleBody.jsx";
-import ArticleBodyEditor from "../components/content/ArticleBodyEditor.jsx";
+import ArticleBodyEditor, {
+  replaceSectionBlocks,
+} from "../components/content/ArticleBodyEditor.jsx";
 import { bodyHasContent, ensureEditableBlocks, serializeBody } from "../../server/contentBody.js";
 import { useAuth } from "../AuthContext.jsx";
 import { sectionHero } from "../siteNav.js";
@@ -38,6 +40,7 @@ export default function Article() {
   const [busy, setBusy] = useState(false);
   const [bodyReview, setBodyReview] = useState(false);
   const [reviewEpoch, setReviewEpoch] = useState(0);
+  const [precedingBlocks, setPrecedingBlocks] = useState(null);
 
   async function load() {
     setArticle(null);
@@ -48,6 +51,7 @@ export default function Article() {
     setError("");
     setBodyReview(false);
     setReviewEpoch(0);
+    setPrecedingBlocks(null);
     try {
       const data = await api.article(slug);
       setArticle(data.article);
@@ -133,6 +137,7 @@ export default function Article() {
     setBusy(true);
     setError("");
     try {
+      setPrecedingBlocks(structuredClone(ensureEditableBlocks(form.blocks)));
       const guidance = String(instruction || "").trim() || undefined;
       let draft = {};
       const current = {
@@ -172,6 +177,47 @@ export default function Article() {
     }
   }
 
+  async function resetSection(sectionIndex, previousSection) {
+    if (!article?.id || !form || !previousSection) return;
+    const nextBlocks = replaceSectionBlocks(form.blocks, sectionIndex, previousSection);
+    setBusy(true);
+    setError("");
+    try {
+      await applyDraft({
+        title: form.title,
+        headline: form.headline,
+        dateLabel: form.dateLabel,
+        summary: form.summary,
+        body: serializeBody(nextBlocks),
+      });
+      setPrecedingBlocks(structuredClone(ensureEditableBlocks(nextBlocks)));
+    } catch (err) {
+      setError(err.message || "Reset failed");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function persistSectionEdits(_sectionIndex, nextBlocks) {
+    if (!article?.id || !form) return;
+    const blocks = nextBlocks || form.blocks;
+    setBusy(true);
+    setError("");
+    try {
+      await applyDraft({
+        title: form.title,
+        headline: form.headline,
+        dateLabel: form.dateLabel,
+        summary: form.summary,
+        body: serializeBody(blocks),
+      });
+    } catch (err) {
+      setError(err.message || "Could not save section");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   if (missing) return <NotFound />;
   if (!article || !form) {
     return (
@@ -185,6 +231,8 @@ export default function Article() {
 
   const isPublished = String(article.status || "published").toLowerCase() === "published";
   const listHref = canManageContent ? "/news?mode=edit" : "/news";
+  const hasBody = bodyHasContent(form.blocks);
+  const showSectionReview = bodyReview || hasBody;
 
   return (
     <>
@@ -231,6 +279,7 @@ export default function Article() {
                         body: serializeBody(form.blocks),
                         dateLabel: form.dateLabel,
                       });
+                      setParams({ mode: "preview" });
                     } catch (err) {
                       setError(err.message);
                     } finally {
@@ -264,12 +313,7 @@ export default function Article() {
                   <WriteSection
                     busy={busy}
                     disabled={busy}
-                    hasBody={bodyHasContent(form.blocks)}
-                    extraActions={
-                      <button className="btn" type="submit" disabled={busy}>
-                        {busy ? "Saving…" : "Save"}
-                      </button>
-                    }
+                    hasBody={hasBody}
                     onWrite={(instruction) => generate(instruction, "write")}
                     onRefine={(instruction) => generate(instruction, "refine")}
                   />
@@ -280,10 +324,21 @@ export default function Article() {
                   value={form.blocks}
                   contentId={article.id}
                   disabled={busy || isPublished}
-                  review={bodyReview}
+                  review={showSectionReview}
                   reviewEpoch={reviewEpoch}
+                  precedingBlocks={precedingBlocks}
+                  onResetSection={resetSection}
+                  onSectionDone={persistSectionEdits}
                   onChange={(blocks) => updateField("blocks", blocks)}
                 />
+                {!isPublished ? (
+                  <div className="content-editor-save">
+                    <p className="form-note">Refine, Rewrite, section Done, and Reset save automatically. Use Save for title, summary, and other fields.</p>
+                    <button className="btn ghost" type="submit" disabled={busy}>
+                      {busy ? "Saving…" : "Save"}
+                    </button>
+                  </div>
+                ) : null}
               </fieldset>
             </form>
           ) : (
