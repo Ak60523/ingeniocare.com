@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { api } from "../api";
 import PageHero from "../components/PageHero.jsx";
+import ShareButton from "../components/ShareButton.jsx";
 import { StartWithAiSection, WriteSection } from "../components/content/AiAssist.jsx";
 import ArticleBody from "../components/content/ArticleBody.jsx";
 import ArticleBodyEditor, {
@@ -9,6 +10,7 @@ import ArticleBodyEditor, {
 } from "../components/content/ArticleBodyEditor.jsx";
 import { bodyHasContent, ensureEditableBlocks, serializeBody } from "../../server/contentBody.js";
 import { useAuth } from "../AuthContext.jsx";
+import { usePageMeta } from "../hooks/usePageMeta.js";
 import { sectionHero } from "../siteNav.js";
 import NotFound from "./NotFound.jsx";
 import { AdminBar, ContentBrowseNav, ContentStatusActions } from "./ContentPages.jsx";
@@ -218,6 +220,19 @@ export default function Article() {
     }
   }
 
+  const sharePath = article?.slug ? `/${article.slug}` : "/news";
+  const metaTitle = article?.seoTitle || article?.headline || article?.title || "News";
+  const metaDescription =
+    article?.seoDescription || article?.summary || article?.headline || "Ingenio Care news";
+
+  usePageMeta({
+    title: missing ? "Not found" : metaTitle,
+    description: missing ? undefined : metaDescription,
+    image: sectionHero.news,
+    url: missing ? undefined : sharePath,
+    type: "article",
+  });
+
   if (missing) return <NotFound />;
   if (!article || !form) {
     return (
@@ -242,7 +257,17 @@ export default function Article() {
       <section className="section content-detail">
         <div className="wrap content-sheet">
           <div className="article-toolbar">
-            <span />
+            <div className="article-toolbar-start">
+              {!isEdit ? (
+                <ShareButton
+                  title={article.seoTitle || article.headline || article.title}
+                  text={article.seoDescription || article.summary || ""}
+                  url={typeof window !== "undefined" ? `${window.location.origin}${sharePath}` : sharePath}
+                />
+              ) : (
+                <span />
+              )}
+            </div>
             <ContentBrowseNav
               previousHref={newer?.slug ? `/${newer.slug}` : null}
               indexHref={listHref}

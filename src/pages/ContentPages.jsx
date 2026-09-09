@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { api } from "../api";
 import PageHero from "../components/PageHero.jsx";
+import ShareButton from "../components/ShareButton.jsx";
 import { StartWithAiSection, WriteSection } from "../components/content/AiAssist.jsx";
 import ArticleBody from "../components/content/ArticleBody.jsx";
 import ArticleBodyEditor, {
@@ -9,6 +10,7 @@ import ArticleBodyEditor, {
 } from "../components/content/ArticleBodyEditor.jsx";
 import { bodyHasContent, ensureEditableBlocks, serializeBody } from "../../server/contentBody.js";
 import { useAuth } from "../AuthContext.jsx";
+import { usePageMeta } from "../hooks/usePageMeta.js";
 import { contentPath, contentStatusLabel, formatContentDate, slugifyTitle } from "../roles";
 import { seedSiteContent } from "../../server/contentSeed.js";
 import { sortNewestFirst } from "../../server/contentSort.js";
@@ -400,6 +402,23 @@ export function ContentDetailPage({ type }) {
     load();
   }, [slug]);
 
+  const listHref = canManageContent ? `${meta.listPath}?mode=edit` : meta.listPath;
+  const isPublished = String(item?.status || "").toLowerCase() === "published";
+  const writeDisabled = busy || isPublished;
+  const hasBody = Boolean(form && bodyHasContent(form.blocks));
+  const showSectionReview = bodyReview || hasBody;
+  const sharePath = item ? contentPath({ ...item, type }) : meta.listPath;
+  const metaTitle = item?.seoTitle || item?.title || meta.itemTitle;
+  const metaDescription = item?.seoDescription || item?.summary || item?.subtitle || meta.lede;
+
+  usePageMeta({
+    title: metaTitle,
+    description: metaDescription,
+    image: meta.heroImage,
+    url: sharePath,
+    type: "article",
+  });
+
   if (!loading && (!item || (item.type && item.type !== type))) {
     return <Navigate to={meta.listPath} replace />;
   }
@@ -566,12 +585,6 @@ export function ContentDetailPage({ type }) {
     }
   }
 
-  const listHref = canManageContent ? `${meta.listPath}?mode=edit` : meta.listPath;
-  const isPublished = String(item?.status || "").toLowerCase() === "published";
-  const writeDisabled = busy || isPublished;
-  const hasBody = Boolean(form && bodyHasContent(form.blocks));
-  const showSectionReview = bodyReview || hasBody;
-
   return (
     <>
       <PageHero
@@ -587,7 +600,16 @@ export function ContentDetailPage({ type }) {
       <section className="section content-detail">
         <div className="wrap content-sheet">
           <div className="article-toolbar">
-            {!isEdit && item ? <p className="date">{formatContentDate(item.publishedAt)}</p> : <span />}
+            <div className="article-toolbar-start">
+              {!isEdit && item ? <p className="date">{formatContentDate(item.publishedAt)}</p> : <span />}
+              {!isEdit && item ? (
+                <ShareButton
+                  title={item.seoTitle || item.title}
+                  text={item.seoDescription || item.summary || item.subtitle || ""}
+                  url={typeof window !== "undefined" ? `${window.location.origin}${sharePath}` : sharePath}
+                />
+              ) : null}
+            </div>
             <ContentBrowseNav
               previousHref={newer ? contentPath({ ...newer, type }) : null}
               indexHref={listHref}

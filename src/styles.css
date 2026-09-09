@@ -2590,13 +2590,14 @@ a.solution-flow-box:focus-visible {
     align-items: stretch;
     position: absolute;
     left: 0;
-    right: 0;
+    right: auto;
     top: 100%;
-    width: 100%;
-    max-width: 100%;
+    width: min(16rem, 72vw);
+    max-width: min(16rem, 72vw);
+    min-width: 0;
     box-sizing: border-box;
     background: var(--paper);
-    padding: 1rem 0 1.4rem;
+    padding: 1rem 1rem 1.4rem;
     border-bottom: 1px solid var(--line);
     box-shadow: var(--shadow);
     z-index: 30;
@@ -2929,11 +2930,89 @@ a.solution-flow-box:focus-visible {
   margin: 0 0 0.7rem;
 }
 
+.article-toolbar-start {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 0.85rem;
+  min-width: 0;
+}
+
 .article-toolbar .date {
   margin: 0;
   color: var(--muted);
   font-size: 0.9rem;
   line-height: 1.15;
+}
+
+.share-control {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.share-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 2rem;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--navy);
+  border-radius: 0;
+  background: var(--paper);
+  color: var(--navy);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.share-button:hover {
+  background: var(--navy-soft);
+}
+
+.share-button svg {
+  flex: none;
+}
+
+.share-status {
+  color: var(--muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.share-menu {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  z-index: 20;
+  display: grid;
+  min-width: 9.5rem;
+  padding: 0.25rem;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  box-shadow: 0 8px 24px rgba(15, 41, 64, 0.12);
+}
+
+.share-menu button,
+.share-menu a {
+  display: block;
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  border: 0;
+  background: transparent;
+  color: var(--navy);
+  font: inherit;
+  font-size: 0.88rem;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.share-menu button:hover,
+.share-menu a:hover {
+  background: var(--navy-soft);
 }
 
 .content-browse {
@@ -2991,8 +3070,17 @@ a.solution-flow-box:focus-visible {
 .article-section-bar {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: flex-end;
   gap: 0.45rem;
+}
+
+.article-section-type {
+  margin-right: auto;
+  font-family: var(--font-menu);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: var(--muted, #5a6b7d);
 }
 
 .content-editor-save {

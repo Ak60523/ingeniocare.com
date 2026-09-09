@@ -23,18 +23,8 @@ function blockLabel(block) {
 }
 
 export function groupSectionIndexes(blocks) {
-  const sections = [];
-  let current = [];
-  blocks.forEach((block, index) => {
-    if (block.type === "heading" && current.length) {
-      sections.push(current);
-      current = [index];
-    } else {
-      current.push(index);
-    }
-  });
-  if (current.length) sections.push(current);
-  return sections;
+  // Each content block is its own editable section (heading, text, quote, list, figure, …).
+  return (blocks || []).map((_, index) => [index]);
 }
 
 export function getSectionBlocks(blocks, sectionIndex) {
@@ -371,9 +361,11 @@ export default function ArticleBodyEditor({
         {sections.map((indexes, sectionIndex) => {
           const isEditing = editingSection === sectionIndex;
           const resetEnabled = canResetSection(sectionIndex);
+          const block = blocks[indexes[0]];
           return (
-            <div className="article-section-review" key={`section-${sectionIndex}`}>
+            <div className="article-section-review" key={`section-${sectionIndex}-${block?.type || "block"}`}>
               <div className="article-section-bar">
+                <span className="article-section-type">{blockLabel(block)}</span>
                 <button
                   type="button"
                   disabled={disabled || !resetEnabled}
