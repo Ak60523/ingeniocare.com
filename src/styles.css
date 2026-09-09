@@ -2589,8 +2589,8 @@ a.solution-flow-box:focus-visible {
     flex-direction: column;
     align-items: stretch;
     position: absolute;
-    left: 0;
-    right: auto;
+    left: auto;
+    right: 0;
     top: 100%;
     width: min(16rem, 72vw);
     max-width: min(16rem, 72vw);
