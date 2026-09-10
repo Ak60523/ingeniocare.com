@@ -32,11 +32,6 @@ const leadership = [
 
 const clinicalAdvisors = [
   {
-    name: "Dr. Deepak Mital",
-    image: "/assets/images/deepak-mital.jpg",
-    bio: "Dr. Deepak Mital, MD, MBA, FACS, is a transplant surgeon with more than 30 years of experience in kidney and pancreas transplantation in the Chicago area. He is Surgical Director of the Kidney Transplant Program at UI Health and a Clinical Professor of Surgery at the University of Illinois College of Medicine. Dr. Mital advises Ingenio Care on high-acuity specialty pathways and multidisciplinary care that keeps complex patients connected before and after major procedures.",
-  },
-  {
     name: "Dr. Krishna Jain",
     image: "/assets/images/krishna-jain.jpg",
     bio: "Dr. Jain is Chief Medical Officer for APEX and founder of Limb Preservation Centers of America®. He is a board-certified vascular surgeon who has been intimately involved in the growth of office-based endovascular labs (OBLs) throughout the U.S. since 2007. Dr. Jain is collaborating with us to build a national population health solution for patients with high risk of foot ulcer and limb amputation.",
