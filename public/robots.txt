@@ -1,3 +1,6 @@
+# Production rules for www.ingeniocare.com.
+# app.ingeniocare.com and dev.ingeniocare.com get "Disallow: /" at build time
+# (see server/robotsTxt.js) — robots.txt only applies to the host that serves it.
 User-agent: *
 Allow: /
 Disallow: /404

@@ -3,6 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      (function () {
+        var blocked = { "app.ingeniocare.com": 1, "dev.ingeniocare.com": 1 };
+        if (!blocked[location.hostname]) return;
+        var meta = document.createElement("meta");
+        meta.name = "robots";
+        meta.content = "noindex, nofollow";
+        document.head.appendChild(meta);
+      })();
+    </script>
     <title>Ingenio Care</title>
     <meta name="description" content="Ai Enabled, Patient Centric Digital Health Network" />
     <meta name="theme-color" content="#0F2940" />
