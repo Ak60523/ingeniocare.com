@@ -2348,64 +2348,11 @@ a.solution-flow-box:focus-visible {
   transition: right 180ms ease;
 }
 
-.growgent-fab-panel-bar {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  padding: 0.55rem 0.7rem 0.55rem 0.95rem;
-  background: #ffffff;
-  color: #0f2940;
-  border-bottom: 1px solid #d7e3ef;
-}
-
-.growgent-fab-panel-bar strong {
-  flex: 1;
-  font-family: var(--font-body);
-  font-size: 0.92rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-}
-
-.growgent-fab-panel-bar a {
-  color: #1e88e5;
-  font-size: 0.78rem;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.growgent-fab-panel-bar button {
-  width: 32px;
-  height: 32px;
-  border: 0;
-  border-radius: 8px;
-  background: transparent;
-  color: #0f2940;
-  font-size: 1.35rem;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.growgent-fab-panel-bar button:hover {
-  background: rgba(15, 41, 64, 0.08);
-}
-
 .growgent-fab-panel iframe {
   flex: 1;
   width: 100%;
   border: 0;
   background: #f4f8fc;
-}
-
-.growgent-fab-loading {
-  position: absolute;
-  inset: 3.1rem 0 0;
-  margin: 0;
-  display: grid;
-  place-items: center;
-  color: #1b3f60;
-  font-size: 0.82rem;
-  font-weight: 600;
-  pointer-events: none;
 }
 
 .btn:disabled {

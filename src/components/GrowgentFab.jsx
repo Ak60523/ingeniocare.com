@@ -1,21 +1,13 @@
 import { useEffect, useState } from "react";
 
-const RECEPTION_ORIGIN = String(
-  import.meta.env.VITE_GROWGENT_ORIGIN ||
-    (import.meta.env.DEV ? "http://127.0.0.1:5177" : "https://growgent.ai"),
-).replace(/\/$/, "");
-const RECEPTION_URL = `${RECEPTION_ORIGIN}/business/ingenio-care?embed=1`;
+const RECEPTION_URL = "https://growgent.ai/embed/ingenio-care";
 const RECEPTION_LABEL = "Ingenio Care receptionist";
 
 export default function GrowgentFab() {
   const [open, setOpen] = useState(false);
-  const [frameReady, setFrameReady] = useState(false);
 
   useEffect(() => {
-    if (!open) {
-      setFrameReady(false);
-      return undefined;
-    }
+    if (!open) return undefined;
     function onKey(event) {
       if (event.key === "Escape") setOpen(false);
     }
@@ -27,29 +19,13 @@ export default function GrowgentFab() {
     <>
       {open ? (
         <div className="growgent-fab-panel" role="dialog" aria-label={RECEPTION_LABEL}>
-          <div className="growgent-fab-panel-bar">
-            <strong>{RECEPTION_LABEL}</strong>
-            <a href={RECEPTION_URL} target="_blank" rel="noopener noreferrer">
-              Open in a new tab
-            </a>
-            <button type="button" aria-label={`Close ${RECEPTION_LABEL}`} onClick={() => setOpen(false)}>
-              ×
-            </button>
-          </div>
-          {frameReady ? null : <p className="growgent-fab-loading">Opening receptionist…</p>}
-          <iframe
-            title={RECEPTION_LABEL}
-            src={RECEPTION_URL}
-            allow="clipboard-write; microphone; autoplay"
-            onLoad={() => setFrameReady(true)}
-          />
+          <iframe title={RECEPTION_LABEL} src={RECEPTION_URL} allow="clipboard-write; microphone; autoplay" />
         </div>
       ) : null}
       <button
         type="button"
         className={`growgent-fab${open ? " is-open" : ""}`}
         aria-label={open ? `Close ${RECEPTION_LABEL}` : `Chat with ${RECEPTION_LABEL}`}
-        title={`Chat with ${RECEPTION_LABEL}`}
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
       >
