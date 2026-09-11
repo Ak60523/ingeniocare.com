@@ -1,8 +1,11 @@
 import outputs from "../amplify_outputs.json";
 
-const base = String(import.meta.env.VITE_API_URL || outputs?.custom?.dataApiUrl || "")
+const remoteBase = String(import.meta.env.VITE_API_URL || outputs?.custom?.dataApiUrl || "")
   .trim()
   .replace(/\/$/, "");
+
+// Vite dev/preview proxy /api to the Function URL so the browser stays same-origin.
+const base = import.meta.env.VITE_USE_API_PROXY === "1" ? "" : remoteBase;
 
 function authHeader() {
   const token = localStorage.getItem("ingenio-token");

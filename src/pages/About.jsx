@@ -24,6 +24,12 @@ const leadership = [
     bio: "Former Chairman of Psychiatry at Mount Sinai Hospital Medical Center of Chicago, Dr. Ahluwalia has dedicated his career to advancing psychiatric care and improving patient outcomes. At Ingenio Care he leads clinical work on behavioral health and care models for underserved communities.",
   },
   {
+    name: "Dr. Deepak Mital",
+    role: "Clinical Leader",
+    image: "/assets/images/deepak-mital.jpg",
+    bio: "Dr. Deepak Mital, MD, MBA, FACS, is a transplant surgeon with more than 30 years of experience in kidney and pancreas transplantation in the Chicago area. He is Surgical Director of the Kidney Transplant Program at UI Health and a Clinical Professor of Surgery at the University of Illinois College of Medicine. Dr. Mital advises Ingenio Care on high-acuity specialty pathways and multidisciplinary care that keeps complex patients connected before and after major procedures.",
+  },
+  {
     name: "Lauren Doolin",
     role: "SVP, Delivery",
     bio: "Lauren Doolin brings healthcare operations and data expertise to Ingenio Care. She helped launch the Total Cost of Care division at Accretive Health, focused on transforming health systems into accountable care organizations, and later led strategic client work in provider markets at Humedica. At Ingenio Care she connects care delivery with data so the network can improve access, quality, and cost together.",
@@ -298,7 +304,7 @@ export default function About() {
             Ingenio Care’s leadership team brings clinical, operating, and data expertise to the
             build-out of a patient-centric digital health network.
           </p>
-          <AdvisorGrid advisors={leadership} />
+          <AdvisorGrid advisors={leadership} className="is-four" />
         </div>
       </section>
       <section className="section alt about-section" id="advisory-board">
@@ -311,11 +317,11 @@ export default function About() {
             higher-quality care at a progressively lower cost.
           </p>
           <div id="physician-advisory-board">
-            <AdvisorGrid advisors={clinicalAdvisors} />
+            <AdvisorGrid advisors={clinicalAdvisors} className="is-four" />
           </div>
           <hr className="advisor-split" />
           <div id="healthcare-advisory-board">
-            <AdvisorGrid advisors={nonClinicalAdvisors} />
+            <AdvisorGrid advisors={nonClinicalAdvisors} className="is-four" />
           </div>
         </div>
       </section>
