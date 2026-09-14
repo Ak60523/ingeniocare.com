@@ -240,6 +240,247 @@ export const products = [
       },
     ],
   },
+  {
+    id: "provider-partnerships",
+    slug: "provider-partnerships",
+    group: "partnership",
+    layout: "access-provider",
+    label: "ACCESS for Providers",
+    title: "Extend Your Care Team With Medicare ACCESS",
+    kicker: "Become ACCESS-ready without building another layer of infrastructure",
+    lede: "Technology-enabled chronic care for your Medicare patients — connected to your providers, your ACO and your care strategy.",
+    intro:
+      "Ingenio helps Medicare providers launch, operate and scale ACCESS-enabled care with a patient-owned digital health platform that connects patients, clinicians and care teams.",
+    body: "We help providers deliver more care, to more Medicare patients, without adding another layer of infrastructure. Become an ACCESS participant, extend care beyond the office, and keep the patient’s PCP and specialists in the loop.",
+    promise: "Your patients. Your care team. Extended through ACCESS.",
+    ctaLabel: "Talk to Ingenio",
+    outcomesTitle: "One platform. Three outcomes.",
+    outcomes: [
+      {
+        title: "More Patient Access",
+        body: "Give Medicare patients convenient, technology-supported chronic care beyond the walls of the practice.",
+      },
+      {
+        title: "Better Care Coordination",
+        body: "Connect ACCESS care with PCPs, specialists and ACO care teams — including HIPAA-compliant updates at key clinical moments.",
+      },
+      {
+        title: "Better Outcomes",
+        body: "Engage patients continuously and manage toward measurable health outcomes, not another disconnected program.",
+      },
+    ],
+    loopTitle: "Your patients. Your care team. Extended through ACCESS.",
+    loopLede:
+      "CMS requires ACCESS organizations to provide care updates to PCPs and referring clinicians at key clinical moments using HIPAA-compliant electronic methods. That loop is built into Ingenio.",
+    loop: [
+      { id: "aco", title: "ACO / PCP" },
+      { id: "door", title: "Ingenio Patient Digital Front Door" },
+      { id: "access", title: "ACCESS-enabled chronic care" },
+      { id: "patient", title: "Patient" },
+    ],
+    loopReturn: "Care updates, coordination and outcomes return to the ACO / PCP.",
+    pillarsTitle: "Four pillars of ACCESS for providers",
+    pillarsLede: "Launch, engage, coordinate and measure — without standing up a separate stack.",
+    pillars: [
+      {
+        step: "01",
+        title: "Launch",
+        lede: "Become ACCESS-ready without building the infrastructure yourself.",
+        points: [
+          "Medicare enrollment guidance",
+          "Clinical program setup",
+          "Physician and clinical director workflow",
+          "ACCESS patient enrollment",
+          "Eligibility",
+          "Documentation",
+          "CMS workflow support",
+        ],
+      },
+      {
+        step: "02",
+        title: "Engage",
+        lede: "Give every patient a digital front door to their care.",
+        points: [
+          "Patient-owned Ingenio health wallet",
+          "Mobile app",
+          "AI health navigation",
+          "Chronic-care engagement",
+          "Reminders and follow-up",
+          "Family and caregiver involvement",
+          "Virtual care",
+          "Health data and device integration",
+          "Referrals and scheduling",
+        ],
+      },
+      {
+        step: "03",
+        title: "Coordinate",
+        lede: "Connect ACCESS care to the patient’s existing care team.",
+        points: [
+          "PCP communication",
+          "Specialist coordination",
+          "Referral management",
+          "Care-plan follow-up",
+          "Care updates",
+          "Shared patient context",
+          "Provider inbox",
+          "ACO care-management integration",
+        ],
+      },
+      {
+        step: "04",
+        title: "Measure",
+        lede: "Turn better engagement into measurable outcomes.",
+        points: [
+          "ACCESS outcome tracking",
+          "Patient engagement",
+          "Clinical measures",
+          "Care-plan adherence",
+          "Escalation",
+          "Reporting",
+          "Performance visibility",
+        ],
+      },
+    ],
+    points: [
+      "Become an ACCESS participant without building a separate operating stack.",
+      "Extend chronic care beyond the office through the Ingenio patient app.",
+      "Monitor and manage chronic conditions with ongoing patient engagement.",
+      "Coordinate with the patient’s PCP and specialists, and receive referrals.",
+      "Track outcomes and manage the ACCESS workflow with less administrative burden.",
+    ],
+    cms: {
+      kicker: "How ACCESS fits",
+      headline: "ACCESS is not simply another FFS reimbursement program.",
+      body: "CMS describes ACCESS as an alternative to traditional fee-for-service billing for participating organizations, with Outcome-Aligned Payments tied to measurable outcomes. Ingenio is the bridge between ACCESS, traditional primary care, and ACO care management — so ACCESS complements the care you already deliver.",
+    },
+    metrics: [
+      { label: "Patient access", direction: "up" },
+      { label: "Care-plan adherence", direction: "up" },
+      { label: "Administrative burden", direction: "down" },
+      { label: "Avoidable utilization", direction: "down" },
+    ],
+    useCases: [
+      {
+        title: "Extend chronic care after the visit",
+        body: "A Medicare patient leaves the office with a care plan that used to stall at home. The Ingenio app keeps engagement, reminders, and follow-up on the same thread the ACCESS team uses.",
+      },
+      {
+        title: "Keep the PCP in the ACCESS loop",
+        body: "When a clinical moment requires an update, the PCP and referring clinician receive HIPAA-compliant context instead of a fax that never arrives.",
+      },
+      {
+        title: "Take ACCESS referrals without extra staff",
+        body: "Inbound ACCESS and ACO referrals land in the provider workflow with eligibility, enrollment, and next steps already attached.",
+      },
+    ],
+  },
+  {
+    id: "aco-partnerships",
+    slug: "aco-partnerships",
+    group: "partnership",
+    layout: "access-aco",
+    label: "ACCESS for ACOs",
+    title: "Extend your care team without expanding your headcount",
+    kicker: "ACCESS as a complement to ACO and other risk-bearing arrangements",
+    lede: "Your ACO does not have to become the ACCESS care organization. Ingenio is the technology and ACCESS network layer that connects your attributed patients to technology-supported chronic care.",
+    intro:
+      "ACCESS gives ACOs another tool for managing chronic disease. Ingenio connects that capability to the ACO’s existing provider network and patient population — so you can extend the care team, keep the PCP informed, and give beneficiaries another way to access care.",
+    body: "CMS explicitly says ACCESS is designed to complement ACO and other risk-bearing arrangements. ACOs can refer aligned beneficiaries to ACCESS participants, and CMS describes ACCESS as a way to give risk-bearing entities new care options for their patients.",
+    promise: "Your patients. Your care team. Extended through ACCESS.",
+    ctaLabel: "Talk to Ingenio",
+    outcomesTitle: "One platform. Three outcomes.",
+    outcomes: [
+      {
+        title: "More Patient Access",
+        body: "Give aligned Medicare beneficiaries another way to receive technology-supported chronic care.",
+      },
+      {
+        title: "Better Care Coordination",
+        body: "Keep the PCP, specialists, ACCESS provider and patient connected — without standing up a parallel care-management stack.",
+      },
+      {
+        title: "Better Outcomes",
+        body: "Improve chronic-condition outcomes and pursue better quality and lower avoidable utilization.",
+      },
+    ],
+    loopTitle: "Your patients. Your care team. Extended through ACCESS.",
+    loopLede:
+      "Ingenio is the digital front door and coordination layer between the ACO, ACCESS-enabled chronic care, and the patient — with care updates returning to the PCP.",
+    loop: [
+      { id: "aco", title: "ACO / PCP" },
+      { id: "door", title: "Ingenio Patient Digital Front Door" },
+      { id: "access", title: "ACCESS-enabled chronic care" },
+      { id: "patient", title: "Patient" },
+    ],
+    loopReturn: "Care updates, coordination and outcomes return to the ACO / PCP.",
+    capabilitiesTitle: "How Ingenio extends the ACO care team",
+    capabilitiesLede:
+      "Identify the patients, connect them to ACCESS care, keep everyone informed, and measure what changes.",
+    capabilities: [
+      {
+        title: "Identify",
+        body: "Find Medicare beneficiaries who may benefit from technology-supported chronic care.",
+      },
+      {
+        title: "Connect",
+        body: "Route patients to the right ACCESS provider or program in the Ingenio network.",
+      },
+      {
+        title: "Engage",
+        body: "Keep patients connected through their own digital health account.",
+      },
+      {
+        title: "Coordinate",
+        body: "Keep the PCP, specialists, ACCESS provider and patient connected.",
+      },
+      {
+        title: "Measure",
+        body: "Track outcomes and identify patients who need additional intervention.",
+      },
+      {
+        title: "Improve",
+        body: "Help the ACO pursue better quality and lower avoidable utilization.",
+      },
+    ],
+    points: [
+      "Identify eligible and high-value patients who may benefit from ACCESS-enabled chronic care.",
+      "Connect them to appropriate ACCESS providers without making the ACO the ACCESS organization.",
+      "Extend the ACO’s care team and keep the PCP informed at key clinical moments.",
+      "Coordinate care across providers and give beneficiaries another way to access care.",
+      "Improve chronic-condition outcomes and support quality and total-cost performance.",
+    ],
+    cms: {
+      kicker: "CMS design",
+      headline: "ACCESS is designed to complement ACOs — not replace them.",
+      body: "CMS describes ACCESS as giving patients more choice, providers new partners, and Original Medicare a way to pay organizations developing technology-supported care. ACOs can refer aligned beneficiaries to ACCESS participants. Ingenio is how that referral, engagement, and care-update loop actually runs.",
+    },
+    economics: {
+      kicker: "Value-based strategy",
+      headline: "ACCESS can complement your existing value-based strategy.",
+      body: "Sophisticated ACOs will ask how ACCESS interacts with existing Medicare economics. CMS currently says that for 2026 and 2027, ACCESS Outcome-Aligned Payments are anticipated not to affect MSSP and ACO REACH benchmark and performance-year calculations; beginning in 2028, ACCESS expenditures will be included. That is a window to add a chronic-care capability now, as a complement to the ACO — not a competing program.",
+    },
+    metrics: [
+      { label: "Chronic-care engagement", direction: "up" },
+      { label: "Care-team coordination", direction: "up" },
+      { label: "Avoidable utilization", direction: "down" },
+      { label: "Quality performance", direction: "up" },
+    ],
+    useCases: [
+      {
+        title: "Refer aligned beneficiaries into ACCESS",
+        body: "Care managers identify high-need chronic patients and route them to an ACCESS provider through Ingenio, while the PCP stays on the care-update loop.",
+      },
+      {
+        title: "Extend the team without hiring a new panel",
+        body: "The ACO keeps its network and care-management model. Ingenio supplies the patient digital front door, ACCESS routing, and coordination layer.",
+      },
+      {
+        title: "See who needs another intervention",
+        body: "Engagement, adherence, and outcome signals surface patients who are stalling — so the ACO can intervene before utilization shows up downstream.",
+      },
+    ],
+  },
 ];
 
 export const productsPath = "/solutions";
@@ -247,6 +488,9 @@ export const solutionsPath = productsPath;
 export const growgentSignupHref = "https://growgent.ai";
 export const planSignupHref = "https://ingeniocare.ai/home/plan";
 export const providerSignupHref = "https://ingeniocare.ai/home/provider";
+
+export const appProducts = products.filter((product) => product.group !== "partnership");
+export const partnershipProducts = products.filter((product) => product.group === "partnership");
 
 const planSignupIds = new Set(["plans", "employers", "plan-app"]);
 
@@ -257,6 +501,11 @@ export function networkSignupHref(id) {
 export function signupHrefForProduct(product) {
   if (product?.id === "growgent-ai") return product.href || growgentSignupHref;
   return networkSignupHref(product?.id);
+}
+
+export function signupLabelForProduct(product) {
+  if (product?.ctaLabel) return product.ctaLabel;
+  return "Sign up";
 }
 
 export function productBySlug(slug) {

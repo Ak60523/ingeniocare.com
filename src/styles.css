@@ -144,6 +144,14 @@ ul {
   margin: 0 0 0.75rem;
 }
 
+.news-flash .news-item a {
+  font-weight: 600;
+}
+
+.news-flash .news-item a::after {
+  content: " →";
+}
+
 .site-header {
   background: var(--paper);
   border-bottom: 1px solid var(--line);
@@ -1309,7 +1317,8 @@ ul {
   border: 0;
 }
 
-.product-section {
+.product-section,
+.partnership-section {
   scroll-margin-top: 9.5rem;
 }
 
@@ -1479,8 +1488,287 @@ ul {
   padding-bottom: 2.4rem;
 }
 
-.solution-flow-section .lede {
+.solution-flow-section .lede,
+.partnership-section .lede {
   max-width: 46rem;
+}
+
+.partnership-section .product-card-grid {
+  margin-top: 1.6rem;
+}
+
+.partnership-section .home-hero-actions {
+  margin: 0.35rem 0 0.25rem;
+}
+
+.partnership-section .product-metrics-kicker {
+  margin-bottom: 0.45rem;
+}
+
+.access-promise {
+  margin: 0 0 1.15rem;
+  color: var(--navy-deep);
+  font-family: var(--font-heading);
+  font-size: calc(1.45rem * var(--heading-scale));
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+}
+
+.access-callout {
+  background: var(--navy);
+  color: var(--on-dark);
+  padding: 1.7rem 1.65rem 1.85rem;
+}
+
+.access-callout .product-metrics-kicker,
+.access-callout h2,
+.access-callout p {
+  color: var(--on-dark);
+}
+
+.access-callout .product-metrics-kicker {
+  color: var(--sky);
+}
+
+.access-callout h2 {
+  margin: 0 0 0.75rem;
+  font-size: calc(1.45rem * var(--heading-scale));
+  text-transform: none;
+}
+
+.access-callout p {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.access-callout.is-wide {
+  max-width: 52rem;
+}
+
+.access-outcomes,
+.access-pillars,
+.access-capabilities {
+  list-style: none;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1.1rem;
+}
+
+.access-outcomes {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.access-pillars {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.access-capabilities {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.access-outcomes li,
+.access-pillars li,
+.access-capabilities li {
+  min-width: 0;
+  padding: 1.2rem 1.15rem 1.3rem;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.access-pillars h3,
+.access-outcomes h3,
+.access-capabilities h3 {
+  margin: 0 0 0.5rem;
+  font-size: calc(1.18rem * var(--heading-scale));
+  color: var(--navy-deep);
+  text-transform: none;
+}
+
+.access-outcomes p,
+.access-pillars > li > p,
+.access-capabilities p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.access-pillars ul {
+  margin: 0.85rem 0 0;
+  padding-left: 1.05rem;
+}
+
+.access-pillars ul li {
+  padding: 0;
+  background: none;
+  box-shadow: none;
+  color: var(--navy-mid);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.access-pillars ul li + li {
+  margin-top: 0.35rem;
+}
+
+.access-loop-section .lede,
+.access-pillars-section .lede,
+.access-capabilities-section .lede,
+.access-outcomes-section .lede {
+  max-width: 46rem;
+}
+
+.access-loop {
+  list-style: none;
+  display: flex;
+  align-items: stretch;
+  gap: 1.35rem;
+  margin: 1.6rem 0 0;
+  padding: 0;
+}
+
+.access-loop-step {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.access-loop-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -1.05rem;
+  width: 0.75rem;
+  height: 2px;
+  background: var(--navy-bright);
+  transform: translateY(-50%);
+}
+
+.access-loop-step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -1.2rem;
+  z-index: 1;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 7px solid var(--navy-bright);
+  transform: translateY(-50%);
+}
+
+.access-loop-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  min-height: 5.4rem;
+  padding: 0.9rem 0.85rem;
+  text-align: center;
+  background: var(--navy);
+  color: var(--on-dark);
+  box-shadow: var(--shadow);
+}
+
+.access-loop-step.is-door .access-loop-card {
+  background: var(--navy-mid);
+}
+
+.access-loop-step.is-access .access-loop-card {
+  background: var(--navy-bright);
+}
+
+.access-loop-step.is-patient .access-loop-card {
+  background: color-mix(in srgb, var(--sky) 72%, var(--navy));
+  color: var(--navy-deep);
+}
+
+.access-loop-card strong {
+  font-family: var(--font-menu);
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+.access-loop-return {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  margin: 1.15rem 0 0;
+  padding: 0.85rem 1rem;
+  background: color-mix(in srgb, var(--navy-soft) 55%, #fff);
+  color: var(--navy-mid);
+  border-top: 3px solid var(--navy-bright);
+  text-align: center;
+  font-size: 1.02rem;
+}
+
+.access-loop-return span {
+  color: var(--navy-bright);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.section.navy.access-close {
+  background: color-mix(in srgb, var(--navy-bright) 38%, #08366e);
+}
+
+.section.navy.access-close h2 {
+  color: var(--on-dark);
+  text-transform: none;
+}
+
+.section.navy.access-close p {
+  max-width: 42rem;
+}
+
+@media (max-width: 980px) {
+  .access-pillars {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 800px) {
+  .access-outcomes,
+  .access-capabilities,
+  .access-pillars {
+    grid-template-columns: 1fr;
+  }
+
+  .access-loop {
+    flex-direction: column;
+    gap: 1.15rem;
+  }
+
+  .access-loop-step:not(:last-child)::after {
+    top: auto;
+    right: auto;
+    left: 50%;
+    bottom: -0.7rem;
+    width: 2px;
+    height: 0.7rem;
+    transform: none;
+  }
+
+  .access-loop-step:not(:last-child)::before {
+    top: auto;
+    right: auto;
+    left: 50%;
+    bottom: -1.05rem;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid var(--navy-bright);
+    border-bottom: 0;
+    transform: translateX(-50%);
+  }
 }
 
 .solution-flow {
@@ -1907,6 +2195,11 @@ a.solution-flow-box:focus-visible {
   font-size: 0.95rem;
   letter-spacing: 0.03em;
   text-decoration: none !important;
+  cursor: pointer;
+}
+
+button.btn {
+  appearance: none;
 }
 
 .btn:hover {

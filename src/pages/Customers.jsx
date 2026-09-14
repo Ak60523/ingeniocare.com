@@ -81,7 +81,12 @@ export default function Customers() {
 
   return (
     <>
-      <PageHero title={segment.title} image={sectionHero.customers} imagePosition="58% 26%">
+      <PageHero
+        title={segment.title}
+        image={sectionHero.customers}
+        imagePosition="58% 26%"
+        flash={segment.flash}
+      >
         <h4>{segment.kicker}</h4>
         <p className="lede">{segment.lede}</p>
       </PageHero>

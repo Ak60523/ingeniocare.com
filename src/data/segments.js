@@ -50,6 +50,11 @@ export const segments = [
     imageAlt: "Provider efficiency",
     primarySolutionId: "provider-app",
     productIds: ["provider-app", "growgent-ai", "marketplace", "digital-front-doors"],
+    flash: {
+      kicker: "ACCESS Flash",
+      title: "Become ACCESS-ready without building another layer of infrastructure",
+      to: productHref({ slug: "provider-partnerships" }),
+    },
   },
   {
     id: "plans",
@@ -137,6 +142,11 @@ export const segments = [
       "Extend the health system beyond its walls with better access, referral coordination, follow-up, and continuity across the patient journey.",
     primarySolutionId: "marketplace",
     productIds: ["marketplace", "digital-front-doors", "provider-app", "patient-app"],
+    flash: {
+      kicker: "ACCESS Flash",
+      title: "Extend your care team with Medicare ACCESS — for providers and ACOs",
+      to: productHref({ slug: "provider-partnerships" }),
+    },
   },
   {
     id: "home-health",
@@ -224,6 +234,11 @@ export const segments = [
       "Expand access and reduce administrative burden with AI-enabled scheduling, navigation, follow-up, and care coordination.",
     primarySolutionId: "growgent-ai",
     productIds: ["growgent-ai", "provider-app", "patient-app", "marketplace"],
+    flash: {
+      kicker: "ACCESS Flash",
+      title: "Become ACCESS-ready without building another layer of infrastructure",
+      to: productHref({ slug: "provider-partnerships" }),
+    },
   },
 ];
 

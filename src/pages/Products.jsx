@@ -1,13 +1,18 @@
 import { Link, Navigate, useLocation, useParams } from "react-router-dom";
+import AccessPartnershipPage from "../components/AccessPartnershipPage.jsx";
 import PageHero from "../components/PageHero.jsx";
 import SignupLearnMore from "../components/SignupLearnMore.jsx";
 import SolutionFlow from "../components/SolutionFlow.jsx";
+import TalkToIngenioButton from "../components/TalkToIngenioButton.jsx";
+import { usePageMeta } from "../hooks/usePageMeta.js";
 import {
+  appProducts,
+  partnershipProducts,
   productBySlug,
   productHref,
-  products,
   productsPath,
   signupHrefForProduct,
+  signupLabelForProduct,
 } from "../data/products.js";
 import { sectionHero } from "../siteNav.js";
 import NotFound from "./NotFound.jsx";
@@ -26,6 +31,16 @@ export function LegacyProductRedirect() {
 }
 
 function ProductPage({ product }) {
+  usePageMeta({
+    title: product.title,
+    description: product.lede,
+    image: sectionHero.solutions,
+    url: productHref(product),
+    type: "website",
+  });
+  if (product.group === "partnership") {
+    return <AccessPartnershipPage product={product} />;
+  }
   const metrics = product.metrics || [];
   const useCases = product.useCases || [];
   return (
@@ -125,13 +140,46 @@ function ProductPage({ product }) {
   );
 }
 
+function ProductCardGrid({ items }) {
+  return (
+    <div className="grid-cards product-card-grid">
+      {items.map((product) => (
+        <article className="card is-compact" key={product.slug}>
+          <div className="card-body">
+            <h4>
+              <Link to={productHref(product)}>{product.label}</Link>
+            </h4>
+            <p>{product.kicker}</p>
+            <p>{product.lede}</p>
+            <SignupLearnMore
+              learnMoreTo={productHref(product)}
+              signupHref={signupHrefForProduct(product)}
+              signupLabel={signupLabelForProduct(product)}
+              openReceptionist={product.group === "partnership"}
+              spread
+            />
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
 function ProductsHub() {
+  usePageMeta({
+    title: "Solutions",
+    description:
+      "Ingenio Care solutions for patient access, provider enablement, and Medicare ACCESS for providers and ACOs.",
+    image: sectionHero.solutions,
+    url: productsPath,
+    type: "website",
+  });
   return (
     <>
       <PageHero title="Solutions" image={sectionHero.solutions} imagePosition="58% 26%">
         <p className="lede">
           Ingenio Care solutions help patients get care, enable providers, and make the network easier
-          to operate—from access and apps to specialty front doors.
+          to operate—from apps and specialty front doors to ACCESS for providers and ACOs.
         </p>
       </PageHero>
       <section className="section soft solution-flow-section">
@@ -146,24 +194,31 @@ function ProductsHub() {
       </section>
       <section className="section">
         <div className="wrap">
-          <div className="grid-cards product-card-grid">
-            {products.map((product) => (
-              <article className="card is-compact" key={product.slug}>
-                <div className="card-body">
-                  <h4>
-                    <Link to={productHref(product)}>{product.label}</Link>
-                  </h4>
-                  <p>{product.kicker}</p>
-                  <p>{product.lede}</p>
-                  <SignupLearnMore
-                    learnMoreTo={productHref(product)}
-                    signupHref={signupHrefForProduct(product)}
-                    spread
-                  />
-                </div>
-              </article>
-            ))}
+          <ProductCardGrid items={appProducts} />
+        </div>
+      </section>
+      <section className="section alt partnership-section" id="access">
+        <div className="wrap">
+          <p className="product-metrics-kicker">Medicare ACCESS</p>
+          <h2>ACCESS for Providers &amp; ACOs</h2>
+          <p className="lede">
+            Turn Medicare ACCESS into a new patient-care and value-based care capability. Ingenio
+            gives providers and ACOs the technology, patient engagement and care-coordination
+            infrastructure to participate in Medicare ACCESS — while extending chronic care beyond
+            the walls of the practice.
+          </p>
+          <p className="lede">
+            CMS designed ACCESS to complement ACO and other risk-bearing arrangements. ACOs can refer
+            aligned beneficiaries to ACCESS participants, and Ingenio is the digital front door that
+            keeps the PCP, the ACCESS team and the patient connected.
+          </p>
+          <div className="home-hero-actions">
+            <Link className="btn sky" to={productHref({ slug: "provider-partnerships" })}>
+              Explore ACCESS for Providers
+            </Link>
+            <TalkToIngenioButton className="btn ghost" />
           </div>
+          <ProductCardGrid items={partnershipProducts} />
         </div>
       </section>
     </>

@@ -1,8 +1,9 @@
+import { Link } from "react-router-dom";
 import HomeHeroGraphic from "./HomeHeroGraphic.jsx";
 import NewsFlash from "./NewsFlash.jsx";
 import SocialLinks from "./SocialLinks.jsx";
 
-export default function PageHero({ title, children, variant, aside, ruled, kicker, image, imagePosition, titleClassName }) {
+export default function PageHero({ title, children, variant, aside, ruled, kicker, image, imagePosition, titleClassName, flash }) {
   const home = variant === "home";
   const photo = image || (home ? "/assets/images/home-hero.jpg" : null);
   const headingClass = [ruled ? "is-ruled" : "", titleClassName].filter(Boolean).join(" ") || undefined;
@@ -37,6 +38,16 @@ export default function PageHero({ title, children, variant, aside, ruled, kicke
           <SocialLinks compact />
         </div>
       </div>
+      {flash?.to && flash?.title ? (
+        <section className="section news-flash">
+          <div className="wrap">
+            {flash.kicker ? <h3>{flash.kicker}</h3> : null}
+            <div className="news-item">
+              <Link to={flash.to}>{flash.title}</Link>
+            </div>
+          </div>
+        </section>
+      ) : null}
       {home ? <NewsFlash /> : null}
     </>
   );
