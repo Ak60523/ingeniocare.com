@@ -1,25 +1,27 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ccmReferralHref, medicareAccessReferralHref } from "../../data/mgLinks.js";
+import { chronicReferralHref, specialtyReferralHref } from "../../data/mgLinks.js";
 import { usePageMeta } from "../../hooks/usePageMeta.js";
+import { useMgPath } from "../../siteMode.js";
 
 const PROGRAMS = {
-  "medicare-access": {
-    title: "Medicare Access referral",
-    href: medicareAccessReferralHref,
-    label: "Medicare Access Program",
-    learnTo: "/medicare-access",
+  chronic: {
+    title: "Chronic care referral",
+    href: chronicReferralHref,
+    label: "Chronic Care Program",
+    learnSegment: "chronic",
   },
-  ccm: {
-    title: "CCM referral",
-    href: ccmReferralHref,
-    label: "Chronic Care Management (CCM) Program",
-    learnTo: "/ccm",
+  specialty: {
+    title: "Specialty care referral",
+    href: specialtyReferralHref,
+    label: "Specialty Care Program",
+    learnSegment: "specialty",
   },
 };
 
 export default function MgProgramReferral({ program }) {
   const config = PROGRAMS[program];
+  const mgPath = useMgPath();
 
   usePageMeta({
     title: config ? `${config.title} | Ingenio Medical Group` : "Referral | Ingenio Medical Group",
@@ -57,7 +59,7 @@ export default function MgProgramReferral({ program }) {
           <a className="btn sky" href={config.href}>
             Continue
           </a>{" "}
-          <Link className="btn light" to={config.learnTo}>
+          <Link className="btn light" to={mgPath(config.learnSegment)}>
             Learn more first
           </Link>
         </p>

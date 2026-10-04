@@ -16,9 +16,9 @@ import CreateAccount from "./pages/CreateAccount.jsx";
 import Invite from "./pages/Invite.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import MgHome from "./pages/mg/MgHome.jsx";
-import MgCare from "./pages/mg/MgCare.jsx";
-import MgMedicareAccess from "./pages/mg/MgMedicareAccess.jsx";
-import MgCcm from "./pages/mg/MgCcm.jsx";
+import MgWellness from "./pages/mg/MgWellness.jsx";
+import MgChronic from "./pages/mg/MgChronic.jsx";
+import MgSpecialty from "./pages/mg/MgSpecialty.jsx";
 import MgProgramReferral from "./pages/mg/MgProgramReferral.jsx";
 import MgAbout from "./pages/mg/MgAbout.jsx";
 import MgContact from "./pages/mg/MgContact.jsx";
@@ -48,11 +48,25 @@ export default function App() {
     <Routes>
       <Route path={mgHost ? "/" : "/ingenio"} element={<MgLayout />}>
         <Route index element={<MgHome />} />
-        <Route path="care" element={<MgCare />} />
-        <Route path="medicare-access" element={<MgMedicareAccess />} />
-        <Route path="ccm" element={<MgCcm />} />
-        <Route path="refer/medicare-access" element={<MgProgramReferral program="medicare-access" />} />
-        <Route path="refer/ccm" element={<MgProgramReferral program="ccm" />} />
+        <Route path="wellness" element={<MgWellness />} />
+        <Route path="chronic" element={<MgChronic />} />
+        <Route path="specialty" element={<MgSpecialty />} />
+        <Route path="refer/chronic" element={<MgProgramReferral program="chronic" />} />
+        <Route path="refer/specialty" element={<MgProgramReferral program="specialty" />} />
+        <Route path="care" element={<Navigate to={mgHost ? "/wellness" : "/ingenio/wellness"} replace />} />
+        <Route
+          path="medicare-access"
+          element={<Navigate to={mgHost ? "/chronic" : "/ingenio/chronic"} replace />}
+        />
+        <Route path="ccm" element={<Navigate to={mgHost ? "/specialty" : "/ingenio/specialty"} replace />} />
+        <Route
+          path="refer/medicare-access"
+          element={<Navigate to={mgHost ? "/refer/chronic" : "/ingenio/refer/chronic"} replace />}
+        />
+        <Route
+          path="refer/ccm"
+          element={<Navigate to={mgHost ? "/refer/specialty" : "/ingenio/refer/specialty"} replace />}
+        />
         <Route path="about" element={<MgAbout />} />
         <Route path="about-us" element={<Navigate to={mgAboutTo} replace />} />
         <Route path="contact" element={<MgContact />} />

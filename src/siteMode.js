@@ -22,7 +22,7 @@ export function useMedicalGroupBasePath() {
   return useMemo(() => medicalGroupBasePath(), []);
 }
 
-/** Build an MG-internal path (`/care` on ingenio.care, `/ingenio/care` elsewhere). */
+/** Build an MG-internal path (`/wellness` on ingenio.care, `/ingenio/wellness` elsewhere). */
 export function useMgPath() {
   const base = useMedicalGroupBasePath();
   return useMemo(() => {

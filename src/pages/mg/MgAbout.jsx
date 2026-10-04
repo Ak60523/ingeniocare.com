@@ -15,6 +15,7 @@ export default function MgAbout() {
   return (
     <>
       <MgHero
+        icon="about"
         title="About Ingenio Medical Group"
         lede="We are a virtual-first medical group for primary and specialty care — built to work with in-person practices, not replace the relationships that already matter."
         image="/assets/images/why-ingenio-care.jpg"

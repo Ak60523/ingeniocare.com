@@ -3,18 +3,18 @@ export const providerAppHref = "https://provider.ingeniocare.ai";
 export const planAppHref = "https://plan.ingeniocare.ai";
 export const platformHref = "https://ingeniocare.ai";
 
-export function medicareAccessReferralPath(base = "/ingenio") {
+export function chronicReferralPath(base = "/ingenio") {
   const root = base.replace(/\/$/, "");
-  return `${root}/refer/medicare-access`;
+  return `${root}/refer/chronic`;
 }
 
-export function ccmReferralPath(base = "/ingenio") {
+export function specialtyReferralPath(base = "/ingenio") {
   const root = base.replace(/\/$/, "");
-  return `${root}/refer/ccm`;
+  return `${root}/refer/specialty`;
 }
 
-/** Patient referral / enrollment into MG programs (patient app entry). */
-export const medicareAccessReferralHref =
+/** Patient app program ids stay medicare-access / ccm until the app renames them. */
+export const chronicReferralHref =
   `${patientAppHref}/home/patient?referral=medicare-access&program=medicare-access`;
-export const ccmReferralHref =
+export const specialtyReferralHref =
   `${patientAppHref}/home/patient?referral=ccm&program=ccm`;

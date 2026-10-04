@@ -61,8 +61,22 @@ export default function Header() {
       )}
       <header className="site-header">
         <div className={`wrap header-inner${open ? " nav-open" : ""}`} ref={navRef}>
-          <Link className="brand" to={medicalGroup ? mgBase || "/" : "/"} onClick={closeAll}>
-            <img src="/assets/images/logo.png" alt={medicalGroup ? "Ingenio Medical Group" : "Ingenio Care"} />
+          <Link
+            className="brand"
+            to={medicalGroup ? mgBase || "/" : "/"}
+            onClick={closeAll}
+            aria-label={medicalGroup ? "Ingenio Medical Group" : "Ingenio Care"}
+          >
+            {medicalGroup ? (
+              <span className="brand-mark" aria-hidden="true">
+                <img src="/assets/images/about-hero.jpg" alt="" />
+                <span className="brand-mark-fade" />
+                <span className="brand-mark-ing">ING</span>
+                <span className="brand-mark-plus">+</span>
+              </span>
+            ) : (
+              <img src="/assets/images/logo.png" alt="Ingenio Care" />
+            )}
             {medicalGroup ? <span className="brand-text">Ingenio Medical Group</span> : null}
           </Link>
           <button
