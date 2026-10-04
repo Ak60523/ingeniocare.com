@@ -58,12 +58,14 @@ import {
   countActiveOwners,
   createTenant,
   createTenantInvite,
-  ensurePersonalWorkspace,
+  deletePersonalWorkspaces,
+  deleteTenant,
   getInviteByToken,
   getMembershipForUser,
   getTenant,
   inviteFrontendUrl,
   listAllTenants,
+  listMemberships,
   newInviteToken,
   listPendingInvites,
   listTenantMembers,
@@ -262,7 +264,7 @@ async function loadUser(id) {
 }
 
 async function sessionPayload(user, tenantId) {
-  const memberships = await ensurePersonalWorkspace(pool, user);
+  const memberships = await listMemberships(pool, user.id);
   const globalRole = resolveGlobalRole(user.email, user.role);
   if (globalRole !== user.role) {
     await pool.query("UPDATE users SET role = ? WHERE id = ?", [globalRole, user.id]);
@@ -1083,6 +1085,29 @@ app.patch(
       ]
     );
     res.json({ tenant: await getTenant(pool, tenant.id) });
+  })
+);
+
+app.delete(
+  "/api/tenants/personal",
+  requireDb,
+  requireAuth,
+  requireRole((role) => canManageTenants(role)),
+  asyncHandler(async (_req, res) => {
+    res.json(await deletePersonalWorkspaces(pool));
+  })
+);
+
+app.delete(
+  "/api/tenants/:id",
+  requireDb,
+  requireAuth,
+  requireRole((role) => canManageTenants(role)),
+  asyncHandler(async (req, res) => {
+    const tenant = await getTenant(pool, req.params.id);
+    if (!tenant) return res.status(404).json({ error: "Workspace not found" });
+    await deleteTenant(pool, tenant.id);
+    res.json({ ok: true, id: tenant.id });
   })
 );
 

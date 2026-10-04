@@ -88,13 +88,22 @@ export async function createTenant(pool, { name, ownerUserId }) {
   return getTenant(pool, tenantId);
 }
 
-export async function ensurePersonalWorkspace(pool, user) {
-  let memberships = await listMemberships(pool, user.id);
-  if (memberships.length) return memberships;
-  const label = user.name?.trim() ? `${user.name.trim()}'s workspace` : "Personal workspace";
-  await createTenant(pool, { name: label, ownerUserId: user.id });
-  memberships = await listMemberships(pool, user.id);
-  return memberships;
+export function isPersonalWorkspaceName(name) {
+  const n = String(name || "").trim();
+  return n === "Personal workspace" || /'s workspace$/i.test(n);
+}
+
+export async function deleteTenant(pool, tenantId) {
+  await pool.query("DELETE FROM tenants WHERE id = ?", [tenantId]);
+}
+
+export async function deletePersonalWorkspaces(pool) {
+  const tenants = await listAllTenants(pool);
+  const personal = tenants.filter((row) => isPersonalWorkspaceName(row.name));
+  for (const row of personal) {
+    await deleteTenant(pool, row.id);
+  }
+  return { deleted: personal.length, ids: personal.map((row) => row.id) };
 }
 
 export async function getMembershipForUser(pool, tenantId, userId) {

@@ -94,6 +94,8 @@ export const api = {
   createTenant: (name) => request("/api/tenants", { method: "POST", body: JSON.stringify({ name }) }),
   updateTenant: (id, body) =>
     request(`/api/tenants/${encodeURIComponent(id)}`, { method: "PATCH", body: JSON.stringify(body) }),
+  deleteTenant: (id) => request(`/api/tenants/${encodeURIComponent(id)}`, { method: "DELETE" }),
+  cleanupPersonalTenants: () => request("/api/tenants/personal", { method: "DELETE" }),
   members: (tenantId) => request(`/api/tenants/${encodeURIComponent(tenantId)}/members`),
   inviteMember: (tenantId, body) =>
     request(`/api/tenants/${encodeURIComponent(tenantId)}/invites`, {
