@@ -1,15 +1,24 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../AuthContext.jsx";
-import { headerNav, isSitePathActive } from "../siteNav.js";
+import { patientAppHref } from "../data/mgLinks.js";
 import { growgentSignupHref } from "../data/products.js";
+import { getMgHeaderNav } from "../mgSiteNav.js";
+import { headerNav, isSitePathActive } from "../siteNav.js";
+import { useMedicalGroupBasePath, useMedicalGroupSite } from "../siteMode.js";
 
 export default function Header() {
+  const medicalGroup = useMedicalGroupSite();
+  const mgBase = useMedicalGroupBasePath();
   const { user, signOut } = useAuth();
   const { pathname, hash } = useLocation();
   const [open, setOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
   const navRef = useRef(null);
+  const navItems = useMemo(
+    () => (medicalGroup ? getMgHeaderNav(mgBase) : headerNav),
+    [medicalGroup, mgBase]
+  );
 
   useEffect(() => {
     function onClick(event) {
@@ -37,15 +46,24 @@ export default function Header() {
 
   return (
     <>
-      <div className="banner">
-        <a href={growgentSignupHref} target="_blank" rel="noopener noreferrer">
-          Sign up for an AI Receptionist at Growgent.ai →
-        </a>
-      </div>
+      {medicalGroup ? (
+        <div className="banner mg-banner">
+          <a href={patientAppHref} target="_blank" rel="noopener noreferrer">
+            Get care in the patient app →
+          </a>
+        </div>
+      ) : (
+        <div className="banner">
+          <a href={growgentSignupHref} target="_blank" rel="noopener noreferrer">
+            Sign up for an AI Receptionist at Growgent.ai →
+          </a>
+        </div>
+      )}
       <header className="site-header">
         <div className={`wrap header-inner${open ? " nav-open" : ""}`} ref={navRef}>
-          <Link className="brand" to="/" onClick={closeAll}>
-            <img src="/assets/images/logo.png" alt="Ingenio Care" />
+          <Link className="brand" to={medicalGroup ? mgBase || "/" : "/"} onClick={closeAll}>
+            <img src="/assets/images/logo.png" alt={medicalGroup ? "Ingenio Medical Group" : "Ingenio Care"} />
+            {medicalGroup ? <span className="brand-text">Ingenio Medical Group</span> : null}
           </Link>
           <button
             className="menu-toggle"
@@ -56,7 +74,7 @@ export default function Header() {
             Menu
           </button>
           <nav className="nav">
-            {headerNav.map((item) => {
+            {navItems.map((item) => {
               if (item.children?.length) {
                 const sectionActive = isSitePathActive(pathname, item);
                 const expanded = openMenu === item.id;
@@ -124,7 +142,7 @@ export default function Header() {
                 <NavLink
                   key={item.id}
                   to={item.to}
-                  end={item.exact || item.to === "/"}
+                  end={item.exact || item.to === "/" || item.to === mgBase}
                   className={({ isActive }) => (isActive ? "active" : undefined)}
                   onClick={closeAll}
                 >
@@ -132,7 +150,17 @@ export default function Header() {
                 </NavLink>
               );
             })}
-            {user ? (
+            {medicalGroup ? (
+              <a
+                className="nav-account"
+                href={patientAppHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={closeAll}
+              >
+                Get care
+              </a>
+            ) : user ? (
               <button
                 className="nav-account"
                 type="button"

@@ -1,6 +1,14 @@
 # Ingenio Care — React + Postgres
 
-React frontend for [ingeniocare.com](https://ingeniocare.com). Local Vite talks to the **production** Amplify data API (Lambda + Aurora). Do not run Postgres or Express on your machine.
+One React app, two homes:
+
+| URL | Home |
+| --- | --- |
+| `/` (ingeniocare.com, localhost) | Platform marketing site |
+| `/ingenio` (local / ingeniocare.com) | Ingenio Medical Group |
+| `ingenio.care` `/` | Ingenio Medical Group (host) |
+
+Local Vite talks to the **production** Amplify data API (Lambda + Aurora). Do not run Postgres or Express on your machine.
 
 The browser never connects to the database. React calls the Function URL in `amplify_outputs.json` (`custom.dataApiUrl`).
 
@@ -11,7 +19,8 @@ npm install
 npm run dev
 ```
 
-- React: http://localhost:5173
+- Platform: http://localhost:5173/
+- Medical group: http://localhost:5173/ingenio
 - API: production Lambda from `amplify_outputs.json`
 - Sign in uses the production `users` table (same accounts as the live site)
 
@@ -87,3 +96,12 @@ Bedrock uses the Lambda IAM role (Claude Sonnet 4.5 for write/rewrite). Override
 ### Optional: EC2 instead of Lambda
 
 `deploy/nginx-api.conf` and `deploy/ingenio-api.service` remain if you want Express on a VM with Postgres on the box. Prefer the Amplify Lambda path above.
+
+### Medical Group (`ingenio.care`)
+
+Same Amplify app. Attach custom domain `ingenio.care` — the host serves the medical group home at `/`. On `ingeniocare.com` / localhost, the medical group is at `/ingenio`.
+
+Patient referral links:
+
+- `/ingenio/refer/medicare-access` (or `/refer/medicare-access` on ingenio.care)
+- `/ingenio/refer/ccm` (or `/refer/ccm` on ingenio.care)

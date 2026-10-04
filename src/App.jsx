@@ -1,6 +1,7 @@
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import ConsoleShell from "./components/ConsoleShell.jsx";
 import Layout from "./components/Layout.jsx";
+import MgLayout from "./components/MgLayout.jsx";
 import RequireRole from "./components/RequireRole.jsx";
 import Home from "./pages/Home.jsx";
 import Products, { HashRedirect, LegacyProductRedirect } from "./pages/Products.jsx";
@@ -14,6 +15,13 @@ import SignIn from "./pages/SignIn.jsx";
 import CreateAccount from "./pages/CreateAccount.jsx";
 import Invite from "./pages/Invite.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import MgHome from "./pages/mg/MgHome.jsx";
+import MgCare from "./pages/mg/MgCare.jsx";
+import MgMedicareAccess from "./pages/mg/MgMedicareAccess.jsx";
+import MgCcm from "./pages/mg/MgCcm.jsx";
+import MgProgramReferral from "./pages/mg/MgProgramReferral.jsx";
+import MgAbout from "./pages/mg/MgAbout.jsx";
+import MgContact from "./pages/mg/MgContact.jsx";
 import {
   BlogPage,
   BlogPostPage,
@@ -30,76 +38,97 @@ import OwnerErrors from "./pages/owner/OwnerErrors.jsx";
 import OwnerCursor from "./pages/owner/OwnerCursor.jsx";
 import OwnerDataModel from "./pages/owner/OwnerDataModel.jsx";
 import { canManageContent, canManageTenants, canManageUsers } from "./roles";
+import { isMedicalGroupHost } from "./siteMode.js";
 
 export default function App() {
+  const mgHost = isMedicalGroupHost();
+  const mgAboutTo = mgHost ? "/about" : "/ingenio/about";
+
   return (
     <Routes>
-      <Route element={<ConsoleShell />}>
-        <Route element={<Layout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/solutions" element={<Products />} />
-          <Route path="/solutions/:slug" element={<Products />} />
-          <Route path="/network" element={<Navigate to="/" replace />} />
-          <Route path="/network/products" element={<HashRedirect to="/solutions" />} />
-          <Route path="/products" element={<HashRedirect to="/solutions" />} />
-          <Route path="/products/:slug" element={<LegacyProductRedirect />} />
-          <Route path="/customers" element={<Customers />} />
-          <Route path="/customers/:slug" element={<Customers />} />
-          <Route path="/about-us" element={<About />} />
-          <Route path="/news" element={<News />} />
-          <Route path="/blog" element={<BlogPage />} />
-          <Route path="/blog/:slug" element={<BlogPostPage />} />
-          <Route path="/blogs" element={<Navigate to="/blog" replace />} />
-          <Route path="/papers" element={<PapersPage />} />
-          <Route path="/papers/:slug" element={<PaperDetailPage />} />
-          <Route path="/podcasts" element={<PodcastsPage />} />
-          <Route path="/podcasts/:slug" element={<PodcastDetailPage />} />
-          <Route path="/podcast" element={<Navigate to="/podcasts" replace />} />
-          <Route path="/privacy-policy" element={<Privacy />} />
-          <Route path="/terms-of-use" element={<Terms />} />
-          <Route path="/physician-advisory-board" element={<Navigate to="/about-us#advisory-board" replace />} />
-          <Route path="/healthcare-advisory-board" element={<Navigate to="/about-us#advisory-board" replace />} />
-          <Route path="/m/account" element={<SignIn />} />
-          <Route path="/m/create-account" element={<CreateAccount />} />
-          <Route path="/invite/:token" element={<Invite />} />
-          <Route path="/:slug" element={<Article />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-
-        <Route
-          element={
-            <RequireRole allow={canManageTenants}>
-              <Outlet />
-            </RequireRole>
-          }
-        >
-          <Route path="/tenants" element={<OwnerTenants />} />
-          <Route path="/builds" element={<OwnerBuilds />} />
-          <Route path="/errors" element={<OwnerErrors />} />
-          <Route path="/cursor" element={<OwnerCursor />} />
-          <Route path="/data-model" element={<OwnerDataModel />} />
-        </Route>
-
-        <Route
-          element={
-            <RequireRole allow={canManageUsers}>
-              <Outlet />
-            </RequireRole>
-          }
-        >
-          <Route path="/users" element={<OwnerUsers />} />
-        </Route>
-
-        <Route
-          element={
-            <RequireRole allow={canManageContent}>
-              <Outlet />
-            </RequireRole>
-          }
-        >
-          <Route path="/settings" element={<OwnerSettings />} />
-        </Route>
+      <Route path={mgHost ? "/" : "/ingenio"} element={<MgLayout />}>
+        <Route index element={<MgHome />} />
+        <Route path="care" element={<MgCare />} />
+        <Route path="medicare-access" element={<MgMedicareAccess />} />
+        <Route path="ccm" element={<MgCcm />} />
+        <Route path="refer/medicare-access" element={<MgProgramReferral program="medicare-access" />} />
+        <Route path="refer/ccm" element={<MgProgramReferral program="ccm" />} />
+        <Route path="about" element={<MgAbout />} />
+        <Route path="about-us" element={<Navigate to={mgAboutTo} replace />} />
+        <Route path="contact" element={<MgContact />} />
+        <Route path="privacy-policy" element={<Privacy />} />
+        <Route path="terms-of-use" element={<Terms />} />
+        <Route path="*" element={<NotFound />} />
       </Route>
+
+      {!mgHost ? (
+        <Route element={<ConsoleShell />}>
+          <Route element={<Layout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/solutions" element={<Products />} />
+            <Route path="/solutions/:slug" element={<Products />} />
+            <Route path="/network" element={<Navigate to="/" replace />} />
+            <Route path="/network/products" element={<HashRedirect to="/solutions" />} />
+            <Route path="/products" element={<HashRedirect to="/solutions" />} />
+            <Route path="/products/:slug" element={<LegacyProductRedirect />} />
+            <Route path="/customers" element={<Customers />} />
+            <Route path="/customers/:slug" element={<Customers />} />
+            <Route path="/about-us" element={<About />} />
+            <Route path="/news" element={<News />} />
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog/:slug" element={<BlogPostPage />} />
+            <Route path="/blogs" element={<Navigate to="/blog" replace />} />
+            <Route path="/papers" element={<PapersPage />} />
+            <Route path="/papers/:slug" element={<PaperDetailPage />} />
+            <Route path="/podcasts" element={<PodcastsPage />} />
+            <Route path="/podcasts/:slug" element={<PodcastDetailPage />} />
+            <Route path="/podcast" element={<Navigate to="/podcasts" replace />} />
+            <Route path="/privacy-policy" element={<Privacy />} />
+            <Route path="/terms-of-use" element={<Terms />} />
+            <Route path="/physician-advisory-board" element={<Navigate to="/about-us#advisory-board" replace />} />
+            <Route path="/healthcare-advisory-board" element={<Navigate to="/about-us#advisory-board" replace />} />
+            <Route path="/m/account" element={<SignIn />} />
+            <Route path="/m/create-account" element={<CreateAccount />} />
+            <Route path="/invite/:token" element={<Invite />} />
+            <Route path="/:slug" element={<Article />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+
+          <Route
+            element={
+              <RequireRole allow={canManageTenants}>
+                <Outlet />
+              </RequireRole>
+            }
+          >
+            <Route path="/tenants" element={<OwnerTenants />} />
+            <Route path="/builds" element={<OwnerBuilds />} />
+            <Route path="/errors" element={<OwnerErrors />} />
+            <Route path="/cursor" element={<OwnerCursor />} />
+            <Route path="/data-model" element={<OwnerDataModel />} />
+          </Route>
+
+          <Route
+            element={
+              <RequireRole allow={canManageUsers}>
+                <Outlet />
+              </RequireRole>
+            }
+          >
+            <Route path="/users" element={<OwnerUsers />} />
+          </Route>
+
+          <Route
+            element={
+              <RequireRole allow={canManageContent}>
+                <Outlet />
+              </RequireRole>
+            }
+          >
+            <Route path="/settings" element={<OwnerSettings />} />
+          </Route>
+        </Route>
+      ) : null}
     </Routes>
   );
 }

@@ -49,11 +49,9 @@ export function usePageMeta({
 } = {}) {
   useEffect(() => {
     const pageTitle = String(title || "").trim();
-    const fullTitle = pageTitle
-      ? pageTitle.includes("Ingenio Care")
-        ? pageTitle
-        : `${pageTitle} | Ingenio Care`
-      : DEFAULT_TITLE;
+    const branded =
+      pageTitle.includes("Ingenio Care") || pageTitle.includes("Ingenio Medical Group");
+    const fullTitle = pageTitle ? (branded ? pageTitle : `${pageTitle} | Ingenio Care`) : DEFAULT_TITLE;
     const desc = String(description || "").trim() || DEFAULT_DESCRIPTION;
     const imageUrl = absoluteUrl(image || DEFAULT_IMAGE);
     const pageUrl = absoluteUrl(url || (typeof window !== "undefined" ? window.location.pathname : "/"));

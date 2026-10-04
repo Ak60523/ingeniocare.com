@@ -7,6 +7,7 @@ Thumbs.db
 _preview/
 node_modules/
 dist/
+dist-ingenio/
 cdk.out/
 cdk.context.json
 amplify-hosting.zip
