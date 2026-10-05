@@ -4789,19 +4789,19 @@ body.site-mg .nav button.active {
 body.site-mg .brand-mark {
   position: relative;
   display: block;
-  width: 64px;
-  height: 64px;
+  width: 76px;
+  height: 76px;
   flex-shrink: 0;
   overflow: hidden;
   border-radius: 14px;
-  background: var(--navy-deep);
+  background: #000;
 }
 
 body.site-mg .brand-mark img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center 20%;
+  object-fit: contain;
+  object-position: center;
   border-radius: 0;
 }
 
