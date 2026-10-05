@@ -71,16 +71,16 @@ function buildImagePrompt({ prompt, placement, kind }) {
   const userPrompt = String(prompt || "").trim();
   const sizeHint =
     placement === "pullout"
-      ? "Square 1:1 composition (1024×1024). Design for a pull-out sidebar figure — bold subject, limited detail, legible when small."
-      : "Landscape ~3:2 composition (1536×1024). Design for a full-width inline article figure — clear focal point, readable at column width.";
+      ? "Square 1:1 composition (1024×1024). Design for a pull-out sidebar figure - bold subject, limited detail, legible when small."
+      : "Landscape ~3:2 composition (1536×1024). Design for a full-width inline article figure - clear focal point, readable at column width.";
 
   if (kind === "image") {
     return [
       "Create a high-quality editorial photograph or photorealistic scene for a professional healthcare article.",
       "Natural lighting, authentic clinical or workplace context, no watermarks, no mockup frames, no UI chrome.",
-      "Prefer a single strong subject or moment — not a diagram, chart, icon grid, or labeled flowchart.",
+      "Prefer a single strong subject or moment - not a diagram, chart, icon grid, or labeled flowchart.",
       sizeHint,
-      "Do NOT render any title, caption, headline, logo lockup, or article heading text in the image — captions are added separately in the layout.",
+      "Do NOT render any title, caption, headline, logo lockup, or article heading text in the image - captions are added separately in the layout.",
       userPrompt,
     ]
       .filter(Boolean)
@@ -92,7 +92,7 @@ function buildImagePrompt({ prompt, placement, kind }) {
     "Create a clean editorial infographic illustration for a professional healthcare article.",
     "Modern flat diagram style, clear hierarchy, no watermarks, no mockup frames, no UI chrome.",
     sizeHint,
-    "Do NOT render any title, caption, headline, or article heading text in the image — captions are added separately in the layout.",
+    "Do NOT render any title, caption, headline, or article heading text in the image - captions are added separately in the layout.",
     "Short diagram labels inside the graphic are OK only when needed for the chart itself.",
     userPrompt,
   ]
@@ -102,7 +102,7 @@ function buildImagePrompt({ prompt, placement, kind }) {
 }
 
 function buildOpenAiImageRequestBody(model, prompt, size, quality) {
-  // Do not send response_format — gpt-image-* rejects it (returns b64_json by default).
+  // Do not send response_format - gpt-image-* rejects it (returns b64_json by default).
   const body = {
     model,
     prompt: String(prompt || "").slice(0, 4000),
@@ -138,7 +138,7 @@ async function generateImageBuffer(fullPrompt, size) {
     return {
       ok: false,
       statusCode: 503,
-      message: "OPENAI_API_KEY is not configured — set it as an Amplify secret for the data-api Lambda.",
+      message: "OPENAI_API_KEY is not configured - set it as an Amplify secret for the data-api Lambda.",
     };
   }
   try {
@@ -188,7 +188,7 @@ export async function storeImageBuffer({ buffer, contentType, key }) {
       return {
         ok: false,
         statusCode: 503,
-        message: "Image storage is not configured — CONTENT_IMAGES_BUCKET missing. Redeploy so Amplify creates the content images bucket.",
+        message: "Image storage is not configured - CONTENT_IMAGES_BUCKET missing. Redeploy so Amplify creates the content images bucket.",
       };
     }
     const imageUrl = await storeLocal(buffer, objectKey, ext);

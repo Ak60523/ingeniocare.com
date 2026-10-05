@@ -12,7 +12,6 @@ export default function Header() {
   const mgBase = useMedicalGroupBasePath();
   const { user, signOut } = useAuth();
   const { pathname, hash } = useLocation();
-  const [open, setOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
   const navRef = useRef(null);
   const navItems = useMemo(
@@ -31,7 +30,6 @@ export default function Header() {
   }, []);
 
   function closeAll() {
-    setOpen(false);
     setOpenMenu(null);
   }
 
@@ -60,7 +58,7 @@ export default function Header() {
         </div>
       )}
       <header className="site-header">
-        <div className={`wrap header-inner${open ? " nav-open" : ""}`} ref={navRef}>
+        <div className="wrap header-inner" ref={navRef}>
           <Link
             className="brand"
             to={medicalGroup ? mgBase || "/" : "/"}
@@ -77,16 +75,7 @@ export default function Header() {
             ) : (
               <img src="/assets/images/logo.png" alt="Ingenio Care" />
             )}
-            {medicalGroup ? <span className="brand-text">Ingenio Medical Group</span> : null}
           </Link>
-          <button
-            className="menu-toggle"
-            type="button"
-            aria-expanded={open}
-            onClick={() => setOpen((value) => !value)}
-          >
-            Menu
-          </button>
           <nav className="nav">
             {navItems.map((item) => {
               if (item.children?.length) {
@@ -164,32 +153,24 @@ export default function Header() {
                 </NavLink>
               );
             })}
-            {medicalGroup ? (
-              <a
-                className="nav-account"
-                href={patientAppHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={closeAll}
-              >
-                Get care
-              </a>
-            ) : user ? (
-              <button
-                className="nav-account"
-                type="button"
-                onClick={() => {
-                  closeAll();
-                  signOut();
-                }}
-              >
-                Sign Out
-              </button>
-            ) : (
-              <NavLink className="nav-account" to="/m/account" onClick={closeAll}>
-                Sign In
-              </NavLink>
-            )}
+            {!medicalGroup ? (
+              user ? (
+                <button
+                  className="nav-account"
+                  type="button"
+                  onClick={() => {
+                    closeAll();
+                    signOut();
+                  }}
+                >
+                  Sign Out
+                </button>
+              ) : (
+                <NavLink className="nav-account" to="/m/account" onClick={closeAll}>
+                  Sign In
+                </NavLink>
+              )
+            ) : null}
           </nav>
         </div>
       </header>

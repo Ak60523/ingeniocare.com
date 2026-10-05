@@ -221,7 +221,7 @@ export default function FigureBlockEditor({
           }}
           disabled={busy}
         />
-        <span className="form-note">Shown under the {figureLabel} — not painted into the image.</span>
+        <span className="form-note">Shown under the {figureLabel} - not painted into the image.</span>
       </label>
 
       <div>
@@ -270,8 +270,8 @@ export default function FigureBlockEditor({
       </label>
       <p className="form-note">
         {isImage
-          ? "Write with AI fills this photo prompt only — use Generate image, upload, or pick from the library to add the photo."
-          : "Write with AI fills this prompt only — use Generate graphic, upload, or pick from the library to add the image."}
+          ? "Write with AI fills this photo prompt only - use Generate image, upload, or pick from the library to add the photo."
+          : "Write with AI fills this prompt only - use Generate graphic, upload, or pick from the library to add the image."}
       </p>
 
       <div className="owner-row-actions">
@@ -307,7 +307,7 @@ export default function FigureBlockEditor({
       </div>
       {generating ? (
         <p className="form-note">
-          Generating {placement === "pullout" ? "square pull-out" : "landscape inline"} {isImage ? "photo" : "graphic"} —
+          Generating {placement === "pullout" ? "square pull-out" : "landscape inline"} {isImage ? "photo" : "graphic"} -
           often 20–60 seconds…
         </p>
       ) : null}
@@ -324,7 +324,7 @@ export default function FigureBlockEditor({
           <p className="form-note">
             {libraryLoading
               ? "Loading library…"
-              : "No images yet — generate or upload one; new graphics are saved to the library."}
+              : "No images yet - generate or upload one; new graphics are saved to the library."}
           </p>
         ) : (
           <div className="figure-library">
@@ -361,7 +361,7 @@ export default function FigureBlockEditor({
           {title ? <figcaption>{title}</figcaption> : null}
         </figure>
       ) : (
-        <p className="form-note">No image yet — generate, upload, or pick from the library.</p>
+        <p className="form-note">No image yet - generate, upload, or pick from the library.</p>
       )}
     </div>
   );

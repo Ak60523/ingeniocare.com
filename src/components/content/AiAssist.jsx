@@ -129,12 +129,12 @@ function buildInstruction({
       ? "Include a sidebar list placed immediately before the section it summarizes (not at the end of the article)."
       : "",
     sections.includes("infographic")
-      ? 'Include one infographic body block with placement "inline" or "pullout" and a concrete diagram/chart prompt only; optional short caption in title; ALWAYS leave imageUrl as an empty string — do not invent URLs; the author will Generate or pick from the library afterward.'
+      ? 'Include one infographic body block with placement "inline" or "pullout" and a concrete diagram/chart prompt only; optional short caption in title; ALWAYS leave imageUrl as an empty string - do not invent URLs; the author will Generate or pick from the library afterward.'
       : "",
     sections.includes("image")
-      ? 'Include one image body block with placement "inline" or "pullout" and a concrete photographic/editorial-scene prompt only (not a diagram or labeled flowchart); optional short caption in title; ALWAYS leave imageUrl as an empty string — do not invent URLs; the author will Generate or pick from the library afterward.'
+      ? 'Include one image body block with placement "inline" or "pullout" and a concrete photographic/editorial-scene prompt only (not a diagram or labeled flowchart); optional short caption in title; ALWAYS leave imageUrl as an empty string - do not invent URLs; the author will Generate or pick from the library afterward.'
       : "",
-    "Use heading blocks (level 2/3) for section titles — never use # markdown inside text blocks. Return the article body as ordered section blocks (heading, text, quote, list, image, infographic), not a single HTML string.",
+    "Use heading blocks (level 2/3) for section titles - never use # markdown inside text blocks. Return the article body as ordered section blocks (heading, text, quote, list, image, infographic), not a single HTML string.",
     `Length: ${paramLabel(SIZE_OPTIONS, size, sizeOverride)}.`,
     `Tone: ${paramLabel(TONE_OPTIONS, tone, toneOverride)}.`,
     `Style: ${paramLabel(STYLE_OPTIONS, style, styleOverride)}.`,
@@ -188,7 +188,7 @@ export function StartWithAiSection({
           subtitle: String(row?.subtitle ?? "").trim(),
         }))
         .filter((row) => row.title);
-      if (!list.length) throw new Error("No alternatives returned — try a clearer prompt");
+      if (!list.length) throw new Error("No alternatives returned - try a clearer prompt");
       setAlternatives(list);
       setSelectedIndex(0);
     } catch (err) {
@@ -386,12 +386,12 @@ export function WriteSection({ busy = false, disabled = false, hasBody = false, 
   const title = intent === "refine" ? "Refine" : intent === "rewrite" ? "Rewrite" : hasBody ? "Rewrite or Refine" : "Write with AI";
   const description =
     intent === "refine"
-      ? "Improve the existing article — keep what’s working and apply your guidance."
+      ? "Improve the existing article - keep what’s working and apply your guidance."
       : intent === "rewrite"
         ? "Replace the article body with a fresh draft from the title, summary, and options below."
         : hasBody
           ? "Rewrite the whole article, or refine the current draft with specific guidance."
-          : "Draft the article body with AI from the title and summary — choose sections and guidance, then write.";
+          : "Draft the article body with AI from the title and summary - choose sections and guidance, then write.";
   const submitLabel = intent === "refine" ? "Refine" : intent === "rewrite" ? "Rewrite" : "Write with AI";
   const busyLabel = intent === "refine" ? "Refining…" : intent === "rewrite" ? "Rewriting…" : "Writing…";
 

@@ -1,11 +1,8 @@
-import { Link } from "react-router-dom";
 import MgHero from "../../components/MgHero.jsx";
 import { patientAppHref, planAppHref, platformHref, providerAppHref } from "../../data/mgLinks.js";
 import { usePageMeta } from "../../hooks/usePageMeta.js";
-import { useMgPath } from "../../siteMode.js";
 
 export default function MgAbout() {
-  const mgPath = useMgPath();
   usePageMeta({
     title: "About | Ingenio Medical Group",
     description:
@@ -17,19 +14,9 @@ export default function MgAbout() {
       <MgHero
         icon="about"
         title="About Ingenio Medical Group"
-        lede="We are a virtual-first medical group for primary and specialty care — built to work with in-person practices, not replace the relationships that already matter."
+        lede="We are a virtual-first medical group for primary and specialty care - built to work with in-person practices, not replace the relationships that already matter."
         image="/assets/images/why-ingenio-care.jpg"
         imageAlt="Ingenio Care clinicians and care model"
-        actions={
-          <>
-            <a className="btn sky" href={patientAppHref} target="_blank" rel="noopener noreferrer">
-              Patient app
-            </a>
-            <Link className="btn light" to={mgPath("contact")}>
-              Contact us
-            </Link>
-          </>
-        }
       />
 
       <section className="section">
@@ -54,7 +41,7 @@ export default function MgAbout() {
             <li>
               <h3>For providers</h3>
               <p>
-                Join our virtual medical group — powered by the ingeniocare.ai platform — at{" "}
+                Join our virtual medical group - powered by the ingeniocare.ai platform - at{" "}
                 <a href={providerAppHref} target="_blank" rel="noopener noreferrer">
                   provider.ingeniocare.ai
                 </a>

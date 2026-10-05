@@ -6,8 +6,8 @@ const defaultFramework = {
     efficiency: "Operating efficiency",
   },
   lede: (segment) =>
-    `Growth, quality, and operating efficiency for ${segment.label.toLowerCase()}—with a combined view of potential improvement and a sample story for each product.`,
-  dashNote: "Directional, illustrative estimates—not a guarantee. Combined view across products for this audience.",
+    `Growth, quality, and operating efficiency for ${segment.label.toLowerCase()}-with a combined view of potential improvement and a sample story for each product.`,
+  dashNote: "Directional, illustrative estimates-not a guarantee. Combined view across products for this audience.",
 };
 
 const frameworksById = {
@@ -19,7 +19,7 @@ const frameworksById = {
       efficiency: "Operating efficiency",
     },
     lede: () =>
-      "Employee productivity, claims cost, and benefits administration—with a combined view of potential improvement and a sample story for each product.",
+      "Employee productivity, claims cost, and benefits administration-with a combined view of potential improvement and a sample story for each product.",
     dashNote:
       "Directional estimates. Cost reduction and operating efficiency are the main movers; productivity follows from faster, completed care.",
   },
@@ -31,7 +31,7 @@ const frameworksById = {
       cost: "Cost",
     },
     lede: () =>
-      "Quality, access, and cost—the measures that support higher reimbursement—with a combined view of potential improvement and a sample story for each product.",
+      "Quality, access, and cost-the measures that support higher reimbursement-with a combined view of potential improvement and a sample story for each product.",
     dashNote:
       "Directional estimates of quality, access, and cost performance that support quality bonuses and value-based reimbursement.",
   },
@@ -43,8 +43,8 @@ const frameworksById = {
       efficiency: "Time saved",
     },
     lede: () =>
-      "Access, quality, and time saved for patients—with a combined view of potential improvement and a sample story for each product.",
-    dashNote: "Directional, illustrative estimates—not a guarantee. Combined view across products for this audience.",
+      "Access, quality, and time saved for patients-with a combined view of potential improvement and a sample story for each product.",
+    dashNote: "Directional, illustrative estimates-not a guarantee. Combined view across products for this audience.",
   },
   "assisted-living": {
     keys: ["access", "quality", "efficiency"],
@@ -54,8 +54,8 @@ const frameworksById = {
       efficiency: "Operating efficiency",
     },
     lede: () =>
-      "Access, quality, and operating efficiency for post-acute settings—with a combined view of potential improvement and a sample story for each product.",
-    dashNote: "Directional, illustrative estimates—not a guarantee. Combined view across products for this audience.",
+      "Access, quality, and operating efficiency for post-acute settings-with a combined view of potential improvement and a sample story for each product.",
+    dashNote: "Directional, illustrative estimates-not a guarantee. Combined view across products for this audience.",
   },
 };
 
@@ -91,7 +91,7 @@ const opportunities = {
       efficiency: "Replace directory hunting and call-center queues with a bookable view of who is actually available.",
       story: {
         title: "Open afternoon clinics finally showed up as real appointments",
-        body: "A self-funded group had contracted capacity that employees never found. The Marketplace listed same-week primary and specialty openings. Utilization moved into the contracted network, and the broker could show leadership that access—not another vendor pamphlet—was what changed.",
+        body: "A self-funded group had contracted capacity that employees never found. The Marketplace listed same-week primary and specialty openings. Utilization moved into the contracted network, and the broker could show leadership that access-not another vendor pamphlet-was what changed.",
       },
     },
   ],
@@ -102,7 +102,7 @@ const opportunities = {
         "Care-gap closure and continuous chronic and post-acute management support quality scores that drive Stars bonuses and value-based reimbursement.",
       access:
         "Members book in-network care they already have, which is what access and “getting needed care” measures actually reward.",
-      cost: "Leakage to out-of-network and retail sites of care drops when the next available in-network clinician is visible—protecting medical cost and MLR.",
+      cost: "Leakage to out-of-network and retail sites of care drops when the next available in-network clinician is visible-protecting medical cost and MLR.",
       story: {
         title: "A regional Medicare Advantage plan shortened the path from ‘I need a doctor’ to a booked visit",
         body: "Members knew they had coverage; they did not know who was open this week. The Plan App paired benefit context with in-network routing. Care-gap work moved off paper lists, specialty leakage slowed, and quality and access measures had a completed visit behind them instead of another directory call.",
@@ -261,7 +261,7 @@ const opportunities = {
     {
       productId: "marketplace",
       growth: "The clinic can send and receive patients across the community network without losing them to a distant system.",
-      quality: "Patients get to available services—behavioral health, dental, specialty—without months of wait.",
+      quality: "Patients get to available services-behavioral health, dental, specialty-without months of wait.",
       efficiency: "Staff stop maintaining unofficial ‘who is taking patients’ spreadsheets.",
       story: {
         title: "Behavioral-health wait times stopped being a rumor",

@@ -2,16 +2,15 @@ import { Link } from "react-router-dom";
 import MgHero from "../../components/MgHero.jsx";
 import { patientAppHref, specialtyReferralPath } from "../../data/mgLinks.js";
 import { usePageMeta } from "../../hooks/usePageMeta.js";
-import { useMedicalGroupBasePath, useMgPath } from "../../siteMode.js";
+import { useMedicalGroupBasePath } from "../../siteMode.js";
 
 export default function MgSpecialty() {
   const base = useMedicalGroupBasePath();
-  const mgPath = useMgPath();
 
   usePageMeta({
     title: "Specialty Care | Ingenio Medical Group",
     description:
-      "Specialty care when you need it — coordinated, prioritized, and easy to follow. Shop economic services to keep deductibles low while plans, employers, and ACOs succeed on shared savings.",
+      "Specialty care when you need it - coordinated, prioritized, and easy to follow. Shop economic services to keep deductibles low while plans, employers, and ACOs succeed on shared savings.",
   });
 
   return (
@@ -19,19 +18,9 @@ export default function MgSpecialty() {
       <MgHero
         icon="specialty"
         title="Specialty care when you need it"
-        lede="Care that is coordinated and prioritized — making it easy to follow, with help shopping for economic services so your deductible stays low."
+        lede="Care that is coordinated and prioritized - making it easy to follow, with help shopping for economic services so your deductible stays low."
         image="/assets/images/assisted-living.jpg"
         imageAlt="Clinician providing specialty care with patients"
-        actions={
-          <>
-            <Link className="btn sky" to={specialtyReferralPath(base)}>
-              Refer a patient
-            </Link>
-            <Link className="btn light" to={mgPath("contact")}>
-              Contact us
-            </Link>
-          </>
-        }
       />
 
       <section className="section">
@@ -64,8 +53,8 @@ export default function MgSpecialty() {
           <div>
             <h2>Shop for care that protects your deductible</h2>
             <p>
-              We help patients compare economic specialty options — in-network, appropriate site of
-              care — so the path forward is clinically right and financially lighter.
+              We help patients compare economic specialty options - in-network, appropriate site of
+              care - so the path forward is clinically right and financially lighter.
             </p>
             <ul>
               <li>Guidance toward lower-cost, high-value services</li>
@@ -81,7 +70,7 @@ export default function MgSpecialty() {
           <h2>Shared savings that work for everyone</h2>
           <p className="lede">
             While patients get specialty care that is easier to follow and easier on the deductible,
-            we help plans, employers, and ACOs do well on shared savings programs — with in-network
+            we help plans, employers, and ACOs do well on shared savings programs - with in-network
             utilization, clearer access, and less leakage.
           </p>
           <ul className="mg-pillars mg-pillars-row">

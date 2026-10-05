@@ -1,12 +1,11 @@
 import MgHero from "../../components/MgHero.jsx";
-import { patientAppHref } from "../../data/mgLinks.js";
 import { usePageMeta } from "../../hooks/usePageMeta.js";
 
 export default function MgWellness() {
   usePageMeta({
     title: "Wellness | Ingenio Medical Group",
     description:
-      "AI-enabled virtual wellness visits — immunizations, screenings, and preventive tests. Most plans cover it with zero copay. We charge Medicare rates to uninsured.",
+      "AI-enabled virtual wellness visits - immunizations, screenings, and preventive tests. Most plans cover it with zero copay. We charge Medicare rates to uninsured.",
   });
 
   return (
@@ -18,19 +17,13 @@ export default function MgWellness() {
           <>
             <p>
               Patient and AI-enabled virtual care supports wellness visits so preventive care fits
-              real life — not another afternoon in a waiting room.
+              real life - not another afternoon in a waiting room.
             </p>
             <p>Most plans cover it with zero copay. We charge Medicare rates to uninsured.</p>
           </>
         }
         image="/assets/images/wellness-family.jpg"
-        imageAlt="Multi-generational family — parents, children, and grandparents — staying well together"
-        actionsOnMedia
-        actions={
-          <a className="btn sky" href={patientAppHref} target="_blank" rel="noopener noreferrer">
-            Open patient app
-          </a>
-        }
+        imageAlt="Multi-generational family - parents, children, and grandparents - staying well together"
       />
 
       <section className="section">
@@ -40,7 +33,7 @@ export default function MgWellness() {
             <p>
               Patients get a clear path to stay current on preventive care. Virtual support and a
               conversational assistant help schedule, prepare for, and follow through on wellness
-              visits — so nothing important slips between appointments.
+              visits - so nothing important slips between appointments.
             </p>
             <p>Most plans cover it with zero copay. We charge Medicare rates to uninsured.</p>
             <ul>
@@ -50,7 +43,7 @@ export default function MgWellness() {
             </ul>
           </div>
           <div className="media-block is-people">
-            <img src="/assets/images/home-hero.jpg" alt="Care team guiding a patient through wellness care" />
+            <img src="/assets/images/wellness-visit.jpg" alt="Couple on a virtual wellness visit with a clinician" />
           </div>
         </div>
       </section>
@@ -58,7 +51,7 @@ export default function MgWellness() {
       <section className="section alt">
         <div className="wrap grid-2 reverse">
           <div className="media-block is-people">
-            <img src="/assets/images/health-plans.jpg" alt="Patient completing preventive screenings and check-ins" />
+            <img src="/assets/images/wellness-screening.jpg" alt="Clinician finishing an immunization with a patient and parent" />
           </div>
           <div>
             <h2>Immunizations, screenings, and more</h2>
@@ -82,7 +75,7 @@ export default function MgWellness() {
           <h2>Healthy patients. Stronger VBC scores.</h2>
           <p className="lede">
             Besides keeping patients healthy, we help employers, plans, and providers close
-            preventive-care gaps and score high on value-based care measures — with less chase and
+            preventive-care gaps and score high on value-based care measures - with less chase and
             clearer completion.
           </p>
           <ul className="mg-pillars mg-pillars-row">
@@ -96,7 +89,7 @@ export default function MgWellness() {
             </li>
             <li>
               <h3>Providers</h3>
-              <p>Gap closure that shows up in the record — ready for VBC reporting.</p>
+              <p>Gap closure that shows up in the record - ready for VBC reporting.</p>
             </li>
           </ul>
         </div>

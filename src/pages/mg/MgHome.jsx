@@ -10,7 +10,7 @@ import { usePageMeta } from "../../hooks/usePageMeta.js";
 import { useMedicalGroupBasePath, useMgPath } from "../../siteMode.js";
 
 const connectedCareSteps = [
-  { title: "AI / App", body: "Start in the patient app — guidance, history, and the next right step." },
+  { title: "AI / App", body: "Start in the patient app - guidance, history, and the next right step." },
   { title: "Virtual", body: "See a clinician by video when that is the fastest, safest first visit." },
   { title: "In-person access", body: "When hands-on care is needed, we coordinate with local practices." },
 ];
@@ -22,7 +22,7 @@ export default function MgHome() {
   usePageMeta({
     title: "Ingenio Medical Group",
     description:
-      "Connected care from AI and app to virtual and in-person access — wellness, chronic, and specialty care with value-based outcomes.",
+      "Connected care from AI and app to virtual and in-person access - wellness, chronic, and specialty care with value-based outcomes.",
     type: "website",
   });
 
@@ -31,15 +31,9 @@ export default function MgHome() {
       <MgHero
         icon="home"
         title="Connected care that stays with you"
-        lede="From the AI-powered app to virtual visits and in-person access — then quality outcomes that stay affordable. Wellness, chronic, and specialty care on one journey."
+        lede="From the AI-powered app to virtual visits and in-person access - then quality outcomes that stay affordable. Wellness, chronic, and specialty care on one journey."
         image="/assets/images/about-hero.jpg"
         imageAlt="Ingenio Medical Group care team of medical professionals"
-        actionsOnMedia
-        actions={
-          <a className="btn sky" href={patientAppHref} target="_blank" rel="noopener noreferrer">
-            Get care
-          </a>
-        }
       >
         <ol className="mg-flow">
           {connectedCareSteps.map((step, index) => (
@@ -63,7 +57,7 @@ export default function MgHome() {
               <span>Wellness</span>
             </h2>
             <p>
-              Preventive visits, immunizations, and screenings — often covered for insured patients —
+              Preventive visits, immunizations, and screenings - often covered for insured patients -
               so you stay ahead of problems instead of catching them late.
             </p>
             <p>Most plans cover it with zero copay. We charge Medicare rates to uninsured.</p>
@@ -136,7 +130,7 @@ export default function MgHome() {
           <div>
             <h2>Value-based care</h2>
             <p className="lede">
-              Better access, continuous plans, and the right site of care — so quality rises and total
+              Better access, continuous plans, and the right site of care - so quality rises and total
               cost of care moves in the right direction for patients, providers, and plans.
             </p>
           </div>

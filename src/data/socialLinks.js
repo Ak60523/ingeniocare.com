@@ -1,5 +1,5 @@
 /**
- * Ingenio Care social profiles — same networks as Growgent.ai.
+ * Ingenio Care social profiles - same networks as Growgent.ai.
  * Update URLs when handles change.
  */
 export const SOCIAL_LINKS = [

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { api } from "../../api";
 
 function cellValue(value) {
-  if (value == null) return "—";
+  if (value == null) return "-";
   if (typeof value === "object") {
     try {
       return JSON.stringify(value);

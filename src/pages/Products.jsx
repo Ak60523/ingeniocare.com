@@ -179,7 +179,7 @@ function ProductsHub() {
       <PageHero title="Solutions" image={sectionHero.solutions} imagePosition="58% 26%">
         <p className="lede">
           Ingenio Care solutions help patients get care, enable providers, and make the network easier
-          to operate—from apps and specialty front doors to ACCESS for providers and ACOs.
+          to operate-from apps and specialty front doors to ACCESS for providers and ACOs.
         </p>
       </PageHero>
       <section className="section soft solution-flow-section">
@@ -187,7 +187,7 @@ function ProductsHub() {
           <h2>Ingenio Care Apps</h2>
           <p className="lede">
             Growgent.ai and the Digital Front Door feed the referral network. The Marketplace
-            connects that demand through the Provider App and Chrome extension—both connected via FHIR.
+            connects that demand through the Provider App and Chrome extension-both connected via FHIR.
           </p>
           <SolutionFlow />
         </div>
@@ -204,7 +204,7 @@ function ProductsHub() {
           <p className="lede">
             Turn Medicare ACCESS into a new patient-care and value-based care capability. Ingenio
             gives providers and ACOs the technology, patient engagement and care-coordination
-            infrastructure to participate in Medicare ACCESS — while extending chronic care beyond
+            infrastructure to participate in Medicare ACCESS - while extending chronic care beyond
             the walls of the practice.
           </p>
           <p className="lede">

@@ -164,7 +164,8 @@ ul {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
   min-height: 88px;
   position: relative;
 }
@@ -194,6 +195,7 @@ ul {
 .nav {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.15rem 1.15rem;
 }
 
@@ -402,15 +404,6 @@ ul {
   font-size: var(--nav-size);
   color: var(--menu);
   margin-left: 0.5rem;
-}
-
-.menu-toggle {
-  display: none;
-  background: none;
-  border: 1px solid var(--menu);
-  color: var(--menu);
-  padding: 0.4rem 0.7rem;
-  font-family: var(--font-menu);
 }
 
 .page-hero {
@@ -2664,6 +2657,22 @@ button.btn {
   text-align: left;
 }
 
+body.site-mg .footer-bottom {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 0.75rem 1rem;
+}
+
+body.site-mg .footer-powered {
+  grid-column: 2;
+  margin: 0;
+  text-align: center;
+}
+
+body.site-mg .footer-bottom .footer-links {
+  grid-column: 3;
+}
+
 .footer-bottom p {
   margin: 0;
   font-size: 0.88rem;
@@ -2724,6 +2733,10 @@ button.btn {
       );
   }
 
+  body.site-mg .media-block {
+    display: none;
+  }
+
   .page-hero-home h1 {
     max-width: 32rem;
   }
@@ -2752,12 +2765,6 @@ button.btn {
     min-height: 20rem;
   }
 
-  .header-inner.nav-open .nav-account {
-    margin-left: 0;
-    padding-left: 0 !important;
-    border-left: 0;
-  }
-
   .grid-2,
   .grid-2.reverse,
   .grid-3,
@@ -2782,90 +2789,6 @@ button.btn {
     max-width: none;
     margin-top: 1.25rem;
     aspect-ratio: 4 / 3;
-  }
-
-  .menu-toggle {
-    display: inline-block;
-  }
-
-  .nav,
-  .account-link,
-  .account-menu-wrap.is-header {
-    display: none;
-  }
-
-  .header-inner.nav-open .nav {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    position: absolute;
-    left: auto;
-    right: 0;
-    top: 100%;
-    width: min(16rem, 72vw);
-    max-width: min(16rem, 72vw);
-    min-width: 0;
-    box-sizing: border-box;
-    background: var(--paper);
-    padding: 1rem 1rem 1.4rem;
-    border-bottom: 1px solid var(--line);
-    box-shadow: var(--shadow);
-    z-index: 30;
-  }
-
-  .header-inner.nav-open .nav > a,
-  .header-inner.nav-open .nav > button,
-  .header-inner.nav-open .nav-more {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-  }
-
-  .header-inner.nav-open .account-link,
-  .header-inner.nav-open .account-menu-wrap.is-header {
-    display: block;
-  }
-
-  .header-inner.nav-open .account-menu-wrap.is-header .account-menu {
-    position: static;
-    margin-top: 0.4rem;
-    box-shadow: none;
-    border: 0;
-    padding: 0;
-    max-height: none;
-  }
-
-  .nav-more-menu {
-    position: static;
-    box-shadow: none;
-    border: 0;
-    display: block;
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-    padding-left: 0.5rem;
-  }
-
-  .nav-more-menu a {
-    white-space: normal;
-  }
-
-  .nav-more-menu.is-mega,
-  .nav-more.open .nav-more-menu.is-mega,
-  .nav-more:hover .nav-more-menu.is-mega {
-    display: grid;
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-    grid-template-columns: 1fr;
-    padding: 0.25rem 0 0.5rem 0.5rem;
-  }
-
-  .nav-mega-col + .nav-mega-col {
-    border-left: 0;
-    border-top: 1px solid var(--line);
-    margin-top: 0.45rem;
-    padding-top: 0.45rem;
   }
 
 }
@@ -4671,6 +4594,16 @@ body.settings-rail-open .site-footer:hover {
     text-align: center;
   }
 
+  body.site-mg .footer-bottom {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  body.site-mg .footer-powered,
+  body.site-mg .footer-bottom .footer-links {
+    grid-column: auto;
+  }
+
   .footer-social {
     justify-content: center;
   }
@@ -4681,6 +4614,10 @@ body.settings-rail-open .site-footer:hover {
 }
 
 @media (max-width: 720px) {
+  .media-block {
+    display: none;
+  }
+
   .settings-grid {
     grid-template-columns: 1fr;
   }
@@ -4778,12 +4715,12 @@ body.settings-rail-open .site-footer:hover {
   }
 }
 
-/* Ingenio Medical Group — consumer practice theme (ingenio.care) */
+/* Ingenio Medical Group - consumer practice theme (ingenio.care) */
 body.site-mg {
   --mg-soft: #e8f3fb;
   --mg-soft-mid: #d7ebf8;
   --mg-coral: #e87a6a;
-  --nav-size: 15px;
+  --nav-size: 19px;
   background:
     radial-gradient(ellipse 80% 50% at 100% 0%, color-mix(in srgb, var(--sky) 14%, transparent), transparent 55%),
     var(--paper);
@@ -4803,18 +4740,6 @@ body.site-mg .nav button.active {
   background: color-mix(in srgb, var(--sky) 22%, #fff);
   border-radius: 999px;
   padding: 0.35rem 0.85rem;
-}
-
-body.site-mg .nav-account {
-  background: var(--navy-deep);
-  color: var(--on-dark) !important;
-  border-radius: 999px;
-  padding: 0.4rem 1rem !important;
-}
-
-body.site-mg .nav-account:hover {
-  background: var(--navy-mid);
-  color: var(--on-dark) !important;
 }
 
 body.site-mg .brand-mark {
@@ -4869,23 +4794,24 @@ body.site-mg .brand-mark-plus {
   line-height: 1;
 }
 
-body.site-mg .brand .brand-text {
-  font-family: var(--font-body);
-  font-size: calc(var(--nav-size) * 1.55);
-  font-weight: 600;
-  color: var(--menu);
-  max-width: none;
-  white-space: nowrap;
-  line-height: 1.2;
-  letter-spacing: normal;
+.mg-hero-brand {
+  margin: 0 0 1.35rem;
+  font-family: var(--font-heading);
+  font-size: calc(clamp(2.1rem, 4vw, 3rem) * var(--heading-scale));
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--on-dark);
+  line-height: 1.15;
 }
 
 .mg-hero {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
-  padding: 3.2rem 0 2.8rem;
-  background: var(--alt-gradient);
-  color: var(--navy-deep);
+  padding: 1.7rem 0 2.4rem;
+  min-height: 18.5rem;
+  background: var(--navy-deep);
+  color: var(--on-dark);
 }
 
 .mg-hero.has-below {
@@ -4894,6 +4820,7 @@ body.site-mg .brand .brand-text {
 
 .mg-hero-below {
   position: relative;
+  z-index: 1;
   margin-top: 2.4rem;
 }
 
@@ -4901,67 +4828,13 @@ body.site-mg .brand .brand-text {
   margin-top: 0;
 }
 
-.mg-hero.is-fill {
-  min-height: calc(100vh - 10.5rem);
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-}
-
-.mg-hero.is-fill .mg-hero-inner {
-  width: 100%;
-}
-
-body.site-mg:has(.mg-hero.is-contact) main {
-  display: flex;
-  flex-direction: column;
-  min-height: calc(100dvh - 9.5rem);
-}
-
-.mg-hero.is-fill.is-contact {
-  align-items: flex-start;
-  padding-top: 2.4rem;
-  padding-bottom: 3rem;
-  flex: 1;
-  min-height: 100%;
-  width: 100%;
-  overflow: visible;
-  box-sizing: border-box;
-}
-
-.mg-hero.is-fill.is-contact .mg-hero-inner {
-  align-items: start;
-  column-gap: 1.25rem;
-  padding-left: 2.5rem;
-  padding-right: 2.5rem;
-  box-sizing: border-box;
-  width: 100%;
-  max-width: var(--max);
-  margin-inline: auto;
-}
-
-.mg-hero.is-fill.is-contact .mg-hero-copy {
-  padding-left: 3rem;
-  padding-top: 5.5rem;
-}
-
-.mg-hero.is-fill.is-contact .mg-hero-title {
-  font-size: calc(clamp(2rem, 3.4vw, 2.85rem) * var(--heading-scale));
-}
-
-.mg-hero.is-fill.is-contact .mg-hero-media {
-  align-self: start;
-  margin-top: 0.25rem;
-  padding-right: 0.5rem;
-  width: min(100%, 280px);
-}
-
 .mg-hero-inner {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  gap: 2.5rem;
-  align-items: center;
+  z-index: 1;
+}
+
+.mg-hero-copy {
+  max-width: 34rem;
 }
 
 .mg-hero-title {
@@ -4969,7 +4842,7 @@ body.site-mg:has(.mg-hero.is-contact) main {
   align-items: center;
   gap: 0.85rem;
   max-width: 28ch;
-  color: var(--navy-deep);
+  color: var(--on-dark);
   font-size: calc(clamp(1.55rem, 2.8vw, 2.35rem) * var(--heading-scale));
   line-height: 1.15;
 }
@@ -5007,11 +4880,8 @@ body.site-mg:has(.mg-hero.is-contact) main {
 }
 
 .mg-hero-icon.is-about {
-  background: #0f2940;
-}
-
-.mg-hero-icon.is-contact {
-  background: #0284c7;
+  background: #38bdf8;
+  color: var(--navy-deep);
 }
 
 .mg-hero-title-text {
@@ -5039,7 +4909,7 @@ body.site-mg:has(.mg-hero.is-contact) main {
 
 .mg-hero-lede {
   max-width: 38rem;
-  color: var(--muted);
+  color: color-mix(in srgb, var(--on-dark) 86%, transparent);
   font-size: 1.1rem;
   margin-bottom: 1.4rem;
 }
@@ -5050,6 +4920,25 @@ body.site-mg:has(.mg-hero.is-contact) main {
 
 .mg-hero-lede p:last-child {
   margin-bottom: 0;
+}
+
+.mg-highlight {
+  background: #fde047;
+  color: var(--navy-deep);
+  font-weight: 700;
+  padding: 0.12em 0.35em;
+  box-decoration-break: clone;
+}
+
+.mg-access-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.mg-access-line .btn {
+  border-radius: 999px;
 }
 
 .mg-hero-actions {
@@ -5063,43 +4952,66 @@ body.site-mg:has(.mg-hero.is-contact) main {
   padding-inline: 1.25rem;
 }
 
+body.site-mg .mg-hero .btn.navy {
+  background: transparent;
+  color: var(--on-dark) !important;
+  border-color: var(--on-dark);
+}
+
+body.site-mg .mg-hero .btn.navy:hover {
+  background: #fff;
+  color: var(--navy-deep) !important;
+  border-color: #fff;
+}
+
 .mg-hero-media {
-  position: relative;
-  justify-self: end;
-  width: min(100%, 380px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 10px solid #fff;
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--navy-deep) 8%, transparent),
-    0 18px 40px rgba(15, 41, 64, 0.16);
-  background: var(--mg-soft-mid);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 34%;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .mg-hero-media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.mg-hero-media.has-action {
-  overflow: visible;
-}
-
-.mg-hero-media.has-action img {
   display: block;
   width: 100%;
   height: 100%;
-  border-radius: 50%;
   object-fit: cover;
+  object-position: 56% 28%;
+}
+
+.mg-hero-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      var(--navy-deep) 0%,
+      color-mix(in srgb, var(--navy-deep) 70%, transparent) 14%,
+      color-mix(in srgb, var(--navy) 28%, transparent) 32%,
+      transparent 52%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--navy-deep) 18%, transparent),
+      transparent 42%,
+      color-mix(in srgb, var(--navy-deep) 22%, transparent)
+    );
+  pointer-events: none;
+}
+
+.mg-hero-media.has-action {
+  pointer-events: none;
 }
 
 .mg-hero-media-action {
   position: absolute;
-  right: 0.15rem;
-  bottom: 1.1rem;
+  top: 1.35rem;
+  right: max(1rem, calc((100vw - var(--max)) / 2 + 0.25rem));
   z-index: 2;
+  pointer-events: auto;
 }
 
 .mg-hero-media-action .btn {
@@ -5137,7 +5049,7 @@ body.site-mg:has(.mg-hero.is-contact) main {
   top: 50%;
   transform: translateY(-50%);
   z-index: 1;
-  color: var(--navy-mid);
+  color: var(--sky);
   font-weight: 700;
   font-size: 1.1rem;
 }
@@ -5191,6 +5103,10 @@ body.site-mg:has(.mg-hero.is-contact) main {
 .mg-pillars-row {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.mg-pillars-row + .mg-hero-actions {
   margin-top: 1.5rem;
 }
 
@@ -5250,7 +5166,7 @@ body.site-mg:has(.mg-hero.is-contact) main {
   background: transparent;
 }
 
-/* MG heroes/sections are light — .btn.light defaults to white text for dark heroes. */
+/* MG heroes/sections are light - .btn.light defaults to white text for dark heroes. */
 body.site-mg .btn.light {
   background: #fff;
   color: var(--navy-deep) !important;
@@ -5275,18 +5191,6 @@ body.site-mg .btn.navy:hover {
   text-decoration: none;
 }
 
-.mg-contact-details {
-  flex-basis: 100%;
-  margin: 0.35rem 0 0;
-  color: var(--muted);
-  font-size: 0.98rem;
-}
-
-.mg-contact-details a {
-  color: var(--navy-deep);
-  font-weight: 600;
-}
-
 @media (max-width: 1100px) {
   .mg-flow {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -5298,15 +5202,48 @@ body.site-mg .btn.navy:hover {
 }
 
 @media (max-width: 900px) {
-  .mg-hero-inner,
-  .mg-pillars-row,
-  .mg-flow {
+  .mg-pillars-row {
     grid-template-columns: 1fr;
   }
 
+  .mg-flow p {
+    display: none;
+  }
+
+  .mg-flow li {
+    padding: 0.85rem 0.65rem;
+  }
+
+  .mg-flow h3 {
+    margin: 0;
+  }
+
   .mg-hero-media {
-    justify-self: center;
-    width: min(100%, 280px);
+    left: 0;
+  }
+
+  .mg-hero-media img {
+    object-position: 62% 30%;
+  }
+
+  .mg-hero-shade {
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--navy-deep) 78%, transparent) 0%,
+        color-mix(in srgb, var(--navy) 55%, transparent) 48%,
+        color-mix(in srgb, var(--navy-deep) 70%, transparent) 100%
+      ),
+      linear-gradient(
+        90deg,
+        var(--navy-deep) 0%,
+        color-mix(in srgb, var(--navy-deep) 55%, transparent) 28%,
+        transparent 58%
+      );
+  }
+
+  .mg-hero-copy {
+    max-width: 34rem;
   }
 
   .mg-hero-title {

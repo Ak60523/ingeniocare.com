@@ -13,7 +13,7 @@ function statusClass(status) {
 }
 
 function fmt(iso) {
-  if (!iso) return "—";
+  if (!iso) return "-";
   const date = new Date(iso);
   return Number.isNaN(date.getTime()) ? iso : date.toLocaleString();
 }
@@ -84,9 +84,9 @@ function BuildRow({ build, onDeleted, onError }) {
       </td>
       <td className="mono">{build.branch}</td>
       <td className="mono">{build.jobId}</td>
-      <td className="mono">{build.commitId ? build.commitId.slice(0, 7) : "—"}</td>
+      <td className="mono">{build.commitId ? build.commitId.slice(0, 7) : "-"}</td>
       <td className="cell-clip" title={build.commitMessage || undefined}>
-        {build.commitMessage || "—"}
+        {build.commitMessage || "-"}
       </td>
       <td>{fmt(build.startTime)}</td>
       <td>{fmt(build.endTime)}</td>
@@ -106,7 +106,7 @@ function BuildRow({ build, onDeleted, onError }) {
             Open
           </a>
         ) : (
-          "—"
+          "-"
         )}
         <button className="btn ghost" type="button" disabled={deleteBusy || busy} onClick={() => void onDelete()}>
           {deleteBusy ? "Deleting…" : "Delete"}

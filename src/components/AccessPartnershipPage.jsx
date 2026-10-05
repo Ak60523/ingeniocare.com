@@ -171,7 +171,7 @@ export default function AccessPartnershipPage({ product }) {
               </p>
               <h2>
                 {product.layout === "access-aco"
-                  ? "A care option for aligned beneficiaries — without a competing stack"
+                  ? "A care option for aligned beneficiaries - without a competing stack"
                   : "Deliver more ACCESS care without another infrastructure layer"}
               </h2>
               <p>
@@ -210,7 +210,7 @@ export default function AccessPartnershipPage({ product }) {
         <div className="wrap">
           <h2>Talk with Ingenio about ACCESS</h2>
           <p>
-            Bring ACCESS-enabled chronic care into the care team you already have — connected through
+            Bring ACCESS-enabled chronic care into the care team you already have - connected through
             a patient-owned digital front door.
           </p>
           <div className="home-hero-actions">

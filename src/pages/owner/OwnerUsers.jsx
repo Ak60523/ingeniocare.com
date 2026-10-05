@@ -155,9 +155,9 @@ export default function OwnerUsers() {
               const memberBusy = busyMemberId === member.membershipId;
               return (
                 <tr key={member.membershipId}>
-                  <td>{member.name || "—"}</td>
+                  <td>{member.name || "-"}</td>
                   <td>{member.email}</td>
-                  <td>{member.phone || "—"}</td>
+                  <td>{member.phone || "-"}</td>
                   <td>{member.role}</td>
                   <td>
                     <span className={`chip ${member.status === "active" ? "ok" : "muted"}`}>{member.status}</span>
@@ -247,11 +247,11 @@ export default function OwnerUsers() {
           <tbody>
             {invites.map((invite) => (
               <tr key={invite.id}>
-                <td>{invite.name || "—"}</td>
+                <td>{invite.name || "-"}</td>
                 <td>{invite.email}</td>
-                <td>{invite.phone || "—"}</td>
+                <td>{invite.phone || "-"}</td>
                 <td>{invite.role}</td>
-                <td>{invite.expiresAt ? new Date(invite.expiresAt).toLocaleDateString() : "—"}</td>
+                <td>{invite.expiresAt ? new Date(invite.expiresAt).toLocaleDateString() : "-"}</td>
                 <td className="owner-row-actions">
                   <button
                     className="btn ghost"

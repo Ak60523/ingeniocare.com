@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { api } from "../../api";
 
 function fmt(iso) {
-  if (!iso) return "—";
+  if (!iso) return "-";
   const date = new Date(iso);
   return Number.isNaN(date.getTime()) ? iso : date.toLocaleString();
 }
@@ -18,7 +18,7 @@ function DetailLine({ label, value }) {
   return (
     <p className="owner-detail-line">
       <span>{label}</span>
-      {value || "—"}
+      {value || "-"}
     </p>
   );
 }
@@ -279,7 +279,7 @@ export default function OwnerErrors() {
                     <td>{row.source}</td>
                     <td className="cell-clip">
                       {row.method ? `${row.method} ` : ""}
-                      {row.path || "—"}
+                      {row.path || "-"}
                     </td>
                     <td className="cell-clip">
                       {row.code ? `[${row.code}] ` : ""}

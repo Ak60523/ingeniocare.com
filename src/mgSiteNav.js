@@ -7,6 +7,5 @@ export function getMgHeaderNav(base = "/ingenio") {
     { id: "chronic", to: path("chronic"), label: "Chronic" },
     { id: "specialty", to: path("specialty"), label: "Specialty" },
     { id: "about", to: path("about"), label: "About" },
-    { id: "contact", to: path("contact"), label: "Contact" },
   ];
 }

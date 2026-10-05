@@ -137,7 +137,7 @@ export default function News() {
                     ) : showAdmin ? (
                       <StatusChip item={{ ...item, status: item.status || "published" }} />
                     ) : null}
-                    <time>{item.dateLabel || "—"}</time>
+                    <time>{item.dateLabel || "-"}</time>
                   </div>
                   {href ? (
                     <h2>

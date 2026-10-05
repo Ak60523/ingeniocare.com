@@ -45,7 +45,7 @@ export function htmlHasContent(html) {
     .trim().length > 0;
 }
 
-const GENERATE_SYSTEM = `You are Ingenio Care's editorial writer. Ingenio Care is an AI-enabled, patient-centric digital health network that connects patients, providers, and payers — improving access, coordination, and affordability.
+const GENERATE_SYSTEM = `You are Ingenio Care's editorial writer. Ingenio Care is an AI-enabled, patient-centric digital health network that connects patients, providers, and payers - improving access, coordination, and affordability.
 
 Write practical, concrete content. Do not invent statistics, quotes from unnamed studies, or fake URLs. Prefer clear healthcare language over hype.
 Return ONLY valid JSON with this shape:
@@ -61,16 +61,16 @@ Return ONLY valid JSON with this shape:
   "body": [
     { "type": "heading", "text": string, "level": 2 | 3 },
     { "type": "text", "text": string (one or more paragraphs separated by blank lines; may include **bold** and *italic* markdown; never use # markdown headings) },
-    { "type": "list", "title": string, "items": string[], "placement": "sidebar" (optional — place immediately before the section it summarizes) },
+    { "type": "list", "title": string, "items": string[], "placement": "sidebar" (optional - place immediately before the section it summarizes) },
     { "type": "quote", "text": string, "speaker": string, "title": string },
-    { "type": "infographic", "title": string (optional short caption under the figure only — not drawn in the image), "prompt": string (diagram/infographic generation brief only), "imageUrl": "", "placement": "inline" | "pullout" },
-    { "type": "image", "title": string (optional short caption under the figure only — not drawn in the image), "prompt": string (photographic / editorial scene brief only — not a diagram), "imageUrl": "", "placement": "inline" | "pullout" }
+    { "type": "infographic", "title": string (optional short caption under the figure only - not drawn in the image), "prompt": string (diagram/infographic generation brief only), "imageUrl": "", "placement": "inline" | "pullout" },
+    { "type": "image", "title": string (optional short caption under the figure only - not drawn in the image), "prompt": string (photographic / editorial scene brief only - not a diagram), "imageUrl": "", "placement": "inline" | "pullout" }
   ]
 }
 
 Rules:
 - body is an ordered array of section blocks. Do not return a single HTML string. Do not wrap the article in <html>, <head>, or <body>. Never include <script> or <img>.
-- Use heading blocks (level 2 for section titles, level 3 for subsections) — never put # or ## markdown inside text blocks.
+- Use heading blocks (level 2 for section titles, level 3 for subsections) - never put # or ## markdown inside text blocks.
 - For sidebar lists and pullout figures: place each immediately before the related text section so it floats beside that content; do not collect all sidebars at the end.
 - Include infographic or image blocks only when the instruction asks for them. Write ONLY a concrete prompt in "prompt" and an optional short caption in "title". ALWAYS set "imageUrl" to "" (empty). Never invent URLs.
 - hashtags: 3-8 lowercase tags without #.
@@ -207,7 +207,7 @@ export async function generateSiteContentDraft(input) {
   const parsed = result.parsed && typeof result.parsed === "object" ? result.parsed : {};
   const draft = draftFromParsed(parsed, input, type);
   if (!bodyHasContent(draft.body)) {
-    return { ok: false, statusCode: 502, message: "AI returned no usable body content — try Write again" };
+    return { ok: false, statusCode: 502, message: "AI returned no usable body content - try Write again" };
   }
   return { ok: true, draft };
 }
@@ -238,7 +238,7 @@ Revise the provided draft according to the instruction. Keep the same JSON shape
   const parsed = result.parsed && typeof result.parsed === "object" ? result.parsed : {};
   const draft = draftFromParsed(parsed, { ...input, draft: current, topicTitle: current.title, topicSummary: current.summary }, type);
   if (!bodyHasContent(draft.body)) {
-    return { ok: false, statusCode: 502, message: "AI revise returned no usable body — try again" };
+    return { ok: false, statusCode: 502, message: "AI revise returned no usable body - try again" };
   }
   if (!draft.subtitle && current.subtitle) draft.subtitle = String(current.subtitle);
   if (!draft.headline && current.headline) draft.headline = String(current.headline);

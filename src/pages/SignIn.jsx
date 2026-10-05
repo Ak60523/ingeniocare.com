@@ -41,7 +41,7 @@ export default function SignIn() {
             {user ? (
               <>
                 <p>
-                  Signed in as {user.name} ({user.email}) — {role}.
+                  Signed in as {user.name} ({user.email}) - {role}.
                 </p>
                 {role === "owner" || role === "admin" ? (
                   <p>

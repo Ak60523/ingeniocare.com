@@ -176,8 +176,8 @@ export default function OwnerTenants() {
                       <div className="form-note">{tenant.brandName}</div>
                     ) : null}
                   </td>
-                  <td>{tenant.slug || "—"}</td>
-                  <td>{tenant.supportEmail || tenant.supportPhone || "—"}</td>
+                  <td>{tenant.slug || "-"}</td>
+                  <td>{tenant.supportEmail || tenant.supportPhone || "-"}</td>
                   <td>
                     <button className="btn ghost" type="button" onClick={() => setOpenId(open ? "" : tenant.id)}>
                       {open ? "Close" : "Edit"}

@@ -53,7 +53,7 @@ function CustomersHub() {
           healthcare continuum.
         </h4>
         <p className="lede">
-          Ingenio Care sits at the center of a coordinated care network—connecting patients, payors,
+          Ingenio Care sits at the center of a coordinated care network-connecting patients, payors,
           and providers.
         </p>
       </PageHero>

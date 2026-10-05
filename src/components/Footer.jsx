@@ -27,17 +27,15 @@ export default function Footer() {
         <div className="footer-bottom">
           <p>
             © 2026 {medicalGroup ? "Ingenio Medical Group" : "Ingenio Care"}. All rights reserved.
-            {medicalGroup ? (
-              <>
-                {" "}
-                Powered by{" "}
-                <a href={platformHref} target="_blank" rel="noopener noreferrer">
-                  ingeniocare.ai
-                </a>
-                .
-              </>
-            ) : null}
           </p>
+          {medicalGroup ? (
+            <p className="footer-powered">
+              Powered by{" "}
+              <a href={platformHref} target="_blank" rel="noopener noreferrer">
+                ingeniocare.ai
+              </a>
+            </p>
+          ) : null}
           <nav className="footer-links" aria-label="Legal">
             <Link to="/terms-of-use">Terms of Use</Link>
             <span className="footer-sep" aria-hidden="true">

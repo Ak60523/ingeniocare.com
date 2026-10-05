@@ -235,8 +235,8 @@ export default function About() {
           <p>
             <strong>Patient empowerment</strong> is solved in the{" "}
             <Link to={productHref({ slug: "patient-app" })}>Patient App</Link>: a conversational AI
-            assistant, pricing transparency, a digital health pass, and data sharing—built in close
-            alignment with CMS innovation—so patients can find care, understand cost, and stay on the
+            assistant, pricing transparency, a digital health pass, and data sharing-built in close
+            alignment with CMS innovation-so patients can find care, understand cost, and stay on the
             plan after discharge.
           </p>
           <p>
@@ -257,7 +257,7 @@ export default function About() {
           </p>
           <p>
             <strong>Lower cost</strong> comes from better provider matching, patient engagement, and
-            care-plan adherence—so the right visit happens the first time, and the plan is actually
+            care-plan adherence-so the right visit happens the first time, and the plan is actually
             followed.
           </p>
         </div>

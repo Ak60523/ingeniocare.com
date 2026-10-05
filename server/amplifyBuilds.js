@@ -136,7 +136,7 @@ export async function getAmplifyBuildLog(branch, jobId) {
 
   const header = steps
     .map((s) => {
-      const reason = s.statusReason ? ` — ${s.statusReason}` : "";
+      const reason = s.statusReason ? ` - ${s.statusReason}` : "";
       return `[${s.status}] ${s.stepName}${reason}`;
     })
     .join("\n");

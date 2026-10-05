@@ -315,7 +315,7 @@ export function ContentListPage({ type }) {
                     ) : null}
                   </div>
                   {item.summary ? <p>{item.summary}</p> : null}
-                  <time>{formatContentDate(item.publishedAt) || "—"}</time>
+                  <time>{formatContentDate(item.publishedAt) || "-"}</time>
                 </article>
               );
             })

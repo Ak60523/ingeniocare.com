@@ -35,7 +35,7 @@ export const segments = [
     title: "For Providers",
     chip: true,
     kicker: "Referrals, visibility, and less administrative burden",
-    lede: "Participating providers receive inbound demand, coordinate referrals, and keep more of the patient’s journey in view—without adding front-desk work.",
+    lede: "Participating providers receive inbound demand, coordinate referrals, and keep more of the patient’s journey in view-without adding front-desk work.",
     intro:
       "Ingenio Care helps clinicians expand their panel, fill available capacity, and collaborate across the care team. Too much of a practice day is spent on intake, phone tag, and documentation that does not change the clinical decision. AI support handles routine inquiries and paperwork so providers can spend more time on care.",
     body: "The Provider App is the operating layer for participating clinicians: inbound referrals, outbound coordination, and shared visibility with the care team. Growgent.ai adds a 24/7 AI receptionist so after-hours and overflow calls still turn into booked visits.",
@@ -71,7 +71,7 @@ export const segments = [
     kicker: "Help members use the right benefits and stay in-network",
     lede: "Health plans can give members a clearer path to appropriate care while improving utilization and lowering the cost of coordinating benefits and follow-up.",
     intro:
-      "Members often know they have coverage, but not how to use it. Ingenio Care connects them to in-network capacity, supports care-gap closure, and keeps specialty and primary care on the same journey—so plans can improve access without adding administrative friction for members or participating providers.",
+      "Members often know they have coverage, but not how to use it. Ingenio Care connects them to in-network capacity, supports care-gap closure, and keeps specialty and primary care on the same journey-so plans can improve access without adding administrative friction for members or participating providers.",
     body: "The Plan App is built for this: benefit navigation, in-network routing, and program engagement in one member experience. The Marketplace sits behind it so the next step is an available clinician, not another call center queue.",
     points: [
       "Help members understand benefits and find in-network options they can actually book.",
@@ -95,7 +95,7 @@ export const segments = [
     chip: true,
     hubOrder: 1,
     kicker: "Faster access for employees and more control over healthcare spend",
-    lede: "Self-funded employers need employees to get the right care quickly—without the delays, leakage, and administrative cost that drive claims up.",
+    lede: "Self-funded employers need employees to get the right care quickly-without the delays, leakage, and administrative cost that drive claims up.",
     intro:
       "When access is slow, employees wait, conditions worsen, and cost shows up later in urgent and specialty claims. Ingenio Care gives employees a simpler way to navigate care while helping employers improve utilization and keep more care in a coordinated, cost-aware network.",
     body: "Employees use the same digital front door as other Ingenio Care patients: find available care, stay on the plan between visits, and reach specialists without starting over. Employers get a path to better access and utilization without standing up another disconnected vendor portal.",
@@ -144,7 +144,7 @@ export const segments = [
     productIds: ["marketplace", "digital-front-doors", "provider-app", "patient-app"],
     flash: {
       kicker: "ACCESS Flash",
-      title: "Extend your care team with Medicare ACCESS — for providers and ACOs",
+      title: "Extend your care team with Medicare ACCESS - for providers and ACOs",
       to: productHref({ slug: "provider-partnerships" }),
     },
   },

@@ -21,7 +21,6 @@ import MgChronic from "./pages/mg/MgChronic.jsx";
 import MgSpecialty from "./pages/mg/MgSpecialty.jsx";
 import MgProgramReferral from "./pages/mg/MgProgramReferral.jsx";
 import MgAbout from "./pages/mg/MgAbout.jsx";
-import MgContact from "./pages/mg/MgContact.jsx";
 import {
   BlogPage,
   BlogPostPage,
@@ -69,7 +68,7 @@ export default function App() {
         />
         <Route path="about" element={<MgAbout />} />
         <Route path="about-us" element={<Navigate to={mgAboutTo} replace />} />
-        <Route path="contact" element={<MgContact />} />
+        <Route path="contact" element={<Navigate to={mgHost ? "/" : "/ingenio"} replace />} />
         <Route path="privacy-policy" element={<Privacy />} />
         <Route path="terms-of-use" element={<Terms />} />
         <Route path="*" element={<NotFound />} />
