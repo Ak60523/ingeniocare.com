@@ -7,7 +7,7 @@ const defaultFramework = {
   },
   lede: (segment) =>
     `Growth, quality, and operating efficiency for ${segment.label.toLowerCase()}-with a combined view of potential improvement and a sample story for each product.`,
-  dashNote: "Directional, illustrative estimates-not a guarantee. Combined view across products for this audience.",
+  dashNote: "Directional, illustrative estimates, not a guarantee. Combined view across products for this audience.",
 };
 
 const frameworksById = {
@@ -44,7 +44,7 @@ const frameworksById = {
     },
     lede: () =>
       "Access, quality, and time saved for patients-with a combined view of potential improvement and a sample story for each product.",
-    dashNote: "Directional, illustrative estimates-not a guarantee. Combined view across products for this audience.",
+    dashNote: "Directional, illustrative estimates, not a guarantee. Combined view across products for this audience.",
   },
   "assisted-living": {
     keys: ["access", "quality", "efficiency"],
@@ -55,7 +55,7 @@ const frameworksById = {
     },
     lede: () =>
       "Access, quality, and operating efficiency for post-acute settings-with a combined view of potential improvement and a sample story for each product.",
-    dashNote: "Directional, illustrative estimates-not a guarantee. Combined view across products for this audience.",
+    dashNote: "Directional, illustrative estimates, not a guarantee. Combined view across products for this audience.",
   },
 };
 
@@ -91,7 +91,7 @@ const opportunities = {
       efficiency: "Replace directory hunting and call-center queues with a bookable view of who is actually available.",
       story: {
         title: "Open afternoon clinics finally showed up as real appointments",
-        body: "A self-funded group had contracted capacity that employees never found. The Marketplace listed same-week primary and specialty openings. Utilization moved into the contracted network, and the broker could show leadership that access-not another vendor pamphlet-was what changed.",
+        body: "A self-funded group had contracted capacity that employees never found. The Marketplace listed same-week primary and specialty openings. Utilization moved into the contracted network, and the broker could show leadership that access changed, not another vendor pamphlet.",
       },
     },
   ],

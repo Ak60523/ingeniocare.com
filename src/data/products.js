@@ -5,9 +5,9 @@ export const products = [
     label: "Patient App",
     title: "Patient App",
     kicker: "Conversational AI, pricing transparency, and a digital health pass",
-    lede: "The Patient App gives people a conversational AI assistant, clear pricing, a digital health pass, and data sharing-aligned with CMS innovation-so they can access care and stay on the plan between visits.",
+    lede: "The Patient App gives people a conversational AI assistant, clear pricing, a digital health pass, and data sharing, aligned with CMS innovation, so they can access care and stay on the plan between visits.",
     intro:
-      "Patients can find the right provider, see what care is likely to cost, and stay engaged after a visit. A conversational AI assistant is the front door: it answers questions, points to next steps, and keeps the journey moving without adding work for care teams.",
+      "Patients can find the right provider, see what care is likely to cost, and stay engaged after a visit. A conversational AI assistant is the front door: it answers questions, points to next steps, and keeps follow-up moving without adding work for care teams.",
     body:
       "The app carries a digital health pass so history, referrals, and follow-up travel with the patient instead of restarting at every handoff. Data sharing keeps the care team on the same record. Design is kept in close alignment with CMS innovation so navigation, transparency, and post-discharge follow-up fit how programs actually pay for access and quality. Family contacts can see the same window of care, so home-based and post-acute follow-up does not restart from voicemail.",
     points: [
@@ -28,11 +28,11 @@ export const products = [
     useCases: [
       {
         title: "Finish the next step after imaging",
-        body: "A patient leaves radiology without a booked follow-up. The Patient App shows the open slot, the referral status, and a reminder-so the visit happens the same week instead of restarting months later.",
+        body: "A patient leaves radiology without a booked follow-up. The Patient App shows the open slot, the referral status, and a reminder, so the visit happens the same week instead of restarting months later.",
       },
       {
         title: "Stay on the plan after a procedure",
-        body: "Discharge tasks-wound check, PT, and the surgeon follow-up-live on one timeline. Patients complete the sequence without calling the clinic to ask what to do next.",
+        body: "Discharge tasks (wound check, PT, and the surgeon follow-up) live on one timeline. Patients complete the sequence without calling the clinic to ask what to do next.",
       },
       {
         title: "Keep family in the loop at home",
@@ -46,9 +46,9 @@ export const products = [
     label: "Provider App",
     title: "Provider App",
     kicker: "Referrals, visibility, and care-team collaboration",
-    lede: "The Provider App gives clinicians the referrals, patient context, and communication they need to deliver care across the journey.",
+    lede: "The Provider App gives clinicians the referrals, patient context, and communication they need from referral through follow-up.",
     intro:
-      "Participating providers can receive inbound demand, coordinate outbound referrals, and see more of the patient’s path-without adding administrative burden.",
+      "Participating providers can receive inbound demand, coordinate outbound referrals, and see more of the patient’s path, without adding administrative burden.",
     body:
       "A large share of clinic time is spent on intake, phone tag, and status checks that do not change the clinical decision. The Provider App puts inbound referrals, outbound coordination, and care-team visibility on the same thread so follow-up does not disappear between locations. Practices can fill unused sessions with patients who already need care, and referring clinicians can see that home visits, specialty consults, and the next step actually happened.",
     points: [
@@ -56,7 +56,7 @@ export const products = [
       "Fill open sessions with inbound network demand.",
       "Coordinate inbound and outbound referrals with less friction.",
       "Share visibility with care teams so follow-up does not fall through.",
-      "Seamless intake with eligibility, authorization, referrals, and medical necessity.",
+      "Intake that includes eligibility, authorization, referrals, and medical necessity.",
       "AI documentation and coding.",
       "Pricing transparency in-network, at the point of care.",
       "Integrated Medicare access, CCM, and RPM.",
@@ -136,7 +136,7 @@ export const products = [
     intro:
       "Built for clinics, pharmacies, and other high-volume service organizations, Growgent.ai combines an AI receptionist with marketing and outreach agents so teams can respond faster, miss fewer calls, and fill available capacity.",
     body:
-      "Phones that go unanswered at lunch, overnight, or during overflow are missed visits-not a lack of demand. Growgent.ai answers inquiries 24/7, books the appointment, and captures why the person called so the morning panel is already full. Outreach agents can offer unused sessions back to patients who missed a screening or follow-up, which fills capacity without adding front-desk headcount and works alongside the Ingenio Care network.",
+      "Phones that go unanswered at lunch, overnight, or during overflow are missed visits, not a lack of demand. Growgent.ai answers inquiries 24/7, books the appointment, and captures why the person called so the morning panel is already full. Outreach agents can offer unused sessions back to patients who missed a screening or follow-up, which fills capacity without adding front-desk headcount and works alongside the Ingenio Care network.",
     points: [
       "AI Receptionist handles phone and web inquiries 24/7, answers routine questions, and books appointments.",
       "AI Marketer and Promoter support targeted outreach, re-engagement, and filling open capacity.",
@@ -205,14 +205,14 @@ export const products = [
   {
     id: "digital-front-doors",
     slug: "digital-front-doors",
-    label: "Digital Front Doors - Specialty Care",
-    title: "Digital Front Doors - Specialty Care",
+    label: "Digital Front Doors for Specialty Care",
+    title: "Digital Front Doors for Specialty Care",
     kicker: "A faster path from need to the right specialist",
     lede: "Digital Front Doors for specialty care help patients and referring clinicians reach the right specialist, with less delay and less administrative back-and-forth.",
     intro:
-      "Specialty access is often the slowest step in the journey. Ingenio Care’s digital front door routes patients to available specialty capacity, coordinates the referral, and keeps both sides informed until care is delivered.",
+      "Specialty access is often the slowest step. Ingenio Care’s digital front door routes patients to available specialty capacity, coordinates the referral, and keeps both sides informed until care is delivered.",
     body:
-      "A long hold, an incomplete packet, or a missing insurance check is how specialty demand leaks to a competitor or the ER. The digital front door collects reason for referral, coverage, and site preference, then offers the next available session so patients leave with a time-not another callback. Home-health and facility teams can route a new specialty need from the existing record, which keeps the patient on the current plan instead of starting over.",
+      "A long hold, an incomplete packet, or a missing insurance check is how specialty demand leaks to a competitor or the ER. The digital front door collects reason for referral, coverage, and site preference, then offers the next available session so patients leave with a time, not another callback. Home-health and facility teams can route a new specialty need from the existing record, which keeps the patient on the current plan instead of starting over.",
     points: [
       "Give patients a clear entry point for specialty needs.",
       "Route referrals to the right specialist with available capacity.",
@@ -248,7 +248,7 @@ export const products = [
     label: "ACCESS for Providers",
     title: "Extend Your Care Team With Medicare ACCESS",
     kicker: "Become ACCESS-ready without building another layer of infrastructure",
-    lede: "Technology-enabled chronic care for your Medicare patients - connected to your providers, your ACO and your care strategy.",
+    lede: "Technology-enabled chronic care for your Medicare patients, connected to your providers, your ACO, and your care strategy.",
     intro:
       "Ingenio helps Medicare providers launch, operate and scale ACCESS-enabled care with a patient-owned digital health platform that connects patients, clinicians and care teams.",
     body: "We help providers deliver more care, to more Medicare patients, without adding another layer of infrastructure. Become an ACCESS participant, extend care beyond the office, and keep the patient’s PCP and specialists in the loop.",
@@ -262,7 +262,7 @@ export const products = [
       },
       {
         title: "Better Care Coordination",
-        body: "Connect ACCESS care with PCPs, specialists and ACO care teams - including HIPAA-compliant updates at key clinical moments.",
+        body: "Connect ACCESS care with PCPs, specialists, and ACO care teams, including HIPAA-compliant updates at key clinical moments.",
       },
       {
         title: "Better Outcomes",
@@ -280,7 +280,7 @@ export const products = [
     ],
     loopReturn: "Care updates, coordination and outcomes return to the ACO / PCP.",
     pillarsTitle: "Four pillars of ACCESS for providers",
-    pillarsLede: "Launch, engage, coordinate and measure - without standing up a separate stack.",
+    pillarsLede: "Launch, engage, coordinate, and measure, without standing up a separate stack.",
     pillars: [
       {
         step: "01",
@@ -352,7 +352,7 @@ export const products = [
     cms: {
       kicker: "How ACCESS fits",
       headline: "ACCESS is not simply another FFS reimbursement program.",
-      body: "CMS describes ACCESS as an alternative to traditional fee-for-service billing for participating organizations, with Outcome-Aligned Payments tied to measurable outcomes. Ingenio is the bridge between ACCESS, traditional primary care, and ACO care management - so ACCESS complements the care you already deliver.",
+      body: "CMS describes ACCESS as an alternative to traditional fee-for-service billing for participating organizations, with Outcome-Aligned Payments tied to measurable outcomes. Ingenio is the bridge between ACCESS, traditional primary care, and ACO care management, so ACCESS complements the care you already deliver.",
     },
     metrics: [
       { label: "Patient access", direction: "up" },
@@ -385,8 +385,8 @@ export const products = [
     kicker: "ACCESS as a complement to ACO and other risk-bearing arrangements",
     lede: "Your ACO does not have to become the ACCESS care organization. Ingenio is the technology and ACCESS network layer that connects your attributed patients to technology-supported chronic care.",
     intro:
-      "ACCESS gives ACOs another tool for managing chronic disease. Ingenio connects that capability to the ACO’s existing provider network and patient population - so you can extend the care team, keep the PCP informed, and give beneficiaries another way to access care.",
-    body: "CMS explicitly says ACCESS is designed to complement ACO and other risk-bearing arrangements. ACOs can refer aligned beneficiaries to ACCESS participants, and CMS describes ACCESS as a way to give risk-bearing entities new care options for their patients.",
+      "ACCESS gives ACOs another tool for managing chronic disease. Ingenio connects that capability to the ACO’s existing provider network and patient population, so you can extend the care team, keep the PCP informed, and give beneficiaries another way to access care.",
+    body: "CMS says ACCESS complements ACO and other risk-bearing arrangements. ACOs can refer aligned beneficiaries to ACCESS participants, and CMS describes ACCESS as a way to give risk-bearing entities new care options for their patients.",
     promise: "Your patients. Your care team. Extended through ACCESS.",
     ctaLabel: "Talk to Ingenio",
     outcomesTitle: "One platform. Three outcomes.",
@@ -397,7 +397,7 @@ export const products = [
       },
       {
         title: "Better Care Coordination",
-        body: "Keep the PCP, specialists, ACCESS provider and patient connected - without standing up a parallel care-management stack.",
+        body: "Keep the PCP, specialists, ACCESS provider, and patient connected, without standing up a parallel care-management stack.",
       },
       {
         title: "Better Outcomes",
@@ -406,7 +406,7 @@ export const products = [
     ],
     loopTitle: "Your patients. Your care team. Extended through ACCESS.",
     loopLede:
-      "Ingenio is the digital front door and coordination layer between the ACO, ACCESS-enabled chronic care, and the patient - with care updates returning to the PCP.",
+      "Ingenio is the digital front door and coordination layer between the ACO, ACCESS-enabled chronic care, and the patient, with care updates returning to the PCP.",
     loop: [
       { id: "aco", title: "ACO / PCP" },
       { id: "door", title: "Ingenio Patient Digital Front Door" },
@@ -452,13 +452,13 @@ export const products = [
     ],
     cms: {
       kicker: "CMS design",
-      headline: "ACCESS is designed to complement ACOs - not replace them.",
+      headline: "ACCESS complements ACOs. It does not replace them.",
       body: "CMS describes ACCESS as giving patients more choice, providers new partners, and Original Medicare a way to pay organizations developing technology-supported care. ACOs can refer aligned beneficiaries to ACCESS participants. Ingenio is how that referral, engagement, and care-update loop actually runs.",
     },
     economics: {
       kicker: "Value-based strategy",
       headline: "ACCESS can complement your existing value-based strategy.",
-      body: "Sophisticated ACOs will ask how ACCESS interacts with existing Medicare economics. CMS currently says that for 2026 and 2027, ACCESS Outcome-Aligned Payments are anticipated not to affect MSSP and ACO REACH benchmark and performance-year calculations; beginning in 2028, ACCESS expenditures will be included. That is a window to add a chronic-care capability now, as a complement to the ACO - not a competing program.",
+      body: "ACOs will ask how ACCESS interacts with existing Medicare economics. CMS currently says that for 2026 and 2027, ACCESS Outcome-Aligned Payments are anticipated not to affect MSSP and ACO REACH benchmark and performance-year calculations; beginning in 2028, ACCESS expenditures will be included. That is a window to add a chronic-care capability now, as a complement to the ACO, not a competing program.",
     },
     metrics: [
       { label: "Chronic-care engagement", direction: "up" },
@@ -477,7 +477,7 @@ export const products = [
       },
       {
         title: "See who needs another intervention",
-        body: "Engagement, adherence, and outcome signals surface patients who are stalling - so the ACO can intervene before utilization shows up downstream.",
+        body: "Engagement, adherence, and outcome signals surface patients who are stalling, so the ACO can intervene before utilization shows up downstream.",
       },
     ],
   },

@@ -169,7 +169,7 @@ function ProductsHub() {
   usePageMeta({
     title: "Solutions",
     description:
-      "Ingenio Care solutions for patient access, provider enablement, and Medicare ACCESS for providers and ACOs.",
+      "Ingenio Care solutions for patient access, provider support, and Medicare ACCESS for providers and ACOs.",
     image: sectionHero.solutions,
     url: productsPath,
     type: "website",
@@ -204,11 +204,11 @@ function ProductsHub() {
           <p className="lede">
             Turn Medicare ACCESS into a new patient-care and value-based care capability. Ingenio
             gives providers and ACOs the technology, patient engagement and care-coordination
-            infrastructure to participate in Medicare ACCESS - while extending chronic care beyond
+            infrastructure to participate in Medicare ACCESS, while extending chronic care beyond
             the walls of the practice.
           </p>
           <p className="lede">
-            CMS designed ACCESS to complement ACO and other risk-bearing arrangements. ACOs can refer
+            CMS built ACCESS to work with ACO and other risk-bearing arrangements. ACOs can refer
             aligned beneficiaries to ACCESS participants, and Ingenio is the digital front door that
             keeps the PCP, the ACCESS team and the patient connected.
           </p>

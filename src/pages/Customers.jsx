@@ -26,7 +26,7 @@ function ProviderInvite() {
             <li>Receive real-time referrals from our network for patients to expand your panel.</li>
             <li>Ai driven documentation coding and claims processing.</li>
             <li>Ai driven patient care suggestions.</li>
-            <li>Seamless outbound and inbound referrals</li>
+            <li>Outbound and inbound referrals on the same thread</li>
             <li>Get patient feedback and improve continuity of care.</li>
             <li>And the best thing is that the enrollment is FREE.</li>
           </ul>
@@ -49,11 +49,11 @@ function CustomersHub() {
     <>
       <PageHero title="Customers" image={sectionHero.customers} imagePosition="58% 26%">
         <h4 className="is-title-case">
-          Driving Network Efficiency to improve Access and Quality while reducing cost - Across the
-          healthcare continuum.
+          Driving network efficiency to improve access and quality while reducing cost, across
+          settings.
         </h4>
         <p className="lede">
-          Ingenio Care sits at the center of a coordinated care network-connecting patients, payors,
+          Ingenio Care sits at the center of a coordinated care network, connecting patients, payors,
           and providers.
         </p>
       </PageHero>

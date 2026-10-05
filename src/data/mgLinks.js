@@ -1,4 +1,6 @@
 export const patientAppHref = "https://patient.ingeniocare.ai";
+export const patientLoginHref = `${patientAppHref}/home/patient?login=1`;
+export const patientJoinHref = `${patientAppHref}/home/patient?join=1`;
 export const providerAppHref = "https://provider.ingeniocare.ai";
 export const planAppHref = "https://plan.ingeniocare.ai";
 export const platformHref = "https://ingeniocare.ai";

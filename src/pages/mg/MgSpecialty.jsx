@@ -1,16 +1,12 @@
-import { Link } from "react-router-dom";
 import MgHero from "../../components/MgHero.jsx";
-import { patientAppHref, specialtyReferralPath } from "../../data/mgLinks.js";
+import { planAppHref } from "../../data/mgLinks.js";
 import { usePageMeta } from "../../hooks/usePageMeta.js";
-import { useMedicalGroupBasePath } from "../../siteMode.js";
 
 export default function MgSpecialty() {
-  const base = useMedicalGroupBasePath();
-
   usePageMeta({
     title: "Specialty Care | Ingenio Medical Group",
     description:
-      "Specialty care when you need it - coordinated, prioritized, and easy to follow. Shop economic services to keep deductibles low while plans, employers, and ACOs succeed on shared savings.",
+      "Specialty care when you need it, coordinated and easy to follow. Shop economic services to keep deductibles low while plans, employers, and ACOs succeed on shared savings.",
   });
 
   return (
@@ -18,12 +14,58 @@ export default function MgSpecialty() {
       <MgHero
         icon="specialty"
         title="Specialty care when you need it"
-        lede="Care that is coordinated and prioritized - making it easy to follow, with help shopping for economic services so your deductible stays low."
-        image="/assets/images/assisted-living.jpg"
-        imageAlt="Clinician providing specialty care with patients"
+        lede="Care that is coordinated and easy to follow, with help shopping for economic services so your deductible stays low."
+        image="/assets/images/specialty-hero.jpg"
+        imageAlt="Specialist on a virtual consult with a patient at home"
       />
 
       <section className="section">
+        <div className="wrap grid-2">
+          <div>
+            <h2>On Demand Specialty Consults</h2>
+            <p className="lede">
+              Virtual specialty consults when a specialist should weigh in sooner — so patients get
+              guidance without waiting weeks for an in-person slot.
+            </p>
+          </div>
+          <div className="media-block is-people">
+            <img
+              src="/assets/images/specialty-ondemand.jpg"
+              alt="Middle-aged patient on an on-demand virtual specialty consult"
+            />
+          </div>
+        </div>
+        <div className="wrap">
+          <ul className="mg-pillars mg-pillars-row">
+            <li>
+              <h3>CKD</h3>
+              <p>Kidney care guidance between visits.</p>
+            </li>
+            <li>
+              <h3>Urology</h3>
+              <p>Faster specialty input on common urology needs.</p>
+            </li>
+            <li>
+              <h3>Oncology</h3>
+              <p>Specialist consults to keep cancer care moving.</p>
+            </li>
+            <li>
+              <h3>Cardiology</h3>
+              <p>Heart care questions answered without the wait.</p>
+            </li>
+            <li>
+              <h3>Behavioral Health</h3>
+              <p>Timely mental health specialty support.</p>
+            </li>
+            <li>
+              <h3>Neurology</h3>
+              <p>Neurology consults when symptoms cannot wait.</p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="section alt">
         <div className="wrap grid-2">
           <div>
             <h2>Coordinated and prioritized</h2>
@@ -40,21 +82,27 @@ export default function MgSpecialty() {
             </ul>
           </div>
           <div className="media-block is-people">
-            <img src="/assets/images/solutions-hero.jpg" alt="Patient meeting with a specialty care team" />
+            <img
+              src="/assets/images/specialty-coordinated.jpg"
+              alt="Care team coordinating a specialty referral"
+            />
           </div>
         </div>
       </section>
 
-      <section className="section alt">
+      <section className="section">
         <div className="wrap grid-2 reverse">
           <div className="media-block is-people">
-            <img src="/assets/images/health-systems.jpg" alt="Clinicians helping a patient choose affordable specialty care" />
+            <img
+              src="/assets/images/specialty-shop.jpg"
+              alt="Patient and care navigator comparing affordable specialty care options"
+            />
           </div>
           <div>
             <h2>Shop for care that protects your deductible</h2>
             <p>
-              We help patients compare economic specialty options - in-network, appropriate site of
-              care - so the path forward is clinically right and financially lighter.
+              We help patients compare economic specialty options, in network and at an appropriate site of
+              care, so the path forward is clinically right and costs less.
             </p>
             <ul>
               <li>Guidance toward lower-cost, high-value services</li>
@@ -65,36 +113,43 @@ export default function MgSpecialty() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section alt">
         <div className="wrap">
           <h2>Shared savings that work for everyone</h2>
           <p className="lede">
             While patients get specialty care that is easier to follow and easier on the deductible,
-            we help plans, employers, and ACOs do well on shared savings programs - with in-network
+            we help plans, employers, and ACOs do well on shared savings programs, with in-network
             utilization, clearer access, and less leakage.
           </p>
           <ul className="mg-pillars mg-pillars-row">
             <li>
               <h3>Plans</h3>
               <p>Appropriate specialty use and lower avoidable cost.</p>
+              <div className="mg-hero-actions">
+                <a className="btn navy" href={planAppHref} target="_blank" rel="noopener noreferrer">
+                  Learn more
+                </a>
+              </div>
             </li>
             <li>
               <h3>Employers</h3>
               <p>Employees get care sooner without blowing through deductibles.</p>
+              <div className="mg-hero-actions">
+                <a className="btn navy" href={planAppHref} target="_blank" rel="noopener noreferrer">
+                  Learn more
+                </a>
+              </div>
             </li>
             <li>
               <h3>ACOs</h3>
               <p>Stay on track for shared savings with coordinated specialty pathways.</p>
+              <div className="mg-hero-actions">
+                <a className="btn navy" href={planAppHref} target="_blank" rel="noopener noreferrer">
+                  Learn more
+                </a>
+              </div>
             </li>
           </ul>
-          <div className="mg-hero-actions" style={{ marginTop: "1.5rem" }}>
-            <Link className="btn sky" to={specialtyReferralPath(base)}>
-              Refer into specialty
-            </Link>
-            <a className="btn light" href={patientAppHref} target="_blank" rel="noopener noreferrer">
-              Open patient app
-            </a>
-          </div>
         </div>
       </section>
     </>

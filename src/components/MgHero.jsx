@@ -1,4 +1,4 @@
-import { patientAppHref, planAppHref, providerAppHref } from "../data/mgLinks.js";
+import { patientJoinHref, patientLoginHref } from "../data/mgLinks.js";
 import MgSectionIcon from "./MgSectionIcon.jsx";
 
 export default function MgHero({
@@ -34,14 +34,11 @@ export default function MgHero({
             )
           ) : null}
           <div className="mg-hero-actions">
-            <a className="btn sky" href={patientAppHref} target="_blank" rel="noopener noreferrer">
+            <a className="btn sky" href={patientLoginHref} target="_blank" rel="noopener noreferrer">
               Get care
             </a>
-            <a className="btn light" href={providerAppHref} target="_blank" rel="noopener noreferrer">
+            <a className="btn light" href={patientJoinHref} target="_blank" rel="noopener noreferrer">
               Enroll
-            </a>
-            <a className="btn navy" href={planAppHref} target="_blank" rel="noopener noreferrer">
-              For plans
             </a>
           </div>
         </div>

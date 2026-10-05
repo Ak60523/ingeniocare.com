@@ -2139,6 +2139,50 @@ body.site-mg .media-block.is-people img {
   background: color-mix(in srgb, var(--on-dark) 10%, transparent);
 }
 
+#medical-directors .advisor-grid {
+  grid-template-columns: 1fr;
+}
+
+#medical-directors .advisor-card {
+  flex-direction: row;
+  align-items: flex-start;
+  background: var(--mg-soft);
+  color: var(--navy-deep);
+  border: 1px solid color-mix(in srgb, var(--sky) 28%, var(--line));
+  box-shadow: none;
+}
+
+#medical-directors .advisor-card h4 {
+  color: var(--navy-deep);
+}
+
+#medical-directors .advisor-role {
+  color: var(--sky-hover);
+}
+
+#medical-directors .advisor-card .card-body p:not(.advisor-role) {
+  color: var(--muted);
+}
+
+#medical-directors .advisor-photo {
+  width: 6.5rem;
+  height: 6.5rem;
+  flex: 0 0 6.5rem;
+  margin: 1rem 0 1rem 1rem;
+  background: color-mix(in srgb, var(--mg-soft-mid) 65%, #fff);
+}
+
+#medical-directors .advisor-initials {
+  font-size: 1.6rem;
+  color: var(--navy-deep);
+}
+
+#medical-directors .card.advisor-card .advisor-photo:not(.is-alex) img {
+  object-fit: cover;
+  object-position: center 18%;
+  transform: scale(1.12);
+}
+
 .advisor-initials {
   position: absolute;
   inset: 0;
@@ -5034,24 +5078,11 @@ body.site-mg .mg-hero .btn.navy:hover {
 }
 
 .mg-flow li {
-  position: relative;
   padding: 1.2rem 1.1rem;
   border-radius: 1.1rem;
   background: color-mix(in srgb, #fff 82%, var(--mg-soft));
   border: 1px solid color-mix(in srgb, var(--sky) 28%, var(--line));
   color: var(--navy-deep);
-}
-
-.mg-flow li:not(:last-child)::after {
-  content: "→";
-  position: absolute;
-  right: -0.65rem;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 1;
-  color: var(--sky);
-  font-weight: 700;
-  font-size: 1.1rem;
 }
 
 .mg-flow-step {
@@ -5073,6 +5104,10 @@ body.site-mg .mg-hero .btn.navy:hover {
   margin: 0;
   color: var(--muted);
   font-size: 0.95rem;
+}
+
+.mg-flow.is-detail li {
+  background: var(--mg-soft);
 }
 
 .section.mg-value:not(.alt) {
@@ -5111,6 +5146,9 @@ body.site-mg .mg-hero .btn.navy:hover {
 }
 
 .mg-pillars li {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   padding: 1.25rem 1.35rem;
   border-radius: 1.1rem;
   background: color-mix(in srgb, var(--mg-soft) 70%, #fff);
@@ -5126,18 +5164,79 @@ body.site-mg .mg-hero .btn.navy:hover {
   color: var(--muted);
 }
 
-.mg-pillar-more {
-  display: inline-block;
-  margin-top: 0.75rem;
-  font-weight: 600;
-  color: var(--navy);
-  text-decoration: underline;
-  text-underline-offset: 0.15em;
+.mg-pillars .mg-hero-actions {
+  margin-top: auto;
+  padding-top: 0.75rem;
 }
 
 .mg-powered {
   background: linear-gradient(135deg, var(--navy-deep), var(--navy-mid) 55%, #1565c0);
   color: var(--on-dark);
+}
+
+.mg-mso-tile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  width: 100%;
+  margin-top: 1.75rem;
+  padding: 1.5rem 1.75rem;
+  border-radius: 1.1rem;
+  background: linear-gradient(135deg, var(--navy-deep), var(--navy-mid) 55%, #1565c0);
+  color: var(--on-dark);
+  text-decoration: none;
+}
+
+.mg-mso-tile:hover {
+  text-decoration: none;
+  filter: brightness(1.05);
+}
+
+.mg-mso-tile-logo {
+  flex-shrink: 0;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 0.85rem;
+  object-fit: cover;
+  background: #fff;
+  box-shadow: 0 0 0 2px color-mix(in srgb, #fff 35%, transparent);
+}
+
+.mg-mso-tile-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.mg-mso-tile-kicker {
+  margin: 0 0 0.25rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  opacity: 0.85;
+  color: var(--on-dark);
+}
+
+.mg-mso-tile h3 {
+  margin: 0 0 0.4rem;
+  color: var(--on-dark);
+}
+
+.mg-mso-tile p:not(.mg-mso-tile-kicker) {
+  margin: 0;
+  max-width: 42rem;
+  color: color-mix(in srgb, #fff 88%, transparent);
+}
+
+.mg-mso-tile .btn {
+  flex-shrink: 0;
+}
+
+@media (max-width: 700px) {
+  .mg-mso-tile {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 .mg-powered h2,
@@ -5191,16 +5290,6 @@ body.site-mg .btn.navy:hover {
   text-decoration: none;
 }
 
-@media (max-width: 1100px) {
-  .mg-flow {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .mg-flow li:not(:last-child)::after {
-    display: none;
-  }
-}
-
 @media (max-width: 900px) {
   .mg-pillars-row {
     grid-template-columns: 1fr;
@@ -5208,6 +5297,22 @@ body.site-mg .btn.navy:hover {
 
   .mg-flow p {
     display: none;
+  }
+
+  .mg-flow.is-detail {
+    grid-template-columns: 1fr;
+  }
+
+  .mg-flow.is-detail p {
+    display: block;
+  }
+
+  .mg-flow.is-detail li {
+    padding: 1.2rem 1.1rem;
+  }
+
+  .mg-flow.is-detail h3 {
+    margin: 0 0 0.4rem;
   }
 
   .mg-flow li {

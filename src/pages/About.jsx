@@ -45,7 +45,7 @@ const clinicalAdvisors = [
   {
     name: "Dr. Robert Wagner",
     image: "/assets/images/robert-wagner.jpg",
-    bio: "Dr. Robert Wagner has deep expertise in both clinical and operational aspects of healthcare. His primary focus is to improve the health of patients and communities through innovation. As an advisor to Ingenio Care, Rob plays a critical role in the development of our solutions as well as their implementation.",
+    bio: "Dr. Robert Wagner has deep expertise in both clinical and operational aspects of healthcare. His primary focus is to improve the health of patients and communities through innovation. As an advisor to Ingenio Care, Rob works on how the solutions are built and put into practice.",
   },
   {
     name: "Dr. Robert Parker",
@@ -229,18 +229,18 @@ export default function About() {
             Ingenio Care is an AI-powered digital health company. We are building a
             patient-centric network in which providers collaborate to deliver high-quality care
             efficiently, while increasing their income. The work is organized around the same five
-            jobs we describe on the <Link to="/#pillars">home page</Link>: patient empowerment,
-            provider enablement, care coordination and continuity, better outcomes, and lower cost.
+            jobs we describe on the <Link to="/#pillars">home page</Link>: patients,
+            providers, care coordination and continuity, better outcomes, and lower cost.
           </p>
           <p>
-            <strong>Patient empowerment</strong> is solved in the{" "}
+            <strong>Patients</strong> use the{" "}
             <Link to={productHref({ slug: "patient-app" })}>Patient App</Link>: a conversational AI
-            assistant, pricing transparency, a digital health pass, and data sharing-built in close
-            alignment with CMS innovation-so patients can find care, understand cost, and stay on the
+            assistant, pricing transparency, a digital health pass, and data sharing, built in close
+            alignment with CMS innovation, so patients can find care, understand cost, and stay on the
             plan after discharge.
           </p>
           <p>
-            <strong>Provider enablement</strong> is solved in the{" "}
+            <strong>Providers</strong> use the{" "}
             <Link to={productHref({ slug: "provider-app" })}>Provider App</Link>: inbound and outbound
             referrals, an AI physician assistant for notes and coding, AI-assisted care planning, and
             prior authorization in the same workflow so the visit is not consumed by administration.
@@ -257,7 +257,7 @@ export default function About() {
           </p>
           <p>
             <strong>Lower cost</strong> comes from better provider matching, patient engagement, and
-            care-plan adherence-so the right visit happens the first time, and the plan is actually
+            care-plan adherence, so the right visit happens the first time, and the plan is actually
             followed.
           </p>
         </div>

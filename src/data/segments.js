@@ -35,7 +35,7 @@ export const segments = [
     title: "For Providers",
     chip: true,
     kicker: "Referrals, visibility, and less administrative burden",
-    lede: "Participating providers receive inbound demand, coordinate referrals, and keep more of the patient’s journey in view-without adding front-desk work.",
+    lede: "Participating providers receive inbound demand, coordinate referrals, and keep more of the patient’s care in view, without adding front-desk work.",
     intro:
       "Ingenio Care helps clinicians expand their panel, fill available capacity, and collaborate across the care team. Too much of a practice day is spent on intake, phone tag, and documentation that does not change the clinical decision. AI support handles routine inquiries and paperwork so providers can spend more time on care.",
     body: "The Provider App is the operating layer for participating clinicians: inbound referrals, outbound coordination, and shared visibility with the care team. Growgent.ai adds a 24/7 AI receptionist so after-hours and overflow calls still turn into booked visits.",
@@ -71,7 +71,7 @@ export const segments = [
     kicker: "Help members use the right benefits and stay in-network",
     lede: "Health plans can give members a clearer path to appropriate care while improving utilization and lowering the cost of coordinating benefits and follow-up.",
     intro:
-      "Members often know they have coverage, but not how to use it. Ingenio Care connects them to in-network capacity, supports care-gap closure, and keeps specialty and primary care on the same journey-so plans can improve access without adding administrative friction for members or participating providers.",
+      "Members often know they have coverage, but not how to use it. Ingenio Care connects them to in-network capacity, supports care-gap closure, and keeps specialty and primary care on the same record, so plans can improve access without adding administrative friction for members or participating providers.",
     body: "The Plan App is built for this: benefit navigation, in-network routing, and program engagement in one member experience. The Marketplace sits behind it so the next step is an available clinician, not another call center queue.",
     points: [
       "Help members understand benefits and find in-network options they can actually book.",
@@ -123,10 +123,10 @@ export const segments = [
     hubCard: true,
     chip: true,
     hubOrder: 3,
-    kicker: "Keep more of the patient journey inside the system",
+    kicker: "Keep more of the patient’s care inside the system",
     lede: "Health systems lose patients in the handoffs between access, referral, specialty, and follow-up. Ingenio Care extends the system beyond its walls so care stays coordinated.",
     intro:
-      "A health system already has clinicians, capacity, and programs. The gap is usually the journey: patients cannot get in quickly, referrals leak, and follow-up depends on phone trees. Ingenio Care adds a digital front door, a market place for available services, and provider tools that keep the system’s own network in view.",
+      "A health system already has clinicians, capacity, and programs. The gap is usually the handoff: patients cannot get in quickly, referrals leak, and follow-up depends on phone trees. Ingenio Care adds a digital front door, a market place for available services, and provider tools that keep the system’s own network in view.",
     body: "The Marketplace makes in-system capacity visible and bookable. Digital Front Doors speed specialty access. The Provider App keeps referring and receiving teams aligned so the patient does not disappear between locations.",
     points: [
       "Give patients a faster way into the system without adding call-center volume.",
@@ -139,12 +139,12 @@ export const segments = [
     imageAlt: "Health systems",
     hubImage: "/assets/images/health-systems.jpg",
     hubSummary:
-      "Extend the health system beyond its walls with better access, referral coordination, follow-up, and continuity across the patient journey.",
+      "Extend the health system beyond its walls with better access, referral coordination, follow-up, and continuity.",
     primarySolutionId: "marketplace",
     productIds: ["marketplace", "digital-front-doors", "provider-app", "patient-app"],
     flash: {
       kicker: "ACCESS Flash",
-      title: "Extend your care team with Medicare ACCESS - for providers and ACOs",
+      title: "Extend your care team with Medicare ACCESS for providers and ACOs",
       to: productHref({ slug: "provider-partnerships" }),
     },
   },

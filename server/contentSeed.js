@@ -36,7 +36,7 @@ export const seedSiteContent = [
     publishedAt: "2025-09-12T12:00:00Z",
     body: `
       <p>Most physician-facing software asks clinicians to become data-entry clerks. Ingenio Care does the opposite: it brings relevant history forward and drafts the note while the visit happens.</p>
-      <p>That is not a replacement for clinical judgment. It is a way to return minutes to every encounter - minutes that become another patient seen, or a conversation that would otherwise be cut short.</p>
+      <p>That is not a replacement for clinical judgment. It is a way to return minutes to every encounter. Those minutes become another patient seen, or a conversation that would otherwise be cut short.</p>
       <h3>In practice</h3>
       <ul>
         <li>Relevant history surfaces before the clinician asks</li>
@@ -51,7 +51,7 @@ export const seedSiteContent = [
     title: "Patient-centric care orchestration",
     subtitle: "A model for access, coordination, and value-based delivery",
     summary:
-      "A deeper guide to Ingenio Care’s Patient Care Orchestration Model - how access, unused capacity, and aligned incentives reduce cost while improving outcomes.",
+      "A deeper guide to Ingenio Care’s Patient Care Orchestration Model: how access, unused capacity, and aligned incentives reduce cost while improving outcomes.",
     hashtags: ["whitepaper", "value-based-care", "pcom"],
     status: "published",
     gated: 0,
@@ -59,7 +59,7 @@ export const seedSiteContent = [
     body: `
       <p>Healthcare has invested heavily in population health, engagement, and PCP-centric programs. Outcomes improved only at the margin. Ingenio Care’s thesis is narrower: find the patient who needs care now, and deliver that care with speed and a closely knit network.</p>
       <h3>The model</h3>
-      <p>The Patient Care Orchestration Model (PCOM) starts with real-time access, then assigns a physician-owned care plan, then coordinates every downstream step - referral, authorization, pharmacy, and follow-up - on the same record.</p>
+      <p>The Patient Care Orchestration Model (PCOM) starts with real-time access, then assigns a physician-owned care plan, then coordinates every downstream step (referral, authorization, pharmacy, and follow-up) on the same record.</p>
       <h3>Why it is different</h3>
       <p>It does not add a central care-coordinator army. It uses existing providers, unused capacity, and AI to remove friction. Bundles are surgeon-led. Pharmacy becomes a coordination point. Payers see utilization in-stream instead of after the fact.</p>
       <p>Request the full paper to see the operating model, the economic model, and the measures we use in IPA, employer, and health-plan pilots.</p>
@@ -136,7 +136,7 @@ export const seedSiteContent = [
         <li>The reason for visit travels with the booking so rooming is not a scavenger hunt</li>
       </ul>
       <h3>What happens when the front desk is full</h3>
-      <p>Overflow does not bounce to voicemail. Web and phone inquiries still get a scheduled slot and routing to the right service line. Staff handle exceptions-not every ring.</p>
+      <p>Overflow does not bounce to voicemail. Web and phone inquiries still get a scheduled slot and routing to the right service line. Staff handle exceptions, not every ring.</p>
       <h3>Filling unused sessions</h3>
       <p>Open capacity can be offered back to patients who missed a visit or screening. Outreach agents re-engage people without adding front-desk headcount, and the same inventory sits alongside the Ingenio Care network.</p>
       <h3>Who this is for</h3>
@@ -168,7 +168,7 @@ export const seedSiteContent = [
       <h3>Closing the loop with home-based care</h3>
       <p>A PCP can see that home visits actually happened. Referrals return to the agency. Staff spend less time on “status please” calls that do not change the clinical decision.</p>
       <h3>What changes for the practice</h3>
-      <p>Unused sessions become booked sessions. Documentation and coding support sit in the visit. Quality and cost scorecards can follow care that was actually delivered-not only what the primary-care office documented.</p>
+      <p>Unused sessions become booked sessions. Documentation and coding support sit in the visit. Quality and cost scorecards can follow care that was actually delivered, including care outside the primary-care office.</p>
     `,
   },
   {
@@ -196,7 +196,7 @@ export const seedSiteContent = [
       <h3>Care managers and care-gap work</h3>
       <p>Program outreach can point to a next step the member can complete. Care-gap lists move off paper and into a path that ends in a booked visit, not another mail merge.</p>
       <h3>The employer outcome</h3>
-      <p>Utilization moves into the contracted network. Avoidable emergency use for issues that belong in clinic declines because access-not another vendor pamphlet-is what changed.</p>
+      <p>Utilization moves into the contracted network. Avoidable emergency use for issues that belong in clinic declines because access changed, not another vendor pamphlet.</p>
     `,
   },
   {
@@ -243,13 +243,13 @@ export const seedSiteContent = [
     title: "A digital front door for specialty access",
     subtitle: "How complete referrals and bookable sessions replace hold times and leaked demand",
     summary:
-      "A proposed paper on Digital Front Doors for specialty care: collect the reason for referral, coverage, and site preference, then offer the next available session so patients leave with a time-not another callback.",
+      "A proposed paper on Digital Front Doors for specialty care: collect the reason for referral, coverage, and site preference, then offer the next available session so patients leave with a time, not another callback.",
     hashtags: ["whitepaper", "digital-front-doors", "specialty-care", "access", "use-case"],
     status: "draft",
     gated: 0,
     publishedAt: null,
     body: `
-      <p>Specialty access is often the slowest step in the journey. A long hold, an incomplete packet, or a missing insurance check is how demand leaks to a competitor-or to the emergency department.</p>
+      <p>Specialty access is often the slowest step. A long hold, an incomplete packet, or a missing insurance check is how demand leaks to a competitor or to the emergency department.</p>
       <p>Ingenio Care’s Digital Front Doors for specialty care are a use case, not a slogan: route the patient to available specialty capacity, coordinate the referral, and keep both sides informed until care is delivered.</p>
       <h3>The GI-line problem</h3>
       <p>A health system’s GI (or ortho, derm, cardiology) phone line becomes the bottleneck. Every request is a conversation. Patients abandon the hold. Those who get through still leave without a time because imaging, coverage, or the reason for referral is missing.</p>
@@ -304,7 +304,7 @@ export const seedSiteContent = [
         <li>Home-health leakage is often a visibility failure, not a clinical one</li>
         <li>Referring physicians refer when they can see completed visits</li>
         <li>Mid-episode specialty needs should reuse the current record</li>
-        <li>Patient, provider, and front-door products have to sit on the same journey</li>
+        <li>Patient, provider, and front-door products have to sit on the same record</li>
       </ul>
       <p>Request the full paper for the role map across agency, clinic, and family; the measures for start-of-care and loop closure; and how post-acute teams join the Ingenio Care network.</p>
     `,
@@ -334,7 +334,7 @@ export const seedSiteContent = [
       <h3>Patient App for the sequence after the visit</h3>
       <p>Discharge tasks, screenings, and specialist follow-up live on one timeline. Employees who stall after an imaging order can finish the next step the same week. Family contacts can see the window of care without calling HR.</p>
       <h3>Marketplace for contracted capacity that was never found</h3>
-      <p>Self-funded groups often pay for clinic time employees never see. Listing same-week primary and specialty openings moves utilization into the contracted network. Brokers can show leadership that access changed-not that another pamphlet shipped.</p>
+      <p>Self-funded groups often pay for clinic time employees never see. Listing same-week primary and specialty openings moves utilization into the contracted network. Brokers can show leadership that access changed, not that another pamphlet shipped.</p>
       <h3>What this is not</h3>
       <p>It is not a new TPA. It is not a population-health overlay that leaves scheduling untouched. The operating bet is narrower: find the employee who needs care now, and deliver that care through a coordinated network with unused capacity made visible.</p>
       <h3>Takeaways</h3>
@@ -342,7 +342,7 @@ export const seedSiteContent = [
         <li>Employer cost follows access failure as much as unit price</li>
         <li>Benefits navigation without bookable capacity still ends in the ER</li>
         <li>Follow-up completion is part of the same use case as the first appointment</li>
-        <li>Plan App, Patient App, and Marketplace should be bought as one journey</li>
+        <li>Plan App, Patient App, and Marketplace should be bought together</li>
       </ul>
       <p>Request the full paper for the buyer checklist, the measures HR and finance should watch, and how Ingenio Care sits beside the existing TPA and carrier.</p>
     `,
