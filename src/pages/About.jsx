@@ -27,7 +27,7 @@ const leadership = [
     name: "Dr. Deepak Mital",
     role: "Clinical Leader",
     image: "/assets/images/deepak-mital.jpg",
-    bio: "Dr. Deepak Mital, MD, MBA, FACS, is a transplant surgeon with more than 30 years of experience in kidney and pancreas transplantation in the Chicago area. He is Surgical Director of the Kidney Transplant Program at UI Health and a Clinical Professor of Surgery at the University of Illinois College of Medicine. Dr. Mital advises Ingenio Care on high-acuity specialty pathways and multidisciplinary care that keeps complex patients connected before and after major procedures.",
+    bio: "Dr. Deepak Mital, MD, MBA, FACS, is a transplant surgeon with more than 30 years of experience in kidney and pancreas transplantation in the Chicago area. He is a Clinical Professor of Surgery at the University of Illinois College of Medicine. Dr. Mital advises Ingenio Care on high-acuity specialty pathways and multidisciplinary care that keeps complex patients connected before and after major procedures.",
   },
   {
     name: "Lauren Doolin",
