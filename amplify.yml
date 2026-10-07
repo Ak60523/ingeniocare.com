@@ -3,7 +3,7 @@ backend:
   phases:
     build:
       commands:
-        - npm ci
+        - npm install
         - |
           set -e
           echo "Backend deploy context: AWS_BRANCH=${AWS_BRANCH:-} AWS_APP_ID=${AWS_APP_ID:-} AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-}"
@@ -33,7 +33,7 @@ frontend:
   phases:
     preBuild:
       commands:
-        - test -d node_modules || npm ci
+        - test -d node_modules || npm install
         - |
           if [ -n "${AWS_BRANCH:-}" ] && [ -n "${AWS_APP_ID:-}" ]; then
             npx ampx generate outputs --branch "$AWS_BRANCH" --app-id "$AWS_APP_ID"

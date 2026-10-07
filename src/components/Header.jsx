@@ -72,7 +72,7 @@ export default function Header() {
           >
             {medicalGroup ? (
               <span className="brand-mark" aria-hidden="true">
-                <img src="/assets/images/img-logo.jpg" alt="" />
+                <img src="/assets/images/img-logo.png" alt="" />
               </span>
             ) : (
               <img src="/assets/images/logo.png" alt="Ingenio Care" />
