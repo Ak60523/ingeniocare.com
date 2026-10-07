@@ -20,13 +20,13 @@ const practiceSteps = [
 const leadership = [
   {
     name: "Dr. Deepak Mital",
-    role: "Provides clinical guidance to practicing providers",
+    role: "Medical Director",
     image: "/assets/images/deepak-mital.jpg",
     bio: "Dr. Deepak Mital, MD, MBA, FACS, is a transplant surgeon with more than 30 years of experience in kidney and pancreas transplantation in the Chicago area. He is a Clinical Professor of Surgery at the University of Illinois College of Medicine. He guides high-acuity specialty pathways and the multidisciplinary care that keeps complex patients connected before and after major procedures.",
   },
   {
     name: "Dr. Ravi Badlani",
-    role: "Provides clinical guidance to practicing providers",
+    role: "Medical Director",
     bio: "Dr. Ravi Badlani, MD, is a board-certified internist who has practiced primary care in Chicago since 1997. He earned his medical degree and completed internal medicine residency at Virginia Commonwealth University and is certified by the American Board of Internal Medicine. A board member of the Independent Physicians' ACO of Chicago, he focuses on preventive care and the day-to-day management of chronic conditions.",
   },
 ];
