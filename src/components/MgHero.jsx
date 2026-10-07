@@ -1,4 +1,4 @@
-import { patientJoinHref, patientLoginHref } from "../data/mgLinks.js";
+import MgLaunchActions from "./MgLaunchActions.jsx";
 import MgSectionIcon from "./MgSectionIcon.jsx";
 
 export default function MgHero({
@@ -21,6 +21,7 @@ export default function MgHero({
       </div>
       <div className="wrap mg-hero-inner">
         <div className="mg-hero-copy">
+          <p className="mg-coming-soon">Coming soon</p>
           <p className="mg-hero-brand">Ingenio Medical Group</p>
           <h1 className="mg-hero-title">
             <MgSectionIcon name={icon} />
@@ -33,14 +34,7 @@ export default function MgHero({
               <div className="mg-hero-lede">{lede}</div>
             )
           ) : null}
-          <div className="mg-hero-actions">
-            <a className="btn sky" href={patientLoginHref} target="_blank" rel="noopener noreferrer">
-              Get care
-            </a>
-            <a className="btn light" href={patientJoinHref} target="_blank" rel="noopener noreferrer">
-              Enroll
-            </a>
-          </div>
+          <MgLaunchActions />
         </div>
       </div>
       {children ? <div className="wrap mg-hero-below">{children}</div> : null}

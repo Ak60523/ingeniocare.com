@@ -1,19 +1,16 @@
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { chronicReferralHref, specialtyReferralHref } from "../../data/mgLinks.js";
+import MgLaunchActions from "../../components/MgLaunchActions.jsx";
 import { usePageMeta } from "../../hooks/usePageMeta.js";
 import { useMgPath } from "../../siteMode.js";
 
 const PROGRAMS = {
   chronic: {
     title: "Chronic care referral",
-    href: chronicReferralHref,
     label: "Chronic Care Program",
     learnSegment: "chronic",
   },
   specialty: {
     title: "Specialty care referral",
-    href: specialtyReferralHref,
     label: "Specialty Care Program",
     learnSegment: "specialty",
   },
@@ -25,15 +22,9 @@ export default function MgProgramReferral({ program }) {
 
   usePageMeta({
     title: config ? `${config.title} | Ingenio Medical Group` : "Referral | Ingenio Medical Group",
-    description: config
-      ? `Refer a patient into the ${config.label} at Ingenio Medical Group.`
-      : "Patient referral into Ingenio Medical Group programs.",
+    description:
+      "Ingenio Medical Group is coming soon. Patients can find providers and connect on ingeniocare.ai. Providers can inquire about joining.",
   });
-
-  useEffect(() => {
-    if (!config?.href) return;
-    window.location.replace(config.href);
-  }, [config]);
 
   if (!config) {
     return (
@@ -53,14 +44,15 @@ export default function MgProgramReferral({ program }) {
   return (
     <section className="section">
       <div className="wrap center">
-        <h1>Continuing to {config.label}</h1>
-        <p>Opening the patient referral in the Ingenio Care patient app…</p>
+        <h1>Coming soon</h1>
         <p>
-          <a className="btn sky" href={config.href}>
-            Continue
-          </a>{" "}
-          <Link className="btn light" to={mgPath(config.learnSegment)}>
-            Learn more first
+          The {config.label} at Ingenio Medical Group is not open yet. Patients can find a provider
+          and connect on ingeniocare.ai. Providers can inquire about joining.
+        </p>
+        <MgLaunchActions />
+        <p>
+          <Link className="btn navy" to={mgPath(config.learnSegment)}>
+            Learn about {config.label}
           </Link>
         </p>
       </div>

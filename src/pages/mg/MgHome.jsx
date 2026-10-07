@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import MgHero from "../../components/MgHero.jsx";
 import MgSectionIcon from "../../components/MgSectionIcon.jsx";
-import { chronicReferralPath } from "../../data/mgLinks.js";
+import MgLaunchActions from "../../components/MgLaunchActions.jsx";
 import { usePageMeta } from "../../hooks/usePageMeta.js";
-import { useMedicalGroupBasePath, useMgPath } from "../../siteMode.js";
+import { useMgPath } from "../../siteMode.js";
 
 const connectedCareSteps = [
   { title: "AI / App", body: "Start in the patient app for guidance, history, and the next right step." },
@@ -12,13 +12,12 @@ const connectedCareSteps = [
 ];
 
 export default function MgHome() {
-  const base = useMedicalGroupBasePath();
   const mgPath = useMgPath();
 
   usePageMeta({
     title: "Ingenio Medical Group",
     description:
-      "Connected care from the app to virtual visits and in-person access, covering wellness, chronic, and specialty care.",
+      "Ingenio Medical Group is coming soon. Patients can find providers and connect on ingeniocare.ai. Providers can inquire about joining.",
     type: "website",
   });
 
@@ -27,7 +26,7 @@ export default function MgHome() {
       <MgHero
         icon="home"
         title="Connected care that stays with you"
-        lede="From the app to virtual visits and in-person access, with quality outcomes that stay affordable. Wellness, chronic, and specialty care in one place."
+        lede="Opening soon: care from the app to virtual visits and in-person access, covering wellness, chronic, and specialty care. Until then, patients can find a provider and connect on ingeniocare.ai. Providers can inquire about joining."
         image="/assets/images/about-hero.jpg"
         imageAlt="Ingenio Medical Group care team of medical professionals"
       >
@@ -120,11 +119,7 @@ export default function MgHome() {
               Better access, continuous plans, and the right site of care. Quality rises and total
               cost of care moves in the right direction for patients, providers, and plans.
             </p>
-            <div className="mg-hero-actions">
-              <Link className="btn sky" to={chronicReferralPath(base)}>
-                Refer a patient
-              </Link>
-            </div>
+            <MgLaunchActions />
           </div>
           <div className="media-block is-people">
             <img src="/assets/images/employer.jpg" alt="People benefiting from coordinated value-based care" />

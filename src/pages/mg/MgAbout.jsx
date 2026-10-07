@@ -1,5 +1,5 @@
 import MgHero from "../../components/MgHero.jsx";
-import { patientAppHref, planAppHref, platformHref, providerAppHref } from "../../data/mgLinks.js";
+import { findProvidersHref, planAppHref, platformHref, providerInquiryHref } from "../../data/mgLinks.js";
 import { usePageMeta } from "../../hooks/usePageMeta.js";
 
 const practiceSteps = [
@@ -20,13 +20,13 @@ const practiceSteps = [
 const leadership = [
   {
     name: "Dr. Deepak Mital",
-    role: "Medical Director",
+    role: "Provides clinical guidance to practicing providers",
     image: "/assets/images/deepak-mital.jpg",
     bio: "Dr. Deepak Mital, MD, MBA, FACS, is a transplant surgeon with more than 30 years of experience in kidney and pancreas transplantation in the Chicago area. He is a Clinical Professor of Surgery at the University of Illinois College of Medicine. He guides high-acuity specialty pathways and the multidisciplinary care that keeps complex patients connected before and after major procedures.",
   },
   {
     name: "Dr. Ravi Badlani",
-    role: "Medical Director",
+    role: "Provides clinical guidance to practicing providers",
     bio: "Dr. Ravi Badlani, MD, is a board-certified internist who has practiced primary care in Chicago since 1997. He earned his medical degree and completed internal medicine residency at Virginia Commonwealth University and is certified by the American Board of Internal Medicine. A board member of the Independent Physicians' ACO of Chicago, he focuses on preventive care and the day-to-day management of chronic conditions.",
   },
 ];
@@ -61,7 +61,7 @@ export default function MgAbout() {
   usePageMeta({
     title: "About | Ingenio Medical Group",
     description:
-      "Ingenio Medical Group is a virtual-first primary and specialty practice coordinated with in-person care, powered by ingeniocare.ai.",
+      "Ingenio Medical Group is coming soon. Patients can find providers and connect on ingeniocare.ai. Providers can inquire about joining.",
   });
 
   return (
@@ -69,10 +69,21 @@ export default function MgAbout() {
       <MgHero
         icon="about"
         title="About Ingenio Medical Group"
-        lede="We are a virtual-first medical group for primary and specialty care. We work with in-person practices. We do not replace the relationships that already matter."
+        lede="A virtual-first medical group for primary and specialty care, opening soon. We will work with in-person practices, and we will not replace the relationships that already matter."
         image="/assets/images/why-ingenio-care.jpg"
         imageAlt="Ingenio Care clinicians and care model"
       />
+
+      <section className="section alt" id="our-team">
+        <div className="wrap">
+          <h2>Our Team</h2>
+          <div className="grid-cards advisor-grid">
+            {leadership.map((director) => (
+              <AdvisorCard key={director.name} person={director} />
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section className="section">
         <div className="wrap">
@@ -94,39 +105,25 @@ export default function MgAbout() {
         </div>
       </section>
 
-      <section className="section alt" id="medical-directors">
-        <div className="wrap">
-          <h2>Founding Partners</h2>
-          <div className="grid-cards advisor-grid">
-            {leadership.map((director) => (
-              <AdvisorCard key={director.name} person={director} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section" id="partners">
+      <section className="section alt" id="partners">
         <div className="wrap">
           <h2>Partners: how we work with them</h2>
           <ul className="mg-pillars mg-pillars-row">
             <li>
               <h3>For patients</h3>
               <p>
-                Get care through{" "}
-                <a href={patientAppHref} target="_blank" rel="noopener noreferrer">
-                  patient.ingeniocare.ai
-                </a>
-                .
+                Find a provider and connect on{" "}
+                <a href={findProvidersHref} target="_blank" rel="noopener noreferrer">
+                  ingeniocare.ai
+                </a>{" "}
+                while the medical group prepares to open.
               </p>
             </li>
             <li>
               <h3>For providers</h3>
               <p>
-                Join our virtual medical group, powered by the ingeniocare.ai platform, at{" "}
-                <a href={providerAppHref} target="_blank" rel="noopener noreferrer">
-                  provider.ingeniocare.ai
-                </a>
-                .
+                The group launches soon.{" "}
+                <a href={providerInquiryHref}>Inquire about joining</a>.
               </p>
             </li>
             <li>

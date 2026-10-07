@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../AuthContext.jsx";
-import { patientLoginHref } from "../data/mgLinks.js";
+import { findProvidersHref, providerInquiryHref } from "../data/mgLinks.js";
 import { growgentSignupHref } from "../data/products.js";
 import { getMgHeaderNav } from "../mgSiteNav.js";
 import { headerNav, isSitePathActive } from "../siteNav.js";
@@ -46,9 +46,14 @@ export default function Header() {
     <>
       {medicalGroup ? (
         <div className="banner mg-banner">
-          <a href={patientLoginHref} target="_blank" rel="noopener noreferrer">
-            Get care in the patient app →
-          </a>
+          <p>
+            Coming soon.{" "}
+            <a href={findProvidersHref} target="_blank" rel="noopener noreferrer">
+              Find a provider
+            </a>{" "}
+            on ingeniocare.ai, or{" "}
+            <a href={providerInquiryHref}>inquire about joining</a>.
+          </p>
         </div>
       ) : (
         <div className="banner">

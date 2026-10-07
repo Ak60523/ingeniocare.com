@@ -4,6 +4,10 @@ export const patientJoinHref = `${patientAppHref}/home/patient?join=1`;
 export const providerAppHref = "https://provider.ingeniocare.ai";
 export const planAppHref = "https://plan.ingeniocare.ai";
 export const platformHref = "https://ingeniocare.ai";
+/** Live network: find a provider and connect. The medical group itself is not open yet. */
+export const findProvidersHref = "https://ingeniocare.ai/home";
+export const providerInquiryHref =
+  "mailto:hello@ingenio.care?subject=Joining%20Ingenio%20Medical%20Group";
 
 export function chronicReferralPath(base = "/ingenio") {
   const root = base.replace(/\/$/, "");

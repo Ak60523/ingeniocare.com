@@ -1,17 +1,8 @@
-import { Link } from "react-router-dom";
 import MgHero from "../../components/MgHero.jsx";
-import {
-  chronicReferralHref,
-  planAppHref,
-  providerAppHref,
-  specialtyReferralPath,
-} from "../../data/mgLinks.js";
+import { findProvidersHref, planAppHref, providerInquiryHref } from "../../data/mgLinks.js";
 import { usePageMeta } from "../../hooks/usePageMeta.js";
-import { useMedicalGroupBasePath } from "../../siteMode.js";
 
 export default function MgChronic() {
-  const base = useMedicalGroupBasePath();
-
   usePageMeta({
     title: "Chronic Care | Ingenio Medical Group",
     description:
@@ -67,8 +58,9 @@ export default function MgChronic() {
             </p>
             <p className="mg-access-line">
               <strong className="mg-highlight">Free to the patient. Perfect for ACO.</strong>
-              <a className="btn sky" href={chronicReferralHref} target="_blank" rel="noopener noreferrer">
-                Enroll Now
+              <span>Enrollment opens when we launch.</span>
+              <a className="btn sky" href={findProvidersHref} target="_blank" rel="noopener noreferrer">
+                Find a provider
               </a>
             </p>
             <ul>
@@ -119,11 +111,11 @@ export default function MgChronic() {
               <li>HIV and AIDS</li>
             </ul>
             <div className="mg-hero-actions">
-              <Link className="btn sky" to={specialtyReferralPath(base)}>
-                Refer patients
-              </Link>
-              <a className="btn navy" href={providerAppHref} target="_blank" rel="noopener noreferrer">
-                Learn more
+              <a className="btn sky" href={providerInquiryHref}>
+                Inquire about joining
+              </a>
+              <a className="btn navy" href={findProvidersHref} target="_blank" rel="noopener noreferrer">
+                Find a provider
               </a>
             </div>
           </div>

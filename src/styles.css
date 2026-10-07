@@ -119,8 +119,10 @@ ul {
   border-bottom: 1px solid color-mix(in srgb, var(--on-dark) 12%, transparent);
 }
 
-.banner a {
+.banner > a,
+.banner p {
   display: block;
+  margin: 0;
   color: inherit;
   text-decoration: none;
   padding: 0.4rem 1rem;
@@ -130,8 +132,14 @@ ul {
   letter-spacing: 0.01em;
 }
 
-.banner a:hover {
+.banner > a:hover {
   text-decoration: underline;
+}
+
+.banner p a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
 }
 
 .section.news-flash {
@@ -2139,11 +2147,11 @@ body.site-mg .media-block.is-people img {
   background: color-mix(in srgb, var(--on-dark) 10%, transparent);
 }
 
-#medical-directors .advisor-grid {
+#our-team .advisor-grid {
   grid-template-columns: 1fr;
 }
 
-#medical-directors .advisor-card {
+#our-team .advisor-card {
   flex-direction: row;
   align-items: flex-start;
   background: var(--mg-soft);
@@ -2152,32 +2160,54 @@ body.site-mg .media-block.is-people img {
   box-shadow: none;
 }
 
-#medical-directors .advisor-card h4 {
+#our-team .advisor-card h4 {
   color: var(--navy-deep);
+  font-size: calc(1.55rem * var(--heading-scale));
 }
 
-#medical-directors .advisor-role {
+#our-team .advisor-card .card-body {
+  padding: 1.15rem 1.35rem 1.25rem;
+}
+
+#our-team .advisor-role {
   color: var(--sky-hover);
+  font-size: 1.05rem;
+  margin-bottom: 0.55rem;
 }
 
-#medical-directors .advisor-card .card-body p:not(.advisor-role) {
+#our-team .advisor-card .card-body p:not(.advisor-role) {
   color: var(--muted);
+  font-size: 1.08rem;
+  line-height: 1.5;
 }
 
-#medical-directors .advisor-photo {
-  width: 6.5rem;
-  height: 6.5rem;
-  flex: 0 0 6.5rem;
-  margin: 1rem 0 1rem 1rem;
+#our-team .advisor-photo {
+  width: 10.5rem;
+  height: 10.5rem;
+  flex: 0 0 10.5rem;
+  margin: 1.15rem 0 1.15rem 1.15rem;
   background: color-mix(in srgb, var(--mg-soft-mid) 65%, #fff);
 }
 
-#medical-directors .advisor-initials {
-  font-size: 1.6rem;
+#our-team .advisor-initials {
+  font-size: 2.6rem;
   color: var(--navy-deep);
 }
 
-#medical-directors .card.advisor-card .advisor-photo:not(.is-alex) img {
+@media (max-width: 640px) {
+  #our-team .advisor-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #our-team .advisor-photo {
+    width: 8.5rem;
+    height: 8.5rem;
+    flex-basis: 8.5rem;
+  }
+}
+
+#our-team .card.advisor-card .advisor-photo:not(.is-alex) img {
   object-fit: cover;
   object-position: center 18%;
   transform: scale(1.12);
@@ -4836,6 +4866,22 @@ body.site-mg .brand-mark-plus {
   font-size: 1.15rem;
   font-weight: 700;
   line-height: 1;
+}
+
+.mg-coming-soon {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0 0.85rem;
+  padding: 0.22rem 0.72rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sky) 35%, transparent);
+  border: 1px solid color-mix(in srgb, #fff 40%, transparent);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .mg-hero-brand {
