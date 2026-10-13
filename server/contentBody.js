@@ -20,6 +20,12 @@ function resolvePlacement(raw) {
   return "inline";
 }
 
+function resolveQuotePlacement(raw) {
+  const value = String(raw || "").trim().toLowerCase();
+  if (value === "inline") return "inline";
+  return "pullout";
+}
+
 function decodeEntities(text) {
   return String(text || "")
     .replace(/&nbsp;/gi, " ")
@@ -60,7 +66,7 @@ export function emptyHeadingBlock(text = "", level = 2) {
 }
 
 export function emptyQuoteBlock() {
-  return { type: "quote", text: "", speaker: "", title: "" };
+  return { type: "quote", text: "", speaker: "", title: "", placement: "pullout" };
 }
 
 export function emptyListBlock() {
@@ -175,7 +181,16 @@ export function splitHtmlIntoBlocks(html) {
     } else if (tag === "blockquote" || /\bclass=["'][^"']*\bquote\b/i.test(attrs)) {
       flushText();
       const text = htmlToPlain(inner);
-      if (text) blocks.push({ type: "quote", text, speaker: "", title: "" });
+      if (text) {
+        const inline = /\b(is-inline|inline)\b/i.test(attrs) && !/\b(is-pullout|pullout)\b/i.test(attrs);
+        blocks.push({
+          type: "quote",
+          text,
+          speaker: "",
+          title: "",
+          placement: inline ? "inline" : "pullout",
+        });
+      }
     } else {
       textBuf.push(match[0]);
     }
@@ -199,6 +214,7 @@ function normalizeOne(block) {
         text: String(block.text ?? block.content ?? "").trim(),
         speaker: String(block.speaker ?? block.author ?? "").trim(),
         title: String(block.title ?? block.role ?? "").trim(),
+        placement: resolveQuotePlacement(block.placement),
       },
     ];
   }

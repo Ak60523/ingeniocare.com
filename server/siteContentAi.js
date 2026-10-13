@@ -62,7 +62,7 @@ Return ONLY valid JSON with this shape:
     { "type": "heading", "text": string, "level": 2 | 3 },
     { "type": "text", "text": string (one or more paragraphs separated by blank lines; may include **bold** and *italic* markdown; never use # markdown headings) },
     { "type": "list", "title": string, "items": string[], "placement": "sidebar" (optional - place immediately before the section it summarizes) },
-    { "type": "quote", "text": string, "speaker": string, "title": string },
+    { "type": "quote", "text": string, "speaker": string, "title": string, "placement": "inline" | "pullout" },
     { "type": "infographic", "title": string (optional short caption under the figure only - not drawn in the image), "prompt": string (diagram/infographic generation brief only), "imageUrl": "", "placement": "inline" | "pullout" },
     { "type": "image", "title": string (optional short caption under the figure only - not drawn in the image), "prompt": string (photographic / editorial scene brief only - not a diagram), "imageUrl": "", "placement": "inline" | "pullout" }
   ]
@@ -71,7 +71,8 @@ Return ONLY valid JSON with this shape:
 Rules:
 - body is an ordered array of section blocks. Do not return a single HTML string. Do not wrap the article in <html>, <head>, or <body>. Never include <script> or <img>.
 - Use heading blocks (level 2 for section titles, level 3 for subsections) - never put # or ## markdown inside text blocks.
-- For sidebar lists and pullout figures: place each immediately before the related text section so it floats beside that content; do not collect all sidebars at the end.
+- For sidebar lists, pullout figures, and pullout quotes: place each immediately before the related text section so it floats beside that content; do not collect all sidebars at the end.
+- Quotes default to placement "pullout" (float beside the following section). Use "inline" only for a full-width blockquote in the article column.
 - Include infographic or image blocks only when the instruction asks for them. Write ONLY a concrete prompt in "prompt" and an optional short caption in "title". ALWAYS set "imageUrl" to "" (empty). Never invent URLs.
 - hashtags: 3-8 lowercase tags without #.
 - summary: 1-2 sentences.

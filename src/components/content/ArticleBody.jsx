@@ -47,8 +47,9 @@ function ListBlock({ block }) {
 
 function QuoteBlock({ block }) {
   const credit = [block.speaker, block.title].filter(Boolean).join(" · ");
+  const pullout = String(block.placement || "pullout").toLowerCase() !== "inline";
   return (
-    <blockquote className="article-quote">
+    <blockquote className={`article-quote${pullout ? " is-pullout" : ""}`}>
       <p>
         “<RichTextNodes text={block.text} />”
       </p>

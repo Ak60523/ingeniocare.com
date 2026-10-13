@@ -2353,6 +2353,7 @@ button.btn {
 .article h2,
 .article h3 {
   margin-top: 1.8rem;
+  clear: both;
 }
 
 .article img {
@@ -2492,6 +2493,33 @@ button.btn {
   color: var(--muted);
 }
 
+.article-quote.is-pullout {
+  float: right;
+  width: min(42%, 340px);
+  max-width: 340px;
+  margin: 0 0 1.25rem 1.5rem;
+  padding: 1.15rem 1.2rem;
+  border-left: none;
+  background: var(--navy);
+  color: var(--on-dark);
+}
+
+.article-quote.is-pullout p {
+  color: var(--on-dark);
+  margin: 0 0 0.5rem;
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+
+.article-quote.is-pullout p:last-child {
+  margin-bottom: 0;
+}
+
+.article-quote.is-pullout cite {
+  color: var(--on-dark);
+  opacity: 0.85;
+}
+
 .content-list,
 .content-sidebar {
   margin: 1.15rem 0;
@@ -2582,7 +2610,8 @@ button.btn {
 
 @media (max-width: 800px) {
   .content-figure.is-pullout,
-  .content-sidebar {
+  .content-sidebar,
+  .article-quote.is-pullout {
     float: none;
     width: 100%;
     max-width: none;
@@ -3333,6 +3362,14 @@ body.site-mg .footer-bottom .footer-links {
 
 .article-section-preview {
   min-width: 0;
+}
+
+.article-section-preview .article-quote.is-pullout,
+.article-section-preview .content-figure.is-pullout,
+.article-section-preview .content-sidebar {
+  float: none;
+  width: min(100%, 340px);
+  margin-left: auto;
 }
 
 .ai-panel-label {

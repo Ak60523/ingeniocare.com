@@ -9,6 +9,7 @@ const SECTION_OPTIONS = [
   { id: "use-cases", label: "Use cases" },
   { id: "takeaways", label: "Takeaways" },
   { id: "quote", label: "Quote" },
+  { id: "pullout-quote", label: "Pull-out quote" },
   { id: "sidebar", label: "Sidebar list" },
   { id: "conclusion", label: "Conclusion" },
   { id: "references", label: "References" },
@@ -127,6 +128,12 @@ function buildInstruction({
       : "",
     sections.includes("sidebar")
       ? "Include a sidebar list placed immediately before the section it summarizes (not at the end of the article)."
+      : "",
+    sections.includes("quote")
+      ? 'Include at least one attributed quote with placement "pullout", placed immediately before the section it should float beside, unless Inline is explicitly requested.'
+      : "",
+    sections.includes("pullout-quote")
+      ? 'Include one attributed quote with placement "pullout", placed immediately before the section it should float beside.'
       : "",
     sections.includes("infographic")
       ? 'Include one infographic body block with placement "inline" or "pullout" and a concrete diagram/chart prompt only; optional short caption in title; ALWAYS leave imageUrl as an empty string - do not invent URLs; the author will Generate or pick from the library afterward.'

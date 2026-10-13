@@ -18,8 +18,14 @@ const BLOCK_TYPES = [
   { value: "html", label: "HTML" },
 ];
 
+function isPulloutQuote(block) {
+  return block?.type === "quote" && String(block.placement || "pullout").toLowerCase() !== "inline";
+}
+
 function blockLabel(block) {
-  return BLOCK_TYPES.find((item) => item.value === block.type)?.label || "Text";
+  const label = BLOCK_TYPES.find((item) => item.value === block.type)?.label || "Text";
+  if (isPulloutQuote(block)) return "Pull-out quote";
+  return label;
 }
 
 export function groupSectionIndexes(blocks) {
@@ -139,6 +145,32 @@ function BodyBlockEditor({
               onChange={(event) => onUpdate(index, { text: event.target.value })}
             />
           </label>
+          <div>
+            <p className="ai-panel-label">Placement</p>
+            <div className="ai-chip-list">
+              <button
+                type="button"
+                className={`chip${isPulloutQuote(block) ? " muted" : " ok"}`}
+                disabled={disabled}
+                onClick={() => onUpdate(index, { placement: "inline" })}
+              >
+                Inline
+              </button>
+              <button
+                type="button"
+                className={`chip${isPulloutQuote(block) ? " ok" : " muted"}`}
+                disabled={disabled}
+                onClick={() => onUpdate(index, { placement: "pullout" })}
+              >
+                Pull-out
+              </button>
+            </div>
+            <p className="form-note">
+              {isPulloutQuote(block)
+                ? "Beside following section · floats beside body text on desktop."
+                : "Full-width blockquote in the article column."}
+            </p>
+          </div>
           <div className="body-heading-row">
             <label>
               Speaker
